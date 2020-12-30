@@ -18,10 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/*
- * Fun lil project because i wanted to test
- * lombok and how it worked asf
- */
 public class Elementals extends JavaPlugin {
     @Getter
     private final List<Castable> castableSpells = new ArrayList<>();

@@ -1,4 +1,5 @@
 .idea/
 Elementals.iml
+dependency-reduced-pom.xml
 # Project exclude paths
 /target/
