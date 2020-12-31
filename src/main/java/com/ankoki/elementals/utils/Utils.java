@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class Utils {
@@ -23,6 +24,15 @@ public class Utils {
         } catch (NullPointerException ex) {
             return material == Material.AIR;
         }
+    }
+
+    public static boolean canSee(Player player, Material material, int distance) {
+        for (Block block : player.getLineOfSight(null, distance)) {
+            if (block.getType() == material) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void sendActionBar(Player player, String message) {

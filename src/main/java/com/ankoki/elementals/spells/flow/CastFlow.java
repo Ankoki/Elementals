@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BlockIterator;
 
 @RequiredArgsConstructor
 public class CastFlow implements Castable {
@@ -21,8 +22,8 @@ public class CastFlow implements Castable {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (player.getTargetBlock(null, 4).getType() != Material.AIR &&
-                            player.getTargetBlock(null, 4).getType() != Material.WATER) {
+                    if (!Utils.canSee(player, Material.WATER, 4) &&
+                            !Utils.canSee(player, Material.AIR, 4)) {
                         this.cancel();
                         Utils.sendActionBar(player, "&eYou have stopped casting &bFLOW&e!");
                         return;

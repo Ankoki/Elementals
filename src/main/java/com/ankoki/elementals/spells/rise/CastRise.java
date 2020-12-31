@@ -15,7 +15,8 @@ public class CastRise implements Castable {
 
     @Override
     public boolean onCast(Player player) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 5, 255, true, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,
+                5*20, 1, true, false));
         new ParticlesManager(player, plugin).giveCloud(5*20);
         return true;
     }

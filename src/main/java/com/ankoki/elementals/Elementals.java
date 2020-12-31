@@ -22,14 +22,14 @@ import java.util.List;
 public class Elementals extends JavaPlugin {
     @Getter
     private final List<Castable> castableSpells = new ArrayList<>();
-    private PluginDescriptionFile pdf;
-    private PluginManager pm;
+    private PluginDescriptionFile description;
+    private PluginManager pluginManager;
 
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
-        pm = this.getServer().getPluginManager();
-        pdf = this.getDescription();
+        pluginManager = this.getServer().getPluginManager();
+        description = this.getDescription();
         registerListeners(new WaterSpread(this),
                 new SpellListener(this),
                 new EventManager());
@@ -37,15 +37,17 @@ public class Elementals extends JavaPlugin {
                 new CastTravel(this),
                 new CastRise(this));
         registerCmds();
-        System.out.println(String.format("%s v%s was enabled in %.2f seconds", pdf.getName(), pdf.getVersion(), (float) System.currentTimeMillis() - start));
+        System.out.println(String.format("%s v%s was enabled in %.2f seconds",
+                description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
     }
 
     @Override
     public void onDisable() {
         long end = System.currentTimeMillis();
-        pm = null;
-        pdf = null;
-        System.out.println(String.format("Elementals was disabled in %.2f seconds", (float) System.currentTimeMillis() - end));
+        pluginManager = null;
+        description = null;
+        System.out.println(String.format("Elementals was disabled in %.2f seconds",
+                (float) System.currentTimeMillis() - end));
     }
 
     private void registerSpells(Castable... castables) {
@@ -54,7 +56,7 @@ public class Elementals extends JavaPlugin {
 
     private void registerListeners(Listener... listeners) {
         for (Listener listener : listeners) {
-            pm.registerEvents(listener, this);
+            pluginManager.registerEvents(listener, this);
         }
     }
 

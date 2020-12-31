@@ -32,7 +32,13 @@ public class SpellListener implements Listener {
             for (Castable castable : plugin.getCastableSpells()) {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(castable.getSpell())) {
-                    long pCooldown = spellCooldown.get(castable.getSpell()).get(player) == null ? 0 : spellCooldown.get(castable.getSpell()).get(player);
+                    boolean cooldownExists = spellCooldown.get(castable.getSpell()) != null;
+                    long pCooldown;
+                    if (cooldownExists) {
+                        pCooldown = spellCooldown.get(castable.getSpell()).get(player) == null ? 0 : spellCooldown.get(castable.getSpell()).get(player);
+                    } else {
+                        pCooldown = 0;
+                    }
                     if ((System.currentTimeMillis() - pCooldown) > (castable.getCooldown() * 1000L)) {
                         SpellCastEvent event = new SpellCastEvent(player, castable.getSpell(), castable.getCooldown());
                         Bukkit.getPluginManager().callEvent(event);
@@ -45,7 +51,7 @@ public class SpellListener implements Listener {
                             Utils.sendActionBar(player, "&eYour spell was cancelled!");
                         }
                     } else {
-                        Utils.sendActionBar(player, String.format("&eYou can only cast this spell every %s&e seconds", castable.getCooldown()));
+                        Utils.sendActionBar(player, "&eYou can only cast this spell every " + castable.getCooldown() + "&e seconds");
                     }
                 }
             }
