@@ -6,6 +6,7 @@ import com.ankoki.elementals.spells.flow.WaterSpread;
 import com.ankoki.elementals.spells.flow.CastFlow;
 import com.ankoki.elementals.managers.EventManager;
 import com.ankoki.elementals.listeners.SpellListener;
+import com.ankoki.elementals.spells.rise.CastRise;
 import com.ankoki.elementals.spells.travel.CastTravel;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -33,7 +34,8 @@ public class Elementals extends JavaPlugin {
                 new SpellListener(this),
                 new EventManager());
         registerSpells(new CastFlow(this),
-                new CastTravel(this));
+                new CastTravel(this),
+                new CastRise(this));
         registerCmds();
         System.out.println(String.format("%s v%s was enabled in %.2f seconds", pdf.getName(), pdf.getVersion(), (float) System.currentTimeMillis() - start));
     }

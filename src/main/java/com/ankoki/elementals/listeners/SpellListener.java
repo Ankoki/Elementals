@@ -5,6 +5,7 @@ import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.events.SpellCastEvent;
 import com.ankoki.elementals.managers.Castable;
 import com.ankoki.elementals.managers.ItemManager;
+import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ import java.util.WeakHashMap;
 public class SpellListener implements Listener {
     private final Elementals plugin;
 
+    private final WeakHashMap<Spell, WeakHashMap<Player, Long>> spellCooldown = new WeakHashMap<>();
     private final WeakHashMap<Player, Long> cooldown = new WeakHashMap<>();
 
     @EventHandler
@@ -30,13 +32,14 @@ public class SpellListener implements Listener {
             for (Castable castable : plugin.getCastableSpells()) {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(castable.getSpell())) {
-                    long pCooldown = cooldown.get(player) == null ? 0 : cooldown.get(player);
+                    long pCooldown = spellCooldown.get(castable.getSpell()).get(player) == null ? 0 : spellCooldown.get(castable.getSpell()).get(player);
                     if ((System.currentTimeMillis() - pCooldown) > (castable.getCooldown() * 1000L)) {
                         SpellCastEvent event = new SpellCastEvent(player, castable.getSpell(), castable.getCooldown());
                         Bukkit.getPluginManager().callEvent(event);
                         if (!event.isCancelled()) {
                             if (castable.onCast(player)) {
                                 cooldown.put(player, System.currentTimeMillis());
+                                spellCooldown.put(castable.getSpell(), cooldown);
                             }
                         } else {
                             Utils.sendActionBar(player, "&eYour spell was cancelled!");

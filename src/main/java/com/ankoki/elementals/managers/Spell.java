@@ -8,7 +8,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public enum Spell {
     TRAVEL("travel", 0),
-    FLOW("flow", 1);
+    FLOW("flow", 1),
+    RISE("rise", 2);
 
     @Getter
     private final String spellName;
