@@ -3,13 +3,11 @@ package com.ankoki.elementals.managers;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 @RequiredArgsConstructor
 public class ItemManager {
     private final ItemStack item;
-    private ItemStack wand = item;
-    private ItemMeta meta = item.getItemMeta();
+    private ItemStack wand;
 
     public ItemManager addSpell(Spell spell) {
         NBTItem wand = new NBTItem(item);
