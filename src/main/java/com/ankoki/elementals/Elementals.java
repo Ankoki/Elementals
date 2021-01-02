@@ -11,6 +11,7 @@ import com.ankoki.elementals.spells.travel.CastTravel;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +31,14 @@ public class Elementals extends JavaPlugin {
         long start = System.currentTimeMillis();
         pluginManager = this.getServer().getPluginManager();
         description = this.getDescription();
+        if (!dependencyCheck()) {
+            System.out.println(" # # # # # # # # # # # # # # #");
+            System.out.println(" # ");
+            System.out.println(" # Dependency RedLib was not found! Have you got it installed?");
+            System.out.println(" # ");
+            System.out.println(" # # # # # # # # # # # # # # #");
+            pluginManager.disablePlugin(this);
+        }
         registerListeners(new WaterSpread(this),
                 new SpellListener(this),
                 new EventManager());
@@ -63,6 +72,24 @@ public class Elementals extends JavaPlugin {
     private void registerCmds() {
         this.getServer().getPluginCommand("elementals").setExecutor(new ElementalsCmd());
     }
+
+    private boolean dependencyCheck() {
+        Plugin redLib = pluginManager.getPlugin("RedLib");
+        if (redLib == null) {
+            return false;
+        } else return redLib.isEnabled();
+    }
+
+    /*
+     * Will actually make this work soon
+    private boolean versionChecker(Plugin plugin, int first, int second, int third) {
+        first *= 1000;
+        second *= 100;
+        third *= 10;
+        int pluginVer = Integer.parseInt(plugin.getDescription().getVersion().replace(".", ""));
+
+        return true;
+    }*/
 
     /**
      * Lists for spells that i dont wanna make

@@ -22,38 +22,64 @@ public class ParticlesManager {
      * @param durationInTicks How long you want the cloud at the
      *                        players feet to last for in ticks.
      */
-    public void giveCloud(int durationInTicks) {
+    public void trackCloud(int durationInTicks) {
         duration = durationInTicks;
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (duration == 0) {
                     this.cancel();
+                    return;
+                }
+                Player updatedPlayer = Bukkit.getPlayer(player.getUniqueId());
+                if (updatedPlayer != null) {
+                    World world = updatedPlayer.getWorld();
+                    world.spawnParticle(Particle.REDSTONE,
+                            updatedPlayer.getLocation().subtract(0, 0.1, 0), 5,
+                            new Particle.DustOptions(Color.WHITE, 3));
+                    world.spawnParticle(Particle.REDSTONE,
+                            updatedPlayer.getLocation().subtract(0.5, 0.1, 0), 5,
+                            new Particle.DustOptions(Color.WHITE, 3));
+                    world.spawnParticle(Particle.REDSTONE,
+                            updatedPlayer.getLocation().subtract(0, 0.1, 0.5), 5,
+                            new Particle.DustOptions(Color.WHITE, 3));
+                    world.spawnParticle(Particle.REDSTONE,
+                            updatedPlayer.getLocation().subtract(0.5, 0.1, 0.5), 5,
+                            new Particle.DustOptions(Color.WHITE, 3));
+                    world.spawnParticle(Particle.REDSTONE,
+                            updatedPlayer.getLocation().subtract(0, 0.3, 0), 5,
+                            new Particle.DustOptions(Color.WHITE, 3));
+                    duration--;
                 } else {
-                    Player updatedPlayer = Bukkit.getPlayer(player.getUniqueId());
-                    if (updatedPlayer != null) {
-                        World world = updatedPlayer.getWorld();
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().subtract(0, 0.3, 0), 5,
-                                new Particle.DustOptions(Color.WHITE, 3));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().subtract(0.5, 0.3, 0), 5,
-                                new Particle.DustOptions(Color.WHITE, 3));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().subtract(0, 0.3, 0.5), 5,
-                                new Particle.DustOptions(Color.WHITE, 3));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().subtract(0.5, 0.3, 0.5), 5,
-                                new Particle.DustOptions(Color.WHITE, 3));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().subtract(0, 0.5, 0), 5,
-                                new Particle.DustOptions(Color.WHITE, 3));
-                        duration--;
-                    } else {
-                        this.cancel();
-                    }
+                    this.cancel();
                 }
             }
         }.runTaskTimer(plugin, 0, 1L);
+    }
+
+    /**
+     * Spawns a series of rings around the player which go up
+     * and has the player as the center.
+     *
+     * @param times   The amount of times the ring will loop around
+     *                the player, and if reverse is true, it will count
+     *                up and down as one time.
+     * @param reverse If reverse is true, the rings will go up and
+     *                then down again around the player.
+     */
+    public void spawnRings(int times, boolean reverse) {
+        duration = times;
+        if (reverse) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (times == 0) {
+                        this.cancel();
+                    }
+                }
+            }.runTaskTimer(plugin, 0L, 20L);
+        } else {
+
+        }
     }
 }
