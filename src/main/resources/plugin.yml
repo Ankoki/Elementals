@@ -2,8 +2,6 @@ name: Elementals
 version: 1.0
 main: com.ankoki.elementals.Elementals
 api-version: 1.16
+author: Ankoki
 softdepend:
   - RedLib
-commands:
-  elementals:
-    description: Main elementals command.

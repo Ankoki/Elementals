@@ -23,7 +23,7 @@ public class ParticlesManager {
      *                        players feet to last for in ticks.
      */
     public void trackCloud(int durationInTicks) {
-        duration = durationInTicks;
+        duration = durationInTicks/2;
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -54,7 +54,7 @@ public class ParticlesManager {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0, 1L);
+        }.runTaskTimer(plugin, 0, 2L);
     }
 
     /**
@@ -73,13 +73,19 @@ public class ParticlesManager {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (times == 0) {
+                    if (duration == 0) {
                         this.cancel();
                     }
+                    duration--;
                 }
-            }.runTaskTimer(plugin, 0L, 20L);
+            }.runTaskTimer(plugin, 0L, 2L);
         } else {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
 
+                }
+            }.runTaskTimer(plugin, 0L, 2L);
         }
     }
 }

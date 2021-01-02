@@ -6,6 +6,7 @@ import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import redempt.redlib.commandmanager.Messages;
 
 @RequiredArgsConstructor
 public class CastTravel implements Castable {
@@ -15,9 +16,8 @@ public class CastTravel implements Castable {
     public boolean onCast(Player player) {
         if (player.getTargetBlock(null, 10).getType().isBlock()) {
             player.teleport(player.getTargetBlock(null, 10).getLocation());
-            Utils.sendActionBar(player, "&eYou used &7TRAVEL &eand teleported!");
         } else {
-            Utils.sendActionBar(player, "&eYou can only teleport to solid blocks!");
+            Utils.sendActionBar(player, Messages.msg("travel-solid"));
             return false;
         }
         return true;

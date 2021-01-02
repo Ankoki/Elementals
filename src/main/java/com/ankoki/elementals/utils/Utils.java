@@ -14,10 +14,6 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public static String colouredPrefix(String message) {
-        return ChatColor.translateAlternateColorCodes('&', "&6৺ &eElementals &7" + message);
-    }
-
     public static boolean isLookingAt(Player player, Material material) {
         try {
             return player.getTargetBlockExact(10, FluidCollisionMode.SOURCE_ONLY).getType() == material;

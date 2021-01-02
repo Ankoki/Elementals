@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.BlockIterator;
+import redempt.redlib.commandmanager.Messages;
 
 @RequiredArgsConstructor
 public class CastFlow implements Castable {
@@ -18,14 +18,13 @@ public class CastFlow implements Castable {
     @Override
     public boolean onCast(Player player) {
         if (Utils.isLookingAt(player, Material.WATER)) {
-            Utils.sendActionBar(player, "&eYou are casting &bFLOW&e!");
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     if (!Utils.canSee(player, Material.WATER, 4) &&
                             !Utils.canSee(player, Material.AIR, 4)) {
                         this.cancel();
-                        Utils.sendActionBar(player, "&eYou have stopped casting &bFLOW&e!");
+                        Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
                         return;
                     }
                     Location targetBlock = player.getTargetBlock(null, 4).getLocation();
@@ -45,7 +44,7 @@ public class CastFlow implements Castable {
                 }
             }.runTaskTimer(plugin, 0L, 1L);
         } else {
-            Utils.sendActionBar(player, "&eThis spell requries water!");
+            Utils.sendActionBar(player, Messages.msg("flow-no-water"));
             return false;
         }
         return false;

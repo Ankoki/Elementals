@@ -2,6 +2,7 @@ package com.ankoki.elementals;
 
 import com.ankoki.elementals.commands.ElementalsCmd;
 import com.ankoki.elementals.managers.Castable;
+import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.spells.flow.WaterSpread;
 import com.ankoki.elementals.spells.flow.CastFlow;
 import com.ankoki.elementals.managers.EventManager;
@@ -15,6 +16,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import redempt.redlib.commandmanager.ArgType;
+import redempt.redlib.commandmanager.CommandParser;
+import redempt.redlib.commandmanager.ContextProvider;
+import redempt.redlib.commandmanager.Messages;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,27 +30,48 @@ public class Elementals extends JavaPlugin {
     private final List<Castable> castableSpells = new ArrayList<>();
     private PluginDescriptionFile description;
     private PluginManager pluginManager;
+    @Getter
+    private String version;
 
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
+        Messages.load(this);
         pluginManager = this.getServer().getPluginManager();
         description = this.getDescription();
+        version = this.description.getVersion();
+
         if (!dependencyCheck()) {
             System.out.println(" # # # # # # # # # # # # # # #");
             System.out.println(" # ");
-            System.out.println(" # Dependency RedLib was not found! Have you got it installed?");
+            System.out.println(" # Dependency RedLib was not found!");
+            System.out.println(" # Have you got it installed?");
             System.out.println(" # ");
             System.out.println(" # # # # # # # # # # # # # # #");
             pluginManager.disablePlugin(this);
+            return;
         }
+
+        Plugin redLib = pluginManager.getPlugin("RedLib");
+        assert redLib != null;
+        if (!versionChecker(redLib, 2, 0)) {
+            System.out.println(" # # # # # # # # # # # # # # #");
+            System.out.println(" # ");
+            System.out.println(" # Dependency RedLib is outdated!");
+            System.out.println(" # Update to the latest version!");
+            System.out.println(" # ");
+            System.out.println(" # # # # # # # # # # # # # # #");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
         registerListeners(new WaterSpread(this),
                 new SpellListener(this),
                 new EventManager());
         registerSpells(new CastFlow(this),
                 new CastTravel(this),
                 new CastRise(this));
-        registerCmds();
+        registerCommand();
         System.out.println(String.format("%s v%s was enabled in %.2f seconds",
                 description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
     }
@@ -63,14 +89,20 @@ public class Elementals extends JavaPlugin {
         castableSpells.addAll(Arrays.asList(castables));
     }
 
+    private void registerCommand() {
+        ArgType<Spell> spellType = new ArgType<>("spell", Elementals::getSpell)
+                .tabStream(c -> Arrays.stream(Spell.values()).map(Spell::getSpellName));
+        new CommandParser(this.getResource("command.txt"))
+                .setArgTypes(spellType)
+                .setContextProviders(ContextProvider.mainHand)
+                .parse()
+                .register("elementals", new ElementalsCmd(this));
+    }
+
     private void registerListeners(Listener... listeners) {
         for (Listener listener : listeners) {
             pluginManager.registerEvents(listener, this);
         }
-    }
-
-    private void registerCmds() {
-        this.getServer().getPluginCommand("elementals").setExecutor(new ElementalsCmd());
     }
 
     private boolean dependencyCheck() {
@@ -80,16 +112,24 @@ public class Elementals extends JavaPlugin {
         } else return redLib.isEnabled();
     }
 
-    /*
-     * Will actually make this work soon
     private boolean versionChecker(Plugin plugin, int first, int second, int third) {
-        first *= 1000;
-        second *= 100;
-        third *= 10;
+        first *= 100;
+        second *= 10;
         int pluginVer = Integer.parseInt(plugin.getDescription().getVersion().replace(".", ""));
+        int required = first + second + third;
+        return pluginVer >= required;
+    }
 
-        return true;
-    }*/
+    private boolean versionChecker(Plugin plugin, int first, int second) {
+        first *= 10;
+        int pluginVer = Integer.parseInt(plugin.getDescription().getVersion().replace(".", ""));
+        int required = first + second;
+        return pluginVer >= required;
+    }
+
+    private static Spell getSpell(String s) {
+        return Spell.valueOf(s.toUpperCase());
+    }
 
     /**
      * Lists for spells that i dont wanna make

@@ -1,0 +1,23 @@
+elementals {
+    help Controls elementals
+    user player
+    hook elementals
+    enchant,give,addspell spell:spell {
+        permission elementals.admin
+        user player
+        hook enchant
+        context mainhand
+        help Enchants a wand
+    }
+    disenchant,remove,removespells {
+        permission elementals.admin
+        user player
+        hook disenchant
+        context mainhand
+        help Disenchants a wand
+    }
+    info,information,help {
+        hook information
+        help Information about Elementals
+    }
+}

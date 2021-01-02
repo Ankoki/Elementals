@@ -21,7 +21,29 @@ public class ItemManager {
         if (wand.hasKey(spell.getSpellName())) {
             wand.removeKey(spell.getSpellName());
         }
+        this.wand = wand.getItem();
         return this;
+    }
+
+    public ItemManager removeSpells() {
+        NBTItem wand = new NBTItem(item);
+        for (Spell spell : Spell.values()) {
+            if (wand.hasKey(spell.getSpellName())) {
+                wand.removeKey(spell.getSpellName());
+            }
+        }
+        this.wand = wand.getItem();
+        return this;
+    }
+
+    public boolean hasSpell() {
+        NBTItem wand = new NBTItem(item);
+        for (Spell spell : Spell.values()) {
+            if (wand.hasKey(spell.getSpellName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean hasSpell(Spell spell) {

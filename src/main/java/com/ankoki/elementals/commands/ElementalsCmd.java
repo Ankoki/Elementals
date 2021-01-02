@@ -1,65 +1,51 @@
 package com.ankoki.elementals.commands;
 
+import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.ItemManager;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
-import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import redempt.redlib.commandmanager.CommandHook;
+import redempt.redlib.commandmanager.Messages;
 
-public class ElementalsCmd implements CommandExecutor {
+@RequiredArgsConstructor
+public class ElementalsCmd {
+    private final Elementals plugin;
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
-        if (sender.hasPermission("elementals.admin") || sender.isOp()) {
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
-                ItemStack heldItem = player.getInventory().getItemInMainHand();
-                if (args.length == 2) {
-                    if (args[0].equalsIgnoreCase("add")) {
-                        if (heldItem.getType() != Material.AIR) {
-                            ItemManager wand = new ItemManager(heldItem);
-                            Spell spell = Spell.valueOf(args[1].toUpperCase());
-                            if (spell != null) {
-                                wand.addSpell(spell);
-                                player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.getItem());
-                                player.sendMessage(Utils.colouredPrefix("You have enchanted this wand with " + spell.getSpellName()));
-                            } else {
-                                player.sendMessage(Utils.colouredPrefix("This isn't a valid spell!"));
-                            }
-                        } else {
-                            player.sendMessage(Utils.colouredPrefix("You need to be holding an item!"));
-                        }
-                    } else if (args[0].equalsIgnoreCase("remove")) {
-                        if (heldItem.getType() != Material.AIR) {
-                            ItemManager wand = new ItemManager(heldItem);
-                            Spell spell = Spell.valueOf(args[1].toUpperCase());
-                            if (spell != null) {
-                                wand.removeSpell(spell);
-                                player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.getItem());
-                                player.sendMessage(Utils.colouredPrefix("You have removed " + spell.getSpellName() + " from this wand!"));
-                            } else {
-                                player.sendMessage(Utils.colouredPrefix("This isn't a valid spell!"));
-                            }
-                        } else {
-                            player.sendMessage(Utils.colouredPrefix("You need to be holding an item!"));
-                        }
-                    } else {
-                        player.sendMessage(Utils.colouredPrefix("This isn't a valid command!"));
-                    }
-                } else {
-                    player.sendMessage(Utils.colouredPrefix("This isn't a valid command!"));
-                }
-            } else {
-                sender.sendMessage(Utils.colouredPrefix("You need to be a player to do this!"));
-            }
-        } else {
-            sender.sendMessage(Utils.colouredPrefix("This command doesn't exist!"));
-        }
-        return true;
+    @CommandHook("elementals")
+    public void elementalsHook(Player sender) {
+        sender.sendMessage(Messages.msg("command-message").replace("%version%", plugin.getVersion()));
     }
 
+    @CommandHook("enchant")
+    public void enchantHook(Player player, Spell spell, ItemStack heldItem) {
+        ItemManager wand = new ItemManager(heldItem);
+        wand.addSpell(spell);
+        player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.getItem());
+        player.sendMessage(Messages.msg("on-enchant").replace("%spell%", spell.getSpellName()));
+    }
+
+    @CommandHook("disenchant")
+    public void disenchantHook(Player player, ItemStack heldItem) {
+        ItemManager wand = new ItemManager(heldItem);
+        if (!wand.hasSpell()) {
+            player.sendMessage(Messages.msg("no-spells"));
+            return;
+        }
+        player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.removeSpells().getItem());
+        player.sendMessage(Messages.msg("on-disenchant"));
+    }
+
+    @CommandHook("information")
+    public void informationHook(CommandSender sender) {
+        sender.sendMessage(Utils.coloured("&6৺  &e&nElementals\n\n" +
+                            "&7    Elementals is a plugin which is developed for\n" +
+                            "&7    anyone who enjoys the magical side of anything.\n" +
+                            "&7    We have multiple spells which players can use and\n" +
+                            "&7    we will continue to add ways to give them to people,\n" +
+                            "&7    and different spells, primarily based on user feedback."));
+    }
 }

@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import redempt.redlib.commandmanager.Messages;
 
 import java.util.WeakHashMap;
 
@@ -46,12 +47,14 @@ public class SpellListener implements Listener {
                             if (castable.onCast(player)) {
                                 cooldown.put(player, System.currentTimeMillis());
                                 spellCooldown.put(castable.getSpell(), cooldown);
+                                Utils.sendActionBar(player, Messages.msg("on-cast").replace("%spell%", castable.getSpell().getSpellName()));
+                                return;
                             }
                         } else {
-                            Utils.sendActionBar(player, "&eYour spell was cancelled!");
+                            Utils.sendActionBar(player, Messages.msg("cancelled-spell"));
                         }
                     } else {
-                        Utils.sendActionBar(player, "&eYou can only cast this spell every " + castable.getCooldown() + "&e seconds");
+                        Utils.sendActionBar(player, Messages.msg("cooldown").replace("%cooldown%", Integer.toString(castable.getCooldown())));
                     }
                 }
             }
