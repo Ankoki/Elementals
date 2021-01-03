@@ -75,27 +75,27 @@ public class Elementals extends JavaPlugin {
             pluginManager.disablePlugin(this);
             return;
         }
-        logger.info(description.getName() + "[v" + description.getVersion() + "] is being enabled...");
-        logger.info("Loading config and messages...");
+        logger.info(description.getName() + " v" + description.getVersion() + " is being enabled...");
+        //Loading config and messages
         Messages.load(this);
         Collections.addAll(enabledSpells, Spell.values());
         this.loadConfiguration();
-        logger.info("Registering listeners...");
+        //Registering Listeners
         SpellListener spellListener = new SpellListener(this);
         this.registerListeners(new WaterSpread(this),
                 spellListener,
                 new EventManager(),
                 new JoinQuitListener(),
                 new ProjectileHit());
-        logger.info("Registering spells...");
+        //Registering Spells
         this.registerGenericSpells(new CastFlow(this, spellListener),
                 new CastTravel(this),
                 new CastRise(this),
                 new CastFireball(this));
         this.registerEntitySpells(new CastPossession(this, spellListener));
-        logger.info("Registering commands...");
+        //Registering commands
         this.registerCommand();
-        logger.info("Loading NBTAPI...");
+        //Loading NBTAPI
         NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
         testItem.addCompound("test");
         testItem.setInteger("testInt", 1);
