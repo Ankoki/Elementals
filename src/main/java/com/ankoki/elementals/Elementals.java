@@ -2,19 +2,25 @@ package com.ankoki.elementals;
 
 import com.ankoki.elementals.commands.ElementalsCmd;
 import com.ankoki.elementals.listeners.JoinListener;
-import com.ankoki.elementals.managers.Castable;
+import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.managers.EntitySpell;
 import com.ankoki.elementals.managers.Spell;
+import com.ankoki.elementals.spells.fireball.CastFireball;
+import com.ankoki.elementals.spells.fireball.ProjectileHit;
 import com.ankoki.elementals.spells.flow.WaterSpread;
 import com.ankoki.elementals.spells.flow.CastFlow;
 import com.ankoki.elementals.managers.EventManager;
 import com.ankoki.elementals.listeners.SpellListener;
+import com.ankoki.elementals.spells.possesion.CastPossession;
 import com.ankoki.elementals.spells.rise.CastRise;
 import com.ankoki.elementals.spells.travel.CastTravel;
 import com.ankoki.elementals.utils.Utils;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.Getter;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -30,9 +36,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+//Note: add EntitySpell and GenericSpell
 public class Elementals extends JavaPlugin {
     @Getter
-    private final List<Castable> castableSpells = new ArrayList<>();
+    private final List<GenericSpell> genericSpells = new ArrayList<>();
+    @Getter
+    private final List<EntitySpell> entitySpells = new ArrayList<>();
     private PluginDescriptionFile description;
     private PluginManager pluginManager;
     private Logger logger;
@@ -65,15 +74,22 @@ public class Elementals extends JavaPlugin {
         this.registerListeners(new WaterSpread(this),
                 new SpellListener(this),
                 new EventManager(),
-                new JoinListener());
+                new JoinListener(),
+                new ProjectileHit());
         logger.info("Registering spells...");
-        this.registerSpells(new CastFlow(this),
+        this.registerGenericSpells(new CastFlow(this),
                 new CastTravel(this),
-                new CastRise(this));
+                new CastRise(this),
+                new CastFireball(this));
+        this.registerEntitySpells(new CastPossession(this));
         logger.info("Registering commands...");
         this.registerCommand();
         logger.info("Loading config...");
         this.loadConfiguration();
+        logger.info("Loading NBTAPI...");
+        NBTItem item = new NBTItem(new ItemStack(Material.BELL));
+        item.addCompound("test");
+        item.setInteger("spell", 2301);
 
         logger.info(String.format("%s v%s was enabled in %.2f seconds",
                 description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
@@ -86,25 +102,30 @@ public class Elementals extends JavaPlugin {
         description = null;
         logger = null;
         version = null;
-        System.out.println(String.format("Elementals was disabled in %.2f seconds",
-                (float) System.currentTimeMillis() - end));
+        System.out.printf("Elementals was disabled in %.2f seconds%n",
+                (float) System.currentTimeMillis() - end);
     }
 
     private void loadConfiguration() {
         configManager = new ConfigManager(this)
-                .register(this)
+                .register(new CastFlow(this),
+                        new CastTravel(this),
+                        new CastRise(this),
+                        new CastFireball(this),
+                        new CastPossession(this))
                 .saveDefaults()
-                .load()
-                .save();
+                .load();
     }
 
-    private void registerSpells(Castable... castables) {
-        castableSpells.addAll(Arrays.asList(castables));
+    private void registerGenericSpells(GenericSpell... genericSpells) {
+        this.genericSpells.addAll(Arrays.asList(genericSpells));
     }
+
+    private void registerEntitySpells(EntitySpell... spells) { entitySpells.addAll(Arrays.asList(spells));}
 
     private void registerCommand() {
         ArgType<Spell> spellType = new ArgType<>("spell", Elementals::getSpell)
-                .tabStream(c -> Arrays.stream(Spell.values()).map(Spell::getSpellName));
+                .tabStream(c -> Arrays.stream(Spell.values()).map(Spell::getSpellName).map(String::toLowerCase));
         new CommandParser(this.getResource("command.txt"))
                 .setArgTypes(spellType)
                 .setContextProviders(ContextProvider.mainHand)
@@ -137,20 +158,12 @@ public class Elementals extends JavaPlugin {
      */
     @Getter
     private final List<Location> flowLocations = new ArrayList<>();
+
     public void addFlowLocation(Location location) {
         flowLocations.add(location);
     }
+
     public void removeFlowLocation(Location location) {
         flowLocations.remove(location);
     }
-
-    @Getter
-    private final List<Player> casting = new ArrayList<>();
-    public void addCaster(Player player) {
-        casting.add(player);
-    }
-    public void removeCaster(Player player) {
-        casting.remove(player);
-    }
-    public boolean isCasting(Player player) { return casting.contains(player); }
 }

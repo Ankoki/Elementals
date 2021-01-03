@@ -1,7 +1,8 @@
 package com.ankoki.elementals.spells.flow;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.managers.Castable;
+import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
@@ -13,33 +14,37 @@ import org.bukkit.scheduler.BukkitRunnable;
 import redempt.redlib.commandmanager.Messages;
 import redempt.redlib.configmanager.annotations.ConfigValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
-public class CastFlow implements Castable {
+public class CastFlow extends Prolonged implements GenericSpell {
     private final Elementals plugin;
     @Getter
     @ConfigValue("flow-enabled")
     private boolean enabled = true;
+    private final List<Player> casting = new ArrayList<>();
 
     @Override
     public boolean onCast(Player player) {
         if (Utils.canSee(player, 10, Material.WATER)) {
-            plugin.addCaster(player);
+            casting.add(player);
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!Utils.canSee(player, 4, Material.WATER) &&
-                            !Utils.canSee(player, 4, Material.AIR)) {
-                        this.cancel();
-                        plugin.removeCaster(player);
+                    Location targetBlock = player.getTargetBlock(null, 4).getLocation();
+                    if (targetBlock.getBlock().getType() != Material.AIR &&
+                        targetBlock.getBlock().getType() != Material.WATER) {
+                        casting.remove(player);
                         Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
+                        this.cancel();
                         return;
-                    } else if (!plugin.isCasting(player)) {
-                        this.cancel();
-                        plugin.removeCaster(player);
+                    } else if (!casting.contains(player)) {
+                        casting.remove(player);
                         Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
+                        this.cancel();
                         return;
                     }
-                    Location targetBlock = player.getTargetBlock(null, 4).getLocation();
                     targetBlock.getWorld()
                             .getBlockAt(targetBlock)
                             .setType(Material.WATER);
@@ -55,11 +60,16 @@ public class CastFlow implements Castable {
                     }.runTaskLater(plugin, 10L);
                 }
             }.runTaskTimer(plugin, 0L, 1L);
+            return true;
         } else {
             Utils.sendActionBar(player, Messages.msg("flow-no-water"));
-            return false;
         }
         return false;
+    }
+
+    @Override
+    public void onCancel(Player player) {
+        casting.remove(player);
     }
 
     @Override

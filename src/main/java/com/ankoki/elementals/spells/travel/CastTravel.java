@@ -1,7 +1,7 @@
 package com.ankoki.elementals.spells.travel;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.managers.Castable;
+import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import redempt.redlib.commandmanager.Messages;
 import redempt.redlib.configmanager.annotations.ConfigValue;
 
 @RequiredArgsConstructor
-public class CastTravel implements Castable {
+public class CastTravel implements GenericSpell {
     private final Elementals plugin;
     @Getter
     @ConfigValue("travel-enabled")

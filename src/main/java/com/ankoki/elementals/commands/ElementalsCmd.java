@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import redempt.redlib.commandmanager.CommandHook;
 import redempt.redlib.commandmanager.Messages;
 
+@SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class ElementalsCmd {
     private final Elementals plugin;
@@ -52,7 +53,7 @@ public class ElementalsCmd {
     @CommandHook("reload")
     public void reloadHook(CommandSender sender) {
         Messages.load(plugin);
-        plugin.getConfigManager().load();
+        plugin.getConfigManager().save();
         sender.sendMessage(Messages.msg("on-reload"));
     }
 }

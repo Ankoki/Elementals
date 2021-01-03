@@ -4,10 +4,12 @@ on-disenchant: &6৺ &eYou have removed all spells from this wand
 on-reload: &6৺ &eYou have reloaded Elementals!
 no-spells: &6৺ &eThis wand has no spells!
 on-cast: &eYou are now casting %spell%
+on-stop-cast: &eYou have stopped casting %spell%
+on-attempted-entitycast: &eYou need to be looking at an entity!
 cooldown: &eYou can only cast this spell every %cooldown%&e seconds!
 cancelled-spell: &eYour spell was cancelled!
 disabled-spell: &e%spell% is disabled!
-flow-interupted: &eYou have stopped casting flow!
+flow-interrupted: &eYou have stopped casting flow!
 flow-no-water: &eThis spell requires water!
 travel-solid: &eYou can only teleport to solid blocks!
-op-join: &6৺ &eTo change elemental messages, go to messages.txt in plugins/RedLib and plugins/Elementals
+already-casting: &eYou are already casting a spell!
