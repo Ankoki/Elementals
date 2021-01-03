@@ -37,10 +37,10 @@ public class SpellListener implements Listener {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(genericSpell.getSpell())) {
                     if (cooldownExpired(player, genericSpell.getSpell(), genericSpell.getCooldown())) {
-                        SpellCastEvent event = new SpellCastEvent(player, genericSpell.getSpell(), genericSpell.getCooldown());
-                        Bukkit.getPluginManager().callEvent(event);
-                        if (!event.isCancelled()) {
-                            if (genericSpell.isEnabled()) {
+                        if (plugin.spellEnabled(genericSpell.getSpell())) {
+                            SpellCastEvent event = new SpellCastEvent(player, genericSpell.getSpell(), genericSpell.getCooldown());
+                            Bukkit.getPluginManager().callEvent(event);
+                            if (!event.isCancelled()) {
                                 if (genericSpell instanceof Prolonged) {
                                     if (!castingSpell.containsKey(player)) {
                                         if (genericSpell.onCast(player)) {
@@ -64,11 +64,11 @@ public class SpellListener implements Listener {
                                     return;
                                 }
                             } else {
-                                Utils.sendActionBar(player, Messages.msg("disabled-spell")
+                                Utils.sendActionBar(player, Messages.msg("cancelled-spell")
                                         .replace("%spell%", genericSpell.getSpell().getSpellName()));
                             }
                         } else {
-                            Utils.sendActionBar(player, Messages.msg("cancelled-spell"));
+                            Utils.sendActionBar(player, Messages.msg("disabled-spell"));
                         }
                     } else {
                         Utils.sendActionBar(player, Messages.msg("cooldown")
@@ -80,16 +80,18 @@ public class SpellListener implements Listener {
             for (EntitySpell entitySpell : plugin.getEntitySpells()) {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(entitySpell.getSpell())) {
-                    if (castingSpell.get(player) == entitySpell.getSpell()) {
-                        if (entitySpell instanceof Prolonged) {
-                            ((Prolonged) entitySpell).onCancel(player);
-                            castingSpell.remove(player);
-                            Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                                    .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                    if (plugin.spellEnabled(entitySpell.getSpell())) {
+                        if (castingSpell.get(player) == entitySpell.getSpell()) {
+                            if (entitySpell instanceof Prolonged) {
+                                ((Prolonged) entitySpell).onCancel(player);
+                                castingSpell.remove(player);
+                                Utils.sendActionBar(player, Messages.msg("on-stop-cast")
+                                        .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                            }
+                            return;
                         }
-                        return;
+                        Utils.sendActionBar(player, Messages.msg("on-attempted-entitycast"));
                     }
-                    Utils.sendActionBar(player, Messages.msg("on-attempted-entitycast"));
                 }
             }
         }
@@ -105,10 +107,10 @@ public class SpellListener implements Listener {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(entitySpell.getSpell())) {
                     if (cooldownExpired(player, entitySpell.getSpell(), entitySpell.getCooldown())) {
-                        SpellCastEvent event = new SpellCastEvent(player, entitySpell.getSpell(), entitySpell.getCooldown());
-                        Bukkit.getPluginManager().callEvent(event);
-                        if (!event.isCancelled()) {
-                            if (entitySpell.isEnabled()) {
+                        if (plugin.spellEnabled(entitySpell.getSpell())) {
+                            SpellCastEvent event = new SpellCastEvent(player, entitySpell.getSpell(), entitySpell.getCooldown());
+                            Bukkit.getPluginManager().callEvent(event);
+                            if (!event.isCancelled()) {
                                 if (entitySpell instanceof Prolonged) {
                                     if (!castingSpell.containsKey(player)) {
                                         if (entitySpell.onCast(player, entity)) {
@@ -132,11 +134,11 @@ public class SpellListener implements Listener {
                                     return;
                                 }
                             } else {
-                                Utils.sendActionBar(player, Messages.msg("disabled-spell")
+                                Utils.sendActionBar(player, Messages.msg("cancelled-spell")
                                         .replace("%spell%", entitySpell.getSpell().getSpellName()));
                             }
                         } else {
-                            Utils.sendActionBar(player, Messages.msg("cancelled-spell"));
+                            Utils.sendActionBar(player, Messages.msg("disabled-spell"));
                         }
                     } else {
                         Utils.sendActionBar(player, Messages.msg("cooldown")
@@ -165,16 +167,20 @@ public class SpellListener implements Listener {
     @EventHandler
     private void onSwitch(PlayerItemHeldEvent e) {
         Player player = e.getPlayer();
-        if (castingSpell.get(player).isProlonged()) {
+        if (castingSpell.containsKey(player)) {
+            if (castingSpell.get(player).isProlonged()) {
 
+            }
         }
     }
 
     @EventHandler
     private void offhandSwap(PlayerSwapHandItemsEvent e) {
         Player player = e.getPlayer();
-        if (castingSpell.get(player).isProlonged()) {
+        if (castingSpell.containsKey(player)) {
+            if (castingSpell.get(player).isProlonged()) {
 
+            }
         }
     }
 

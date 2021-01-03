@@ -22,9 +22,6 @@ import java.util.List;
 public class CastPossession extends Prolonged implements EntitySpell {
     private final Elementals plugin;
     private final List<Player> casting = new ArrayList<>();
-    @Getter
-    @ConfigValue("possession-enabled")
-    private boolean enabled = true;
 
     @Override
     public boolean onCast(Player player, Entity entity) {

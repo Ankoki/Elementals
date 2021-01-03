@@ -14,9 +14,6 @@ import redempt.redlib.configmanager.annotations.ConfigValue;
 @RequiredArgsConstructor
 public class CastRise implements GenericSpell {
     private final Elementals plugin;
-    @Getter
-    @ConfigValue("rise-enabled")
-    private boolean enabled = true;
 
     @Override
     public boolean onCast(Player player) {

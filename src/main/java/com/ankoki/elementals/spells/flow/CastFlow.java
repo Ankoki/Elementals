@@ -20,9 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CastFlow extends Prolonged implements GenericSpell {
     private final Elementals plugin;
-    @Getter
-    @ConfigValue("flow-enabled")
-    private boolean enabled = true;
     private final List<Player> casting = new ArrayList<>();
 
     @Override

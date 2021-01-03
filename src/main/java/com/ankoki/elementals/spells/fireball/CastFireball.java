@@ -13,9 +13,6 @@ import redempt.redlib.configmanager.annotations.ConfigValue;
 @RequiredArgsConstructor
 public class CastFireball implements GenericSpell {
     private final Elementals plugin;
-    @Getter
-    @ConfigValue("fireball-enabled")
-    private boolean enabled = true;
 
     @Override
     public boolean onCast(Player player) {

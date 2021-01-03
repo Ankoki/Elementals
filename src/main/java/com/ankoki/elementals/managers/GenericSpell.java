@@ -7,5 +7,4 @@ public interface GenericSpell {
     boolean onCast(Player player);
     int getCooldown();
     Spell getSpell();
-    boolean isEnabled();
 }

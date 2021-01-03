@@ -8,5 +8,4 @@ public interface EntitySpell {
     boolean onCast(Player player, Entity entity);
     int getCooldown();
     Spell getSpell();
-    boolean isEnabled();
 }

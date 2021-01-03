@@ -53,7 +53,8 @@ public class ElementalsCmd {
     @CommandHook("reload")
     public void reloadHook(CommandSender sender) {
         Messages.load(plugin);
-        plugin.getConfigManager().save();
+        plugin.getConfigManager().load();
+        plugin.reloadSpells();
         sender.sendMessage(Messages.msg("on-reload"));
     }
 }

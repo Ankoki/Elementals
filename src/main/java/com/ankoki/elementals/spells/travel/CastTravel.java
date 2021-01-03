@@ -13,9 +13,6 @@ import redempt.redlib.configmanager.annotations.ConfigValue;
 @RequiredArgsConstructor
 public class CastTravel implements GenericSpell {
     private final Elementals plugin;
-    @Getter
-    @ConfigValue("travel-enabled")
-    private boolean enabled = true;
 
     @Override
     public boolean onCast(Player player) {
