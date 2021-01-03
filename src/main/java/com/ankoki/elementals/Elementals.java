@@ -15,9 +15,12 @@ import com.ankoki.elementals.spells.possesion.CastPossession;
 import com.ankoki.elementals.spells.rise.CastRise;
 import com.ankoki.elementals.spells.travel.CastTravel;
 import com.ankoki.elementals.utils.Utils;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.Getter;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -72,38 +75,32 @@ public class Elementals extends JavaPlugin {
             pluginManager.disablePlugin(this);
             return;
         }
+        logger.info(description.getName() + "[v" + description.getVersion() + "] is being enabled...");
+        logger.info("Loading config and messages...");
         Messages.load(this);
-        this.registerCommand(); /*This is up here so the load is pretty coz this sends a warning mind ur business*/
-        logger.info("__________________________________________________________");
-        logger.info(" ");
-        logger.info("                " + description.getName() + "[v" + description.getVersion() + "]");
-
-        logger.info(" ");
-        logger.info("You are running Minecraft " + this.getServer().getVersion());
-        logger.info(" ");
-        logger.info("    > Loading config...");
         Collections.addAll(enabledSpells, Spell.values());
         this.loadConfiguration();
-        logger.info("    > Registering listeners...");
+        logger.info("Registering listeners...");
         SpellListener spellListener = new SpellListener(this);
         this.registerListeners(new WaterSpread(this),
                 spellListener,
                 new EventManager(),
                 new JoinQuitListener(),
                 new ProjectileHit());
-        logger.info("    > Registering spells...");
+        logger.info("Registering spells...");
         this.registerGenericSpells(new CastFlow(this, spellListener),
                 new CastTravel(this),
                 new CastRise(this),
                 new CastFireball(this));
         this.registerEntitySpells(new CastPossession(this, spellListener));
-        logger.info("    > Registering commands...");
-        logger.info("    > Loading NBTAPI...");
-        logger.info(" ");
-
+        logger.info("Registering commands...");
+        this.registerCommand();
+        logger.info("Loading NBTAPI...");
+        NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
+        testItem.addCompound("test");
+        testItem.setInteger("testInt", 1);
         logger.info(String.format("%s v%s was enabled in %.2f seconds (" + (System.currentTimeMillis() - start) + "ms)\n",
                 description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
-        logger.info("__________________________________________________________");
     }
 
     @Override
