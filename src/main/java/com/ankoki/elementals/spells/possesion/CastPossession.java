@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.possesion;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.managers.EntitySpell;
 import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
@@ -21,24 +22,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CastPossession extends Prolonged implements EntitySpell {
     private final Elementals plugin;
-    private final List<Player> casting = new ArrayList<>();
+    private final SpellListener listener;
 
     @Override
     public boolean onCast(Player player, Entity entity) {
         if (entity instanceof Animals) {
-            ((Animals) entity).setCollidable(false);
-            casting.add(player);
+            ((Animals) entity).getCollidableExemptions().add(player.getUniqueId());
+            player.getCollidableExemptions().add(entity.getUniqueId());
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     Player p = Bukkit.getPlayer(player.getUniqueId());
                     if (p == null || !player.isOnline()) {
-                        casting.remove(player);
+                        if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                            player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                        }
+                        listener.removeCaster(player);
                         this.cancel();
                         return;
                     }
                     if (entity.isDead()) {
-                        casting.remove(player);
+                        listener.removeCaster(player);
                         Utils.sendActionBar(player, Messages.msg("on-stop-cast")
                                 .replace("%spell%", "Possession"));
                         if (p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
@@ -47,7 +51,7 @@ public class CastPossession extends Prolonged implements EntitySpell {
                         this.cancel();
                         return;
                     }
-                    if (!casting.contains(p)) {
+                    if (!listener.isCasting(p)) {
                         if (p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }
@@ -65,11 +69,6 @@ public class CastPossession extends Prolonged implements EntitySpell {
         }
         Utils.sendActionBar(player, "&eYou need to be looking at an animal!");
         return false;
-    }
-
-    @Override
-    public void onCancel(Player player) {
-        casting.remove(player);
     }
 
     @Override

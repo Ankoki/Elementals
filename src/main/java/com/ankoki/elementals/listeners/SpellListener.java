@@ -1,8 +1,9 @@
 package com.ankoki.elementals.listeners;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.events.EntitySpellCastEvent;
 import com.ankoki.elementals.events.RightClickEvent;
-import com.ankoki.elementals.events.SpellCastEvent;
+import com.ankoki.elementals.events.GenericSpellCastEvent;
 import com.ankoki.elementals.managers.*;
 import com.ankoki.elementals.utils.Utils;
 import lombok.RequiredArgsConstructor;
@@ -38,19 +39,21 @@ public class SpellListener implements Listener {
                 if (wand.hasSpell(genericSpell.getSpell())) {
                     if (cooldownExpired(player, genericSpell.getSpell(), genericSpell.getCooldown())) {
                         if (plugin.spellEnabled(genericSpell.getSpell())) {
-                            SpellCastEvent event = new SpellCastEvent(player, genericSpell.getSpell(), genericSpell.getCooldown());
+                            GenericSpellCastEvent event = new GenericSpellCastEvent(player, genericSpell.getSpell(),
+                                    genericSpell.getCooldown());
                             Bukkit.getPluginManager().callEvent(event);
                             if (!event.isCancelled()) {
+                                e.setCancelled(true);
                                 if (genericSpell instanceof Prolonged) {
-                                    if (!castingSpell.containsKey(player)) {
+                                    if (!isCasting(player)) {
                                         if (genericSpell.onCast(player)) {
-                                            castingSpell.put(player, genericSpell.getSpell());
+                                            addCaster(player, genericSpell.getSpell());
                                             Utils.sendActionBar(player, Messages.msg("on-cast")
                                                     .replace("%spell%", genericSpell.getSpell().getSpellName()));
                                         }
                                     } else {
                                         ((Prolonged) genericSpell).onCancel(player);
-                                        castingSpell.remove(player);
+                                        removeCaster(player);
                                         Utils.sendActionBar(player, Messages.msg("on-stop-cast")
                                                 .replace("%spell%", genericSpell.getSpell().getSpellName()));
                                     }
@@ -68,7 +71,8 @@ public class SpellListener implements Listener {
                                         .replace("%spell%", genericSpell.getSpell().getSpellName()));
                             }
                         } else {
-                            Utils.sendActionBar(player, Messages.msg("disabled-spell"));
+                            Utils.sendActionBar(player, Messages.msg("disabled-spell")
+                                    .replace("%spell%", genericSpell.getSpell().getSpellName()));
                         }
                     } else {
                         Utils.sendActionBar(player, Messages.msg("cooldown")
@@ -84,7 +88,7 @@ public class SpellListener implements Listener {
                         if (castingSpell.get(player) == entitySpell.getSpell()) {
                             if (entitySpell instanceof Prolonged) {
                                 ((Prolonged) entitySpell).onCancel(player);
-                                castingSpell.remove(player);
+                                removeCaster(player);
                                 Utils.sendActionBar(player, Messages.msg("on-stop-cast")
                                         .replace("%spell%", entitySpell.getSpell().getSpellName()));
                             }
@@ -106,43 +110,51 @@ public class SpellListener implements Listener {
             for (EntitySpell entitySpell : plugin.getEntitySpells()) {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(entitySpell.getSpell())) {
-                    if (cooldownExpired(player, entitySpell.getSpell(), entitySpell.getCooldown())) {
-                        if (plugin.spellEnabled(entitySpell.getSpell())) {
-                            SpellCastEvent event = new SpellCastEvent(player, entitySpell.getSpell(), entitySpell.getCooldown());
-                            Bukkit.getPluginManager().callEvent(event);
-                            if (!event.isCancelled()) {
-                                if (entitySpell instanceof Prolonged) {
-                                    if (!castingSpell.containsKey(player)) {
-                                        if (entitySpell.onCast(player, entity)) {
-                                            castingSpell.put(player, entitySpell.getSpell());
-                                            Utils.sendActionBar(player, Messages.msg("on-cast")
+                    if (!isCasting(player)) {
+                        if (cooldownExpired(player, entitySpell.getSpell(), entitySpell.getCooldown())) {
+                            if (plugin.spellEnabled(entitySpell.getSpell())) {
+                                EntitySpellCastEvent event = new EntitySpellCastEvent(player, entity,
+                                        entitySpell.getSpell(), entitySpell.getCooldown());
+                                Bukkit.getPluginManager().callEvent(event);
+                                if (!event.isCancelled()) {
+                                    e.setCancelled(true);
+                                    if (entitySpell instanceof Prolonged) {
+                                        if (!isCasting(player)) {
+                                            if (entitySpell.onCast(player, entity)) {
+                                                addCaster(player, entitySpell.getSpell());
+                                                Utils.sendActionBar(player, Messages.msg("on-cast")
+                                                        .replace("%spell%", entitySpell.getSpell()
+                                                                .getSpellName()));
+                                            }
+                                        } else {
+                                            ((Prolonged) entitySpell).onCancel(player);
+                                            removeCaster(player);
+                                            Utils.sendActionBar(player, Messages.msg("on-stop-cast")
                                                     .replace("%spell%", entitySpell.getSpell().getSpellName()));
                                         }
-                                    } else {
-                                        ((Prolonged) entitySpell).onCancel(player);
-                                        castingSpell.remove(player);
-                                        Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                                                .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                                        return;
                                     }
-                                    return;
-                                }
-                                if (entitySpell.onCast(player, entity)) {
-                                    cooldown.put(entitySpell.getSpell(), System.currentTimeMillis());
-                                    spellCooldown.put(player, cooldown);
-                                    Utils.sendActionBar(player, Messages.msg("on-cast")
+                                    if (entitySpell.onCast(player, entity)) {
+                                        cooldown.put(entitySpell.getSpell(), System.currentTimeMillis());
+                                        spellCooldown.put(player, cooldown);
+                                        Utils.sendActionBar(player, Messages.msg("on-cast")
+                                                .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                                        return;
+                                    }
+                                } else {
+                                    Utils.sendActionBar(player, Messages.msg("cancelled-spell")
                                             .replace("%spell%", entitySpell.getSpell().getSpellName()));
-                                    return;
                                 }
                             } else {
-                                Utils.sendActionBar(player, Messages.msg("cancelled-spell")
+                                Utils.sendActionBar(player, Messages.msg("disabled-spell")
                                         .replace("%spell%", entitySpell.getSpell().getSpellName()));
                             }
                         } else {
-                            Utils.sendActionBar(player, Messages.msg("disabled-spell"));
+                            Utils.sendActionBar(player, Messages.msg("cooldown")
+                                    .replace("%cooldown%", Integer.toString(entitySpell.getCooldown())));
                         }
                     } else {
-                        Utils.sendActionBar(player, Messages.msg("cooldown")
-                                .replace("%cooldown%", Integer.toString(entitySpell.getCooldown())));
+                        Utils.sendActionBar(player, Messages.msg("already-casting"));
                     }
                 }
             }
@@ -169,7 +181,9 @@ public class SpellListener implements Listener {
         Player player = e.getPlayer();
         if (castingSpell.containsKey(player)) {
             if (castingSpell.get(player).isProlonged()) {
-
+                removeCaster(player);
+                Utils.sendActionBar(player, Messages.msg("on-stop-cast")
+                        .replace("%spell%", castingSpell.get(player).getSpellName()));
             }
         }
     }
@@ -177,11 +191,24 @@ public class SpellListener implements Listener {
     @EventHandler
     private void offhandSwap(PlayerSwapHandItemsEvent e) {
         Player player = e.getPlayer();
-        if (castingSpell.containsKey(player)) {
+        if (isCasting(player)) {
             if (castingSpell.get(player).isProlonged()) {
-
+                removeCaster(player);
+                Utils.sendActionBar(player, Messages.msg("on-stop-cast")
+                        .replace("%spell%", castingSpell.get(player).getSpellName()));
             }
         }
     }
 
+    public void removeCaster(Player player) {
+        castingSpell.remove(player);
+    }
+
+    public void addCaster(Player player, Spell spell) {
+        castingSpell.put(player, spell);
+    }
+
+    public boolean isCasting(Player player) {
+        return castingSpell.containsKey(player);
+    }
 }

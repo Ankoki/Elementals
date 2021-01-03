@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.flow;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CastFlow extends Prolonged implements GenericSpell {
     private final Elementals plugin;
+    private final SpellListener listener;
     private final List<Player> casting = new ArrayList<>();
 
     @Override

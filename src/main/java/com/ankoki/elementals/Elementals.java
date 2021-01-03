@@ -1,7 +1,7 @@
 package com.ankoki.elementals;
 
 import com.ankoki.elementals.commands.ElementalsCmd;
-import com.ankoki.elementals.listeners.JoinListener;
+import com.ankoki.elementals.listeners.JoinQuitListener;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.EntitySpell;
 import com.ankoki.elementals.managers.Spell;
@@ -31,6 +31,7 @@ import redempt.redlib.configmanager.annotations.ConfigValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -47,7 +48,8 @@ public class Elementals extends JavaPlugin {
     @Getter
     private ConfigManager configManager;
     @Getter
-    private List<Spell> enabledSpells = null;
+    @ConfigValue("enabled-spells")
+    private List<Spell> enabledSpells = ConfigManager.list(Spell.class);
 
     @Override
     public void onEnable() {
@@ -79,19 +81,21 @@ public class Elementals extends JavaPlugin {
         logger.info("You are running Minecraft " + this.getServer().getVersion());
         logger.info(" ");
         logger.info("    > Loading config...");
+        Collections.addAll(enabledSpells, Spell.values());
         this.loadConfiguration();
         logger.info("    > Registering listeners...");
+        SpellListener spellListener = new SpellListener(this);
         this.registerListeners(new WaterSpread(this),
-                new SpellListener(this),
+                spellListener,
                 new EventManager(),
-                new JoinListener(),
+                new JoinQuitListener(),
                 new ProjectileHit());
         logger.info("    > Registering spells...");
-        this.registerGenericSpells(new CastFlow(this),
+        this.registerGenericSpells(new CastFlow(this, spellListener),
                 new CastTravel(this),
                 new CastRise(this),
                 new CastFireball(this));
-        this.registerEntitySpells(new CastPossession(this));
+        this.registerEntitySpells(new CastPossession(this, spellListener));
         logger.info("    > Registering commands...");
         this.registerCommand();
         logger.info("    > Loading NBTAPI...");
@@ -163,35 +167,12 @@ public class Elementals extends JavaPlugin {
         flowLocations.remove(location);
     }
 
-    //ConfigValues and all handlers
-    @ConfigValue("fireball-enabled")
-    private boolean fireballEnabled = true;
-    @ConfigValue("flow-enabled")
-    private boolean flowEnabled = true;
-    @ConfigValue("possession-enabled")
-    private boolean possessionEnabled = true;
-    @ConfigValue("rise-enabled")
-    private boolean riseEnabled = true;
-    @ConfigValue("travel-enabled")
-    private boolean travelEnabled = true;
-
     private void loadConfiguration() {
         configManager = new ConfigManager(this)
+                .addConverter(Spell.class, Spell::valueOf, Spell::toString)
                 .register(this)
                 .saveDefaults()
                 .load();
-        reloadSpells();
-    }
-
-    public void reloadSpells() {
-        List<Spell> tempList = new ArrayList<>();
-        if (fireballEnabled) tempList.add(Spell.FIREBALL);
-        if (flowEnabled) tempList.add(Spell.FLOW);
-        if (possessionEnabled) tempList.add(Spell.POSSESSION);
-        if (riseEnabled) tempList.add(Spell.RISE);
-        if (travelEnabled) tempList.add(Spell.TRAVEL);
-        enabledSpells = null;
-        enabledSpells = tempList;
     }
 
     public boolean spellEnabled(Spell spell) {

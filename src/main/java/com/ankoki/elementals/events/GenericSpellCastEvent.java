@@ -10,7 +10,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @RequiredArgsConstructor
-public class SpellCastEvent extends Event implements Cancellable {
+public class GenericSpellCastEvent extends Event implements Cancellable {
 
     @Getter
     @Setter

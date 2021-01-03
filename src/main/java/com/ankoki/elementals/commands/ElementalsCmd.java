@@ -23,10 +23,14 @@ public class ElementalsCmd {
 
     @CommandHook("enchant")
     public void enchantHook(Player player, Spell spell, ItemStack heldItem) {
-        ItemManager wand = new ItemManager(heldItem);
-        wand.addSpell(spell);
-        player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.getItem());
-        player.sendMessage(Messages.msg("on-enchant").replace("%spell%", spell.getSpellName()));
+        if (heldItem.getType().isItem()) {
+            ItemManager wand = new ItemManager(heldItem);
+            wand.addSpell(spell);
+            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.getItem());
+            player.sendMessage(Messages.msg("on-enchant").replace("%spell%", spell.getSpellName()));
+        } else {
+            player.sendMessage(Messages.msg("enchant-blocks"));
+        }
     }
 
     @CommandHook("disenchant")
@@ -54,7 +58,6 @@ public class ElementalsCmd {
     public void reloadHook(CommandSender sender) {
         Messages.load(plugin);
         plugin.getConfigManager().load();
-        plugin.reloadSpells();
         sender.sendMessage(Messages.msg("on-reload"));
     }
 }
