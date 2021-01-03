@@ -181,9 +181,9 @@ public class SpellListener implements Listener {
         Player player = e.getPlayer();
         if (castingSpell.containsKey(player)) {
             if (castingSpell.get(player).isProlonged()) {
-                removeCaster(player);
                 Utils.sendActionBar(player, Messages.msg("on-stop-cast")
                         .replace("%spell%", castingSpell.get(player).getSpellName()));
+                removeCaster(player);
             }
         }
     }
@@ -193,9 +193,9 @@ public class SpellListener implements Listener {
         Player player = e.getPlayer();
         if (isCasting(player)) {
             if (castingSpell.get(player).isProlonged()) {
-                removeCaster(player);
                 Utils.sendActionBar(player, Messages.msg("on-stop-cast")
                         .replace("%spell%", castingSpell.get(player).getSpellName()));
+                removeCaster(player);
             }
         }
     }

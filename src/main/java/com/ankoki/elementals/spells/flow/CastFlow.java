@@ -6,40 +6,34 @@ import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import redempt.redlib.commandmanager.Messages;
-import redempt.redlib.configmanager.annotations.ConfigValue;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class CastFlow extends Prolonged implements GenericSpell {
     private final Elementals plugin;
     private final SpellListener listener;
-    private final List<Player> casting = new ArrayList<>();
 
     @Override
     public boolean onCast(Player player) {
         if (Utils.canSee(player, 10, Material.WATER)) {
-            casting.add(player);
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     Location targetBlock = player.getTargetBlock(null, 4).getLocation();
                     if (targetBlock.getBlock().getType() != Material.AIR &&
                         targetBlock.getBlock().getType() != Material.WATER) {
-                        casting.remove(player);
+                        listener.removeCaster(player);
                         Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
                         this.cancel();
                         return;
-                    } else if (!casting.contains(player)) {
-                        casting.remove(player);
+                    }
+                    if (!listener.isCasting(player)) {
+                        listener.removeCaster(player);
                         Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
                         this.cancel();
                         return;
@@ -64,11 +58,6 @@ public class CastFlow extends Prolonged implements GenericSpell {
             Utils.sendActionBar(player, Messages.msg("flow-no-water"));
         }
         return false;
-    }
-
-    @Override
-    public void onCancel(Player player) {
-        casting.remove(player);
     }
 
     @Override
