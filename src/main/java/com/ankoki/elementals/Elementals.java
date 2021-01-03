@@ -75,7 +75,7 @@ public class Elementals extends JavaPlugin {
             pluginManager.disablePlugin(this);
             return;
         }
-        logger.info(description.getName() + " v" + description.getVersion() + " is being enabled...");
+
         //Loading config and messages
         Messages.load(this);
         Collections.addAll(enabledSpells, Spell.values());
