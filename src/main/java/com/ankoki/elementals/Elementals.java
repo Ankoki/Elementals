@@ -73,7 +73,7 @@ public class Elementals extends JavaPlugin {
             return;
         }
         Messages.load(this);
-
+        this.registerCommand(); /*This is up here so the load is pretty coz this sends a warning mind ur business*/
         logger.info("__________________________________________________________");
         logger.info(" ");
         logger.info("                " + description.getName() + "[v" + description.getVersion() + "]");
@@ -98,7 +98,6 @@ public class Elementals extends JavaPlugin {
                 new CastFireball(this));
         this.registerEntitySpells(new CastPossession(this, spellListener));
         logger.info("    > Registering commands...");
-        this.registerCommand();
         logger.info("    > Loading NBTAPI...");
         logger.info(" ");
 
