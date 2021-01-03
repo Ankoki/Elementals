@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum Spell {
-    TRAVEL("travel", 0),
-    FLOW("flow", 1),
-    RISE("rise", 2);
+    TRAVEL("Travel", 3730),
+    FLOW("Flow", 3731),
+    RISE("Rise", 3732);
 
     @Getter
     private final String spellName;

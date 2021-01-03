@@ -7,4 +7,5 @@ public interface Castable {
     boolean onCast(Player player);
     int getCooldown();
     Spell getSpell();
+    boolean isEnabled();
 }

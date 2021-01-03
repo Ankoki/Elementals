@@ -4,14 +4,19 @@ import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.Castable;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import redempt.redlib.configmanager.annotations.ConfigValue;
 
 @RequiredArgsConstructor
 public class CastRise implements Castable {
     private final Elementals plugin;
+    @Getter
+    @ConfigValue("rise-enabled")
+    private boolean enabled = true;
 
     @Override
     public boolean onCast(Player player) {

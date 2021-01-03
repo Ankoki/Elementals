@@ -41,11 +41,18 @@ public class ElementalsCmd {
 
     @CommandHook("information")
     public void informationHook(CommandSender sender) {
-        sender.sendMessage(Utils.coloured("&6৺  &e&nElementals\n\n" +
+        sender.sendMessage(Utils.coloured("&6৺  &e&nElementals\n" + "\n" +
                             "&7    Elementals is a plugin which is developed for\n" +
                             "&7    anyone who enjoys the magical side of anything.\n" +
                             "&7    We have multiple spells which players can use and\n" +
                             "&7    we will continue to add ways to give them to people,\n" +
                             "&7    and different spells, primarily based on user feedback."));
+    }
+
+    @CommandHook("reload")
+    public void reloadHook(CommandSender sender) {
+        Messages.load(plugin);
+        plugin.getConfigManager().load();
+        sender.sendMessage(Messages.msg("on-reload"));
     }
 }

@@ -1,6 +1,7 @@
 package com.ankoki.elementals;
 
 import com.ankoki.elementals.commands.ElementalsCmd;
+import com.ankoki.elementals.listeners.JoinListener;
 import com.ankoki.elementals.managers.Castable;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.spells.flow.WaterSpread;
@@ -9,8 +10,10 @@ import com.ankoki.elementals.managers.EventManager;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.spells.rise.CastRise;
 import com.ankoki.elementals.spells.travel.CastTravel;
+import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -20,18 +23,23 @@ import redempt.redlib.commandmanager.ArgType;
 import redempt.redlib.commandmanager.CommandParser;
 import redempt.redlib.commandmanager.ContextProvider;
 import redempt.redlib.commandmanager.Messages;
+import redempt.redlib.configmanager.ConfigManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Elementals extends JavaPlugin {
     @Getter
     private final List<Castable> castableSpells = new ArrayList<>();
     private PluginDescriptionFile description;
     private PluginManager pluginManager;
+    private Logger logger;
     @Getter
     private String version;
+    @Getter
+    private ConfigManager configManager;
 
     @Override
     public void onEnable() {
@@ -39,40 +47,35 @@ public class Elementals extends JavaPlugin {
         Messages.load(this);
         pluginManager = this.getServer().getPluginManager();
         description = this.getDescription();
+        logger = this.getLogger();
         version = this.description.getVersion();
 
         if (!dependencyCheck()) {
-            System.out.println(" # # # # # # # # # # # # # # #");
-            System.out.println(" # ");
-            System.out.println(" # Dependency RedLib was not found!");
-            System.out.println(" # Have you got it installed?");
-            System.out.println(" # ");
-            System.out.println(" # # # # # # # # # # # # # # #");
+            logger.severe(" # # # # # # # # # # # # # # #");
+            logger.severe(" # ");
+            logger.severe(" # Dependency RedLib was not found or outdated!");
+            logger.severe(" # Check you have it installed or updated!");
+            logger.severe(" # Disabling...");
+            logger.severe(" # ");
+            logger.severe(" # # # # # # # # # # # # # # #");
             pluginManager.disablePlugin(this);
             return;
         }
-
-        Plugin redLib = pluginManager.getPlugin("RedLib");
-        assert redLib != null;
-        if (!versionChecker(redLib, 2, 0)) {
-            System.out.println(" # # # # # # # # # # # # # # #");
-            System.out.println(" # ");
-            System.out.println(" # Dependency RedLib is outdated!");
-            System.out.println(" # Update to the latest version!");
-            System.out.println(" # ");
-            System.out.println(" # # # # # # # # # # # # # # #");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
-        registerListeners(new WaterSpread(this),
+        logger.info("Registering listeners...");
+        this.registerListeners(new WaterSpread(this),
                 new SpellListener(this),
-                new EventManager());
-        registerSpells(new CastFlow(this),
+                new EventManager(),
+                new JoinListener());
+        logger.info("Registering spells...");
+        this.registerSpells(new CastFlow(this),
                 new CastTravel(this),
                 new CastRise(this));
-        registerCommand();
-        System.out.println(String.format("%s v%s was enabled in %.2f seconds",
+        logger.info("Registering commands...");
+        this.registerCommand();
+        logger.info("Loading config...");
+        this.loadConfiguration();
+
+        logger.info(String.format("%s v%s was enabled in %.2f seconds",
                 description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
     }
 
@@ -81,8 +84,18 @@ public class Elementals extends JavaPlugin {
         long end = System.currentTimeMillis();
         pluginManager = null;
         description = null;
+        logger = null;
+        version = null;
         System.out.println(String.format("Elementals was disabled in %.2f seconds",
                 (float) System.currentTimeMillis() - end));
+    }
+
+    private void loadConfiguration() {
+        configManager = new ConfigManager(this)
+                .register(this)
+                .saveDefaults()
+                .load()
+                .save();
     }
 
     private void registerSpells(Castable... castables) {
@@ -109,22 +122,9 @@ public class Elementals extends JavaPlugin {
         Plugin redLib = pluginManager.getPlugin("RedLib");
         if (redLib == null) {
             return false;
-        } else return redLib.isEnabled();
-    }
-
-    private boolean versionChecker(Plugin plugin, int first, int second, int third) {
-        first *= 100;
-        second *= 10;
-        int pluginVer = Integer.parseInt(plugin.getDescription().getVersion().replace(".", ""));
-        int required = first + second + third;
-        return pluginVer >= required;
-    }
-
-    private boolean versionChecker(Plugin plugin, int first, int second) {
-        first *= 10;
-        int pluginVer = Integer.parseInt(plugin.getDescription().getVersion().replace(".", ""));
-        int required = first + second;
-        return pluginVer >= required;
+        } else if (!redLib.isEnabled()) {
+            return false;
+        } else return Utils.checkPluginVersion(redLib, 2, 0);
     }
 
     private static Spell getSpell(String s) {
@@ -140,8 +140,17 @@ public class Elementals extends JavaPlugin {
     public void addFlowLocation(Location location) {
         flowLocations.add(location);
     }
-
     public void removeFlowLocation(Location location) {
         flowLocations.remove(location);
     }
+
+    @Getter
+    private final List<Player> casting = new ArrayList<>();
+    public void addCaster(Player player) {
+        casting.add(player);
+    }
+    public void removeCaster(Player player) {
+        casting.remove(player);
+    }
+    public boolean isCasting(Player player) { return casting.contains(player); }
 }

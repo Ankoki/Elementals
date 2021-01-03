@@ -4,13 +4,18 @@ import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.Castable;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import redempt.redlib.commandmanager.Messages;
+import redempt.redlib.configmanager.annotations.ConfigValue;
 
 @RequiredArgsConstructor
 public class CastTravel implements Castable {
     private final Elementals plugin;
+    @Getter
+    @ConfigValue("travel-enabled")
+    private boolean enabled = true;
 
     @Override
     public boolean onCast(Player player) {

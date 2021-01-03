@@ -1,10 +1,13 @@
 command-message: &6৺ &eYou are running Elementals v%version%
 on-enchant: &6৺ &eYou have enchanted this wand with %spell%
 on-disenchant: &6৺ &eYou have removed all spells from this wand
+on-reload: &6৺ &eYou have reloaded Elementals!
 no-spells: &6৺ &eThis wand has no spells!
 on-cast: &eYou are now casting %spell%
 cooldown: &eYou can only cast this spell every %cooldown%&e seconds!
 cancelled-spell: &eYour spell was cancelled!
+disabled-spell: &e%spell% is disabled!
 flow-interupted: &eYou have stopped casting flow!
 flow-no-water: &eThis spell requires water!
 travel-solid: &eYou can only teleport to solid blocks!
+op-join: &6৺ &eTo change elemental messages, go to messages.txt in plugins/RedLib and plugins/Elementals

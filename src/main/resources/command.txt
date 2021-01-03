@@ -20,4 +20,9 @@ elementals {
         hook information
         help Information about Elementals
     }
+    reload {
+        permission elementals.admin
+        hook reload
+        help Reloads the messages.txt
+    }
 }

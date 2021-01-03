@@ -4,26 +4,38 @@ import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.Castable;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import redempt.redlib.commandmanager.Messages;
+import redempt.redlib.configmanager.annotations.ConfigValue;
 
 @RequiredArgsConstructor
 public class CastFlow implements Castable {
     private final Elementals plugin;
+    @Getter
+    @ConfigValue("flow-enabled")
+    private boolean enabled = true;
 
     @Override
     public boolean onCast(Player player) {
-        if (Utils.isLookingAt(player, Material.WATER)) {
+        if (Utils.canSee(player, 10, Material.WATER)) {
+            plugin.addCaster(player);
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!Utils.canSee(player, Material.WATER, 4) &&
-                            !Utils.canSee(player, Material.AIR, 4)) {
+                    if (!Utils.canSee(player, 4, Material.WATER) &&
+                            !Utils.canSee(player, 4, Material.AIR)) {
                         this.cancel();
+                        plugin.removeCaster(player);
+                        Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
+                        return;
+                    } else if (!plugin.isCasting(player)) {
+                        this.cancel();
+                        plugin.removeCaster(player);
                         Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
                         return;
                     }

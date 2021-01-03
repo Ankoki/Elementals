@@ -13,9 +13,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import redempt.redlib.commandmanager.Messages;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class SpellListener implements Listener {
 
     private final WeakHashMap<Spell, WeakHashMap<Player, Long>> spellCooldown = new WeakHashMap<>();
     private final WeakHashMap<Player, Long> cooldown = new WeakHashMap<>();
+    private final List<Player> casting = new ArrayList<>();
 
     @EventHandler
     private void onRightClick(RightClickEvent e) {
@@ -44,11 +49,15 @@ public class SpellListener implements Listener {
                         SpellCastEvent event = new SpellCastEvent(player, castable.getSpell(), castable.getCooldown());
                         Bukkit.getPluginManager().callEvent(event);
                         if (!event.isCancelled()) {
-                            if (castable.onCast(player)) {
-                                cooldown.put(player, System.currentTimeMillis());
-                                spellCooldown.put(castable.getSpell(), cooldown);
-                                Utils.sendActionBar(player, Messages.msg("on-cast").replace("%spell%", castable.getSpell().getSpellName()));
-                                return;
+                            if (castable.isEnabled()) {
+                                if (castable.onCast(player)) {
+                                    cooldown.put(player, System.currentTimeMillis());
+                                    spellCooldown.put(castable.getSpell(), cooldown);
+                                    Utils.sendActionBar(player, Messages.msg("on-cast").replace("%spell%", castable.getSpell().getSpellName()));
+                                    return;
+                                }
+                            } else {
+                                Utils.sendActionBar(player, Messages.msg("disabled-spell").replace("%spell%", castable.getSpell().getSpellName()));
                             }
                         } else {
                             Utils.sendActionBar(player, Messages.msg("cancelled-spell"));
@@ -60,4 +69,25 @@ public class SpellListener implements Listener {
             }
         }
     }
+
+    /*
+     * These events are for the spells which cast for an extended amount
+     * of time, such as Flow, and rely on holding the same wand throughout.
+     */
+    @EventHandler
+    private void onSwitch(PlayerItemHeldEvent e) {
+        Player player = e.getPlayer();
+        if (plugin.isCasting(player)) {
+            plugin.removeCaster(player);
+        }
+    }
+
+    @EventHandler
+    private void offhandSwap(PlayerSwapHandItemsEvent e) {
+        Player player = e.getPlayer();
+        if (plugin.isCasting(player)) {
+            plugin.removeCaster(player);
+        }
+    }
+
 }

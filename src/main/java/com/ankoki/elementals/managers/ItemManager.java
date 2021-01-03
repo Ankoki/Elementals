@@ -11,15 +11,15 @@ public class ItemManager {
 
     public ItemManager addSpell(Spell spell) {
         NBTItem wand = new NBTItem(item);
-        wand.addCompound(spell.getSpellName());
+        wand.addCompound(Integer.toString(spell.getId()));
         this.wand = wand.getItem();
         return this;
     }
 
     public ItemManager removeSpell(Spell spell) {
         NBTItem wand = new NBTItem(item);
-        if (wand.hasKey(spell.getSpellName())) {
-            wand.removeKey(spell.getSpellName());
+        if (wand.hasKey(Integer.toString(spell.getId()))) {
+            wand.removeKey("" + spell.getId());
         }
         this.wand = wand.getItem();
         return this;
@@ -28,8 +28,8 @@ public class ItemManager {
     public ItemManager removeSpells() {
         NBTItem wand = new NBTItem(item);
         for (Spell spell : Spell.values()) {
-            if (wand.hasKey(spell.getSpellName())) {
-                wand.removeKey(spell.getSpellName());
+            if (wand.hasKey(Integer.toString(spell.getId()))) {
+                wand.removeKey(Integer.toString(spell.getId()));
             }
         }
         this.wand = wand.getItem();
@@ -39,7 +39,7 @@ public class ItemManager {
     public boolean hasSpell() {
         NBTItem wand = new NBTItem(item);
         for (Spell spell : Spell.values()) {
-            if (wand.hasKey(spell.getSpellName())) {
+            if (wand.hasKey(Integer.toString(spell.getId()))) {
                 return true;
             }
         }
@@ -47,7 +47,7 @@ public class ItemManager {
     }
 
     public boolean hasSpell(Spell spell) {
-        return new NBTItem(item).hasKey(spell.getSpellName());
+        return new NBTItem(item).hasKey(Integer.toString(spell.getId()));
     }
 
     public ItemStack getItem() {
