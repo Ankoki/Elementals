@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import redempt.redlib.commandmanager.Messages;
 
+@SuppressWarnings("ConstantConditions")
 @RequiredArgsConstructor
 public class CastFlow extends Prolonged implements GenericSpell {
     private final Elementals plugin;
@@ -38,6 +39,7 @@ public class CastFlow extends Prolonged implements GenericSpell {
                         this.cancel();
                         return;
                     }
+                    targetBlock.getWorld().getBlockAt(targetBlock);
                     targetBlock.getWorld()
                             .getBlockAt(targetBlock)
                             .setType(Material.WATER);

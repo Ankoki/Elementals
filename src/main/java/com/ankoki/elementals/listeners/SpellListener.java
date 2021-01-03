@@ -21,6 +21,7 @@ import redempt.redlib.commandmanager.Messages;
 
 import java.util.WeakHashMap;
 
+@SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class SpellListener implements Listener {
     private final Elementals plugin;

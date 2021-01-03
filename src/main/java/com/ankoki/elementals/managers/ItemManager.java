@@ -4,16 +4,16 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.inventory.ItemStack;
 
+@SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class ItemManager {
     private final ItemStack item;
     private ItemStack wand;
 
-    public ItemManager addSpell(Spell spell) {
+    public void addSpell(Spell spell) {
         NBTItem wand = new NBTItem(item);
         wand.addCompound(Integer.toString(spell.getId()));
         this.wand = wand.getItem();
-        return this;
     }
 
     public ItemManager removeSpell(Spell spell) {

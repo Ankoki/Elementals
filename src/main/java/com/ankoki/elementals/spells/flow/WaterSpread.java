@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 
+@SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class WaterSpread implements Listener {
     private final Elementals plugin;

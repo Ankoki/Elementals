@@ -3,12 +3,10 @@ package com.ankoki.elementals.spells.fireball;
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import redempt.redlib.configmanager.annotations.ConfigValue;
 
 @RequiredArgsConstructor
 public class CastFireball implements GenericSpell {

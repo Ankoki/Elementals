@@ -49,6 +49,7 @@ public class Elementals extends JavaPlugin {
     private ConfigManager configManager;
     @Getter
     @ConfigValue("enabled-spells")
+    @SuppressWarnings("FieldMayBeFinal")
     private List<Spell> enabledSpells = ConfigManager.list(Spell.class);
 
     @Override

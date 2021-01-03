@@ -4,12 +4,11 @@ import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import redempt.redlib.commandmanager.Messages;
-import redempt.redlib.configmanager.annotations.ConfigValue;
 
+@SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class CastTravel implements GenericSpell {
     private final Elementals plugin;

@@ -9,6 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+@SuppressWarnings("unused")
 public class EventManager implements Listener {
 
     @EventHandler

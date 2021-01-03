@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class ParticlesManager {
     private final Player player;
