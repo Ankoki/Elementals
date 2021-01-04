@@ -9,12 +9,17 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 @SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class ParticlesManager {
     private final Player player;
     private final Elementals plugin;
     private int duration = 0;
+    private double yValue = 0.1;
 
     /**
      * Spawns a cloud of redstone particles under the players feet,
@@ -62,14 +67,18 @@ public class ParticlesManager {
      * Spawns a series of rings around the player which go up
      * and has the player as the center.
      *
-     * @param times   The amount of times the ring will loop around
-     *                the player, and if reverse is true, it will count
-     *                up and down as one time.
+     * @param timeInTicks   The amount of time in ticks the ring will take before
+     *                      stopping the player, and if reverse is true, it will count
+     *                      up and down as one time.
      * @param reverse If reverse is true, the rings will go up and
      *                then down again around the player.
+     * @param colours  The colour you want the particles to be, they
+     *                will be randomised and can be as many as wanted
      */
-    public void spawnRings(int times, boolean reverse) {
-        duration = times;
+    public void spawnRings(int timeInTicks, boolean reverse, Color... colours) {
+        duration = timeInTicks;
+        List<Color> allColours = Arrays.asList(colours);
+        yValue = 0.1;
         if (reverse) {
             new BukkitRunnable() {
                 @Override
@@ -77,7 +86,33 @@ public class ParticlesManager {
                     if (duration == 0) {
                         this.cancel();
                     }
-                    duration--;
+                    Player updatedPlayer = Bukkit.getPlayer(player.getUniqueId());
+                    if (updatedPlayer != null) {
+                        Color randomColour = allColours.get(new Random().nextInt(allColours.size()));
+                        World world = updatedPlayer.getWorld();
+                        world.spawnParticle(Particle.REDSTONE,
+                                updatedPlayer.getLocation().subtract(0, yValue, 0.5), 5,
+                                new Particle.DustOptions(randomColour, 2));
+                        world.spawnParticle(Particle.REDSTONE,
+                                updatedPlayer.getLocation().subtract(0.5, yValue, 0),5,
+                                new Particle.DustOptions(randomColour, 2));
+                        world.spawnParticle(Particle.REDSTONE,
+                                updatedPlayer.getLocation().subtract(0.5, yValue, 0.5),5,
+                                new Particle.DustOptions(randomColour, 2));
+                        world.spawnParticle(Particle.REDSTONE,
+                                updatedPlayer.getLocation().add(0, -yValue, 0.5), 5,
+                                new Particle.DustOptions(randomColour, 2));
+                        world.spawnParticle(Particle.REDSTONE,
+                                updatedPlayer.getLocation().add(0.5, -yValue, 0),5,
+                                new Particle.DustOptions(randomColour, 2));
+                        world.spawnParticle(Particle.REDSTONE,
+                                updatedPlayer.getLocation().add(0.5, -yValue, 0.5),5,
+                                new Particle.DustOptions(randomColour, 2));
+                        yValue -= 0.1;
+                        duration--;
+                    } else {
+                        this.cancel();
+                    }
                 }
             }.runTaskTimer(plugin, 0L, 2L);
         } else {

@@ -2,9 +2,11 @@ package com.ankoki.elementals.commands;
 
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.ItemManager;
+import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Color;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,5 +61,12 @@ public class ElementalsCmd {
         Messages.load(plugin);
         plugin.getConfigManager().load();
         sender.sendMessage(Messages.msg("on-reload"));
+    }
+
+    @CommandHook("test")
+    public void testHook(Player player) {
+        new ParticlesManager(player, plugin).spawnRings(20, true,
+                Color.AQUA, Color.WHITE, Color.RED);
+        player.sendMessage("Spawning rings!");
     }
 }
