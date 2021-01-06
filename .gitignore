@@ -1,5 +1,6 @@
 .idea/
 Elementals.iml
 dependency-reduced-pom.xml
+.gradle/
 # Project exclude paths
 /target/
