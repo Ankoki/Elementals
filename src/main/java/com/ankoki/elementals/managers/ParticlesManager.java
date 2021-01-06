@@ -2,16 +2,16 @@ package com.ankoki.elementals.managers;
 
 import com.ankoki.elementals.Elementals;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
 
 @SuppressWarnings("unused")
 @RequiredArgsConstructor
@@ -20,6 +20,7 @@ public class ParticlesManager {
     private final Elementals plugin;
     private int duration = 0;
     private double yValue = 0.1;
+    private static final double DEGREES_TO_RADIANS = Math.PI/180;
 
     /**
      * Spawns a cloud of redstone particles under the players feet,
@@ -89,25 +90,12 @@ public class ParticlesManager {
                     Player updatedPlayer = Bukkit.getPlayer(player.getUniqueId());
                     if (updatedPlayer != null) {
                         Color randomColour = allColours.get(new Random().nextInt(allColours.size()));
-                        World world = updatedPlayer.getWorld();
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().subtract(0, yValue, 0.5), 5,
-                                new Particle.DustOptions(randomColour, 2));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().subtract(0.5, yValue, 0),5,
-                                new Particle.DustOptions(randomColour, 2));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().subtract(0.5, yValue, 0.5),5,
-                                new Particle.DustOptions(randomColour, 2));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().add(0, -yValue, 0.5), 5,
-                                new Particle.DustOptions(randomColour, 2));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().add(0.5, -yValue, 0),5,
-                                new Particle.DustOptions(randomColour, 2));
-                        world.spawnParticle(Particle.REDSTONE,
-                                updatedPlayer.getLocation().add(0.5, -yValue, 0.5),5,
-                                new Particle.DustOptions(randomColour, 2));
+                        for (Location loc : getCircle(updatedPlayer.getLocation(),
+                                1, 10, new Vector(1,0,0),
+                                90)) {
+                            loc.getWorld().spawnParticle(Particle.REDSTONE, loc, 5,
+                                    new Particle.DustOptions(randomColour, 2));
+                        }
                         yValue -= 0.1;
                         duration--;
                     } else {
@@ -123,5 +111,22 @@ public class ParticlesManager {
                 }
             }.runTaskTimer(plugin, 0L, 2L);
         }
+    }
+
+    // I cant do maths can you tell im gay
+    private List<Location> getCircle(Location centre, int radius, int density, Vector rotationVector, double rotationAngle) {
+        double points = 6.283185307179586 * radius;
+        double delta = 360 / points;
+        double theta = 0;
+        List<Location> allLocations = new ArrayList<>();
+        for (int i = 0; i <= points; i++) {
+            double x = Math.cos(theta * DEGREES_TO_RADIANS) * radius;
+            double y = Math.sin(theta * DEGREES_TO_RADIANS) * radius;
+            Vector vector = new Vector (x, y, 0);
+            vector.rotateAroundAxis(vector, rotationAngle);
+            allLocations.add(centre.add(vector));
+            theta += delta;
+        }
+        return allLocations;
     }
 }

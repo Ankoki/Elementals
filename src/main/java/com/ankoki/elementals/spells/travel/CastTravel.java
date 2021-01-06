@@ -16,7 +16,11 @@ public class CastTravel implements GenericSpell {
     @Override
     public boolean onCast(Player player) {
         if (player.getTargetBlock(null, 10).getType().isBlock()) {
+            float yaw = player.getLocation().getYaw();
+            float pitch = player.getLocation().getPitch();
             player.teleport(player.getTargetBlock(null, 10).getLocation());
+            player.getLocation().setYaw(yaw);
+            player.getLocation().setPitch(pitch);
         } else {
             Utils.sendActionBar(player, Messages.msg("travel-solid"));
             return false;
