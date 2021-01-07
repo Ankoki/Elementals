@@ -1,4 +1,4 @@
-package com.ankoki.elementals.spells.fireball;
+package com.ankoki.elementals.spells.generic.fireball;
 
 import org.bukkit.World;
 import org.bukkit.entity.Projectile;

@@ -65,7 +65,7 @@ public class ElementalsCmd {
 
     @CommandHook("test")
     public void testHook(Player player) {
-        new ParticlesManager(player, plugin).spawnRings(20, true,
+        new ParticlesManager(player, plugin).spawnRings(2, true,
                 Color.AQUA, Color.WHITE, Color.RED);
         player.sendMessage("Spawning rings!");
     }

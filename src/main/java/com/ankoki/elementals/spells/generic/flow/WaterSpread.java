@@ -1,4 +1,4 @@
-package com.ankoki.elementals.spells.flow;
+package com.ankoki.elementals.spells.generic.flow;
 
 import com.ankoki.elementals.Elementals;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.ankoki.elementals.spells.possesion;
+package com.ankoki.elementals.spells.entity.possesion;
 
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.listeners.SpellListener;

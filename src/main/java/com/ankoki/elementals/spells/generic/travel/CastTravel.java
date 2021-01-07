@@ -1,11 +1,14 @@
-package com.ankoki.elementals.spells.travel;
+package com.ankoki.elementals.spells.generic.travel;
 
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import redempt.redlib.commandmanager.Messages;
 
 @SuppressWarnings("unused")
@@ -18,9 +21,12 @@ public class CastTravel implements GenericSpell {
         if (player.getTargetBlock(null, 10).getType().isBlock()) {
             float yaw = player.getLocation().getYaw();
             float pitch = player.getLocation().getPitch();
-            player.teleport(player.getTargetBlock(null, 10).getLocation());
-            player.getLocation().setYaw(yaw);
-            player.getLocation().setPitch(pitch);
+            new ParticlesManager(player, plugin).spawnRings(1, true, Color.WHITE, Color.GRAY, Color.BLACK);
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                player.teleport(player.getTargetBlock(null, 10).getLocation());
+                player.getLocation().setYaw(yaw);
+                player.getLocation().setPitch(pitch);
+            }, 20L);
         } else {
             Utils.sendActionBar(player, Messages.msg("travel-solid"));
             return false;

@@ -1,33 +1,31 @@
-package com.ankoki.elementals.spells.rise;
+package com.ankoki.elementals.spells.generic.fireball;
 
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.GenericSpell;
-import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.metadata.FixedMetadataValue;
 
 @RequiredArgsConstructor
-public class CastRise implements GenericSpell {
+public class CastFireball implements GenericSpell {
     private final Elementals plugin;
 
     @Override
     public boolean onCast(Player player) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,
-                5*20, 1, true, false));
-        new ParticlesManager(player, plugin).trackCloud(5*20);
+        Fireball fireball = player.launchProjectile(Fireball.class);
+        fireball.setMetadata("elementalsSpell", new FixedMetadataValue(plugin, true));
         return true;
     }
 
     @Override
     public int getCooldown() {
-        return 15;
+        return 10;
     }
 
     @Override
     public Spell getSpell() {
-        return Spell.RISE;
+        return Spell.FIREBALL;
     }
 }
