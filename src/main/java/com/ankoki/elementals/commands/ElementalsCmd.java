@@ -20,7 +20,7 @@ public class ElementalsCmd {
 
     @CommandHook("elementals")
     public void elementalsHook(Player sender) {
-        sender.sendMessage(Messages.msg("command-message").replace("%version%", plugin.getVersion()));
+        sender.sendMessage(Messages.msg("command-message").replace("%version%", plugin.getDescription().getVersion()));
     }
 
     @CommandHook("enchant")

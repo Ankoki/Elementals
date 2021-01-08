@@ -15,6 +15,7 @@ import com.ankoki.elementals.spells.entity.possesion.CastPossession;
 import com.ankoki.elementals.spells.generic.rise.CastRise;
 import com.ankoki.elementals.spells.generic.travel.CastTravel;
 import com.ankoki.elementals.utils.Utils;
+import com.ankoki.elementals.utils.Version;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -54,6 +55,7 @@ public class Elementals extends JavaPlugin {
     @ConfigValue("enabled-spells")
     @SuppressWarnings("FieldMayBeFinal")
     private List<Spell> enabledSpells = ConfigManager.list(Spell.class);
+    public static Version SERVER_VERSION;
 
     @Override
     public void onEnable() {
@@ -62,6 +64,7 @@ public class Elementals extends JavaPlugin {
         description = this.getDescription();
         logger = this.getLogger();
         version = this.description.getVersion();
+        SERVER_VERSION = this.getVersion();
 
 
         if (!dependencyCheck()) {
@@ -96,9 +99,11 @@ public class Elementals extends JavaPlugin {
         //Registering commands
         this.registerCommand();
         //Loading NBTAPI
-        NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
-        testItem.addCompound("test");
-        testItem.setInteger("testInt", 1);
+        if (!getVersion().isLegacy()) {
+            NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
+            testItem.addCompound("test");
+            testItem.setInteger("testInt", 1);
+        }
         logger.info(String.format("%s v%s was enabled in %.2f seconds (" + (System.currentTimeMillis() - start) + "ms)\n",
                 description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
     }
@@ -170,6 +175,16 @@ public class Elementals extends JavaPlugin {
                 .register(this)
                 .saveDefaults()
                 .load();
+    }
+
+    private Version getVersion() {
+        try {
+            String packageName = this.getServer().getClass().getPackage().getName();
+            String version = packageName.substring(packageName.lastIndexOf('.') + 1);
+            return Version.valueOf(version);
+        } catch (Exception ex) {
+            return Version.UNKNOWN;
+        }
     }
 
     public boolean spellEnabled(Spell spell) {
