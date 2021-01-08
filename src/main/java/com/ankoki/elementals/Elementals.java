@@ -66,6 +66,17 @@ public class Elementals extends JavaPlugin {
         version = this.description.getVersion();
         SERVER_VERSION = this.getVersion();
 
+        if (this.getVersion().isLegacy()) {
+            logger.severe(" # # # # # # # # # # # # # # #");
+            logger.severe(" # ");
+            logger.severe(" # You are running on a legacy version!");
+            logger.severe(" # This plugin only supports 1.13+!");
+            logger.severe(" # Disabling...");
+            logger.severe(" # ");
+            logger.severe(" # # # # # # # # # # # # # # #");
+            pluginManager.disablePlugin(this);
+            return;
+        }
 
         if (!dependencyCheck()) {
             logger.severe(" # # # # # # # # # # # # # # #");
@@ -99,11 +110,9 @@ public class Elementals extends JavaPlugin {
         //Registering commands
         this.registerCommand();
         //Loading NBTAPI
-        if (!getVersion().isLegacy()) {
-            NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
-            testItem.addCompound("test");
-            testItem.setInteger("testInt", 1);
-        }
+        NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
+        testItem.addCompound("test");
+        testItem.setInteger("testInt", 1);
         logger.info(String.format("%s v%s was enabled in %.2f seconds (" + (System.currentTimeMillis() - start) + "ms)\n",
                 description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
     }
@@ -123,7 +132,9 @@ public class Elementals extends JavaPlugin {
         this.genericSpells.addAll(Arrays.asList(genericSpells));
     }
 
-    private void registerEntitySpells(EntitySpell... spells) { entitySpells.addAll(Arrays.asList(spells));}
+    private void registerEntitySpells(EntitySpell... spells) {
+        entitySpells.addAll(Arrays.asList(spells));
+    }
 
     private void registerCommand() {
         ArgType<Spell> spellType = new ArgType<>("spell", Elementals::getSpell)
