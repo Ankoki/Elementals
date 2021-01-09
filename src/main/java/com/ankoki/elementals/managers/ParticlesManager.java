@@ -29,7 +29,7 @@ public class ParticlesManager {
      * @param durationInTicks How long you want the cloud at the
      *                        players feet to last for in ticks.
      */
-    public void trackCloud(int durationInTicks) {
+    public void spawnCloud(int durationInTicks) {
         duration = durationInTicks/2;
         new BukkitRunnable() {
             @Override
@@ -122,23 +122,34 @@ public class ParticlesManager {
         }
     }
 
-    // I cant do maths can you tell im gay
-    /*
-    private List<Location> getCircle(Location centre, int radius, int density, Vector rotationVector, double rotationAngle) {
-        double points = 6.283185307179586 * radius;
-        double delta = 360 / points;
-        double theta = 0;
-        List<Location> allLocations = new ArrayList<>();
-        for (int i = 0; i <= points; i++) {
-            double x = Math.cos(theta * DEGREES_TO_RADIANS) * radius;
-            double y = Math.sin(theta * DEGREES_TO_RADIANS) * radius;
-            Vector vector = new Vector (x, y, 0);
-            vector.rotateAroundAxis(vector, rotationAngle);
-            allLocations.add(centre.add(vector));
-            theta += delta;
+    /**
+     * Spawns a helix at the player's location surrounding them in
+     * a hurricane like shape
+     *
+     * @param height This specifies how tall you want the helix
+     *               to be in blocks
+     * @param allColours An array of colours that the particles
+     *                   that are being spawned can possibly be.
+     *                   These are randomised.
+     */
+    public void spawnHelix(int height, Color... allColours) {
+        int radius = 2;
+        for(double y = 0; y <= 50; y += 0.05) {
+            double x = radius * Math.cos(y);
+            double z = radius * Math.sin(y);
+            Color randomColour = allColours[new Random().nextInt(allColours.length)];
+            Player updatedPlayer = Bukkit.getPlayer(player.getUniqueId());
+            if (updatedPlayer == null) return;
+            if (!updatedPlayer.isOnline()) return;
+            Location centre = player.getLocation();
+            Location spawn = new Location(centre.getWorld(),
+                    centre.getX() + x,
+                    centre.getY() + y,
+                    centre.getZ() + z);
+            centre.getWorld().spawnParticle(Particle.REDSTONE, spawn, 1,
+                    new Particle.DustOptions(randomColour, 1));
         }
-        return allLocations;
-    }*/
+    }
 
     private List<Location> getCircle(Location centre, double radius, int density) {
         World world = centre.getWorld();

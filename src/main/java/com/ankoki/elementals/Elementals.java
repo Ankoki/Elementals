@@ -5,6 +5,7 @@ import com.ankoki.elementals.listeners.JoinQuitListener;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.EntitySpell;
 import com.ankoki.elementals.managers.Spell;
+import com.ankoki.elementals.spells.generic.dash.CastDash;
 import com.ankoki.elementals.spells.generic.fireball.CastFireball;
 import com.ankoki.elementals.spells.generic.fireball.ProjectileHit;
 import com.ankoki.elementals.spells.generic.flow.WaterSpread;
@@ -66,6 +67,18 @@ public class Elementals extends JavaPlugin {
         version = this.description.getVersion();
         SERVER_VERSION = this.getVersion();
 
+        if (this.getVersion() == Version.UNKNOWN) {
+            logger.severe(" # # # # # # # # # # # # # # #");
+            logger.severe(" # ");
+            logger.severe(" # You are running on an unknown version!");
+            logger.severe(" # There is will be an update to support shortly!");
+            logger.severe(" # Disabling...");
+            logger.severe(" # ");
+            logger.severe(" # # # # # # # # # # # # # # #");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
         if (this.getVersion().isLegacy()) {
             logger.severe(" # # # # # # # # # # # # # # #");
             logger.severe(" # ");
@@ -105,7 +118,8 @@ public class Elementals extends JavaPlugin {
         this.registerGenericSpells(new CastFlow(this, spellListener),
                 new CastTravel(this),
                 new CastRise(this),
-                new CastFireball(this));
+                new CastFireball(this),
+                new CastDash(this));
         this.registerEntitySpells(new CastPossession(this, spellListener));
         //Registering commands
         this.registerCommand();
@@ -165,21 +179,6 @@ public class Elementals extends JavaPlugin {
         return Spell.valueOf(s.toUpperCase());
     }
 
-    /**
-     * Lists for spells that i dont wanna make
-     * static so i get them from here asf
-     */
-    @Getter
-    private final List<Location> flowLocations = new ArrayList<>();
-
-    public void addFlowLocation(Location location) {
-        flowLocations.add(location);
-    }
-
-    public void removeFlowLocation(Location location) {
-        flowLocations.remove(location);
-    }
-
     private void loadConfiguration() {
         configManager = new ConfigManager(this)
                 .addConverter(Spell.class, Spell::valueOf, Spell::toString)
@@ -200,5 +199,20 @@ public class Elementals extends JavaPlugin {
 
     public boolean spellEnabled(Spell spell) {
         return enabledSpells.contains(spell);
+    }
+
+    /**
+     * Lists for spells that i dont wanna make
+     * static so i get them from here asf
+     */
+    @Getter
+    private final List<Location> flowLocations = new ArrayList<>();
+
+    public void addFlowLocation(Location location) {
+        flowLocations.add(location);
+    }
+
+    public void removeFlowLocation(Location location) {
+        flowLocations.remove(location);
     }
 }

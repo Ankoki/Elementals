@@ -9,7 +9,8 @@ public enum Spell {
     FLOW("Flow", 3731, true),
     RISE("Rise", 3732, false),
     FIREBALL("Fireball", 3733, false),
-    POSSESSION("Possession", 3734, true);
+    POSSESSION("Possession", 3734, true),
+    DASH("Dash", 3735, false);
 
     @Getter
     private final String spellName;

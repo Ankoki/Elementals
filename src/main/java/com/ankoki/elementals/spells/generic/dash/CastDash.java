@@ -1,33 +1,37 @@
-package com.ankoki.elementals.spells.generic.rise;
+package com.ankoki.elementals.spells.generic.dash;
 
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 @RequiredArgsConstructor
-public class CastRise implements GenericSpell {
+public class CastDash implements GenericSpell {
     private final Elementals plugin;
 
     @Override
     public boolean onCast(Player player) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,
-                5*20, 1, true, false));
-        new ParticlesManager(player, plugin).spawnCloud(5*20);
+        Vector unitVector = new Vector(player.getLocation().getDirection().getX(), 0, player.getLocation().getDirection().getZ());
+        unitVector.normalize();
+        player.setVelocity(unitVector.multiply(2));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*10, 2));
+        new ParticlesManager(player, plugin).spawnHelix(10, Color.BLUE, Color.AQUA, Color.WHITE);
         return true;
     }
 
     @Override
     public int getCooldown() {
-        return 15;
+        return 30;
     }
 
     @Override
     public Spell getSpell() {
-        return Spell.RISE;
+        return Spell.DASH;
     }
 }
