@@ -62,6 +62,19 @@ public class Elementals extends JavaPlugin {
     public void onEnable() {
         long start = System.currentTimeMillis();
         pluginManager = this.getServer().getPluginManager();
+
+        if (!dependencyCheck()) {
+            logger.severe(" # # # # # # # # # # # # # # #");
+            logger.severe(" # ");
+            logger.severe(" # Dependency RedLib was not found or outdated!");
+            logger.severe(" # Check you have it installed or updated!");
+            logger.severe(" # Disabling...");
+            logger.severe(" # ");
+            logger.severe(" # # # # # # # # # # # # # # #");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
         description = this.getDescription();
         logger = this.getLogger();
         version = this.description.getVersion();
@@ -84,18 +97,6 @@ public class Elementals extends JavaPlugin {
             logger.severe(" # ");
             logger.severe(" # You are running on a legacy version!");
             logger.severe(" # This plugin only supports 1.13+!");
-            logger.severe(" # Disabling...");
-            logger.severe(" # ");
-            logger.severe(" # # # # # # # # # # # # # # #");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
-        if (!dependencyCheck()) {
-            logger.severe(" # # # # # # # # # # # # # # #");
-            logger.severe(" # ");
-            logger.severe(" # Dependency RedLib was not found or outdated!");
-            logger.severe(" # Check you have it installed or updated!");
             logger.severe(" # Disabling...");
             logger.severe(" # ");
             logger.severe(" # # # # # # # # # # # # # # #");

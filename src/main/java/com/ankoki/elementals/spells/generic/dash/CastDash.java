@@ -21,7 +21,7 @@ public class CastDash implements GenericSpell {
         unitVector.normalize();
         player.setVelocity(unitVector.multiply(2));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*10, 2));
-        new ParticlesManager(player, plugin).spawnHelix(10, Color.BLUE, Color.AQUA, Color.WHITE);
+        new ParticlesManager(player, plugin).spawnHelix(10, Color.BLUE, Color.AQUA, Color.TEAL);
         return true;
     }
 

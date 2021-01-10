@@ -27,6 +27,7 @@ public class ElementalsCmd {
     public void enchantHook(Player player, Spell spell, ItemStack heldItem) {
         if (heldItem.getType().isItem()) {
             ItemManager wand = new ItemManager(heldItem);
+            wand.removeSpells();
             wand.addSpell(spell);
             player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.getItem());
             player.sendMessage(Messages.msg("on-enchant").replace("%spell%", spell.getSpellName()));
@@ -65,8 +66,8 @@ public class ElementalsCmd {
 
     @CommandHook("test")
     public void testHook(Player player) {
-        new ParticlesManager(player, plugin).spawnRings(2, true,
-                Color.AQUA, Color.WHITE, Color.RED);
+        new ParticlesManager(player, plugin).spawnHelix(2,
+                Color.AQUA, Color.BLUE, Color.TEAL);
         player.sendMessage("Spawning rings!");
     }
 }

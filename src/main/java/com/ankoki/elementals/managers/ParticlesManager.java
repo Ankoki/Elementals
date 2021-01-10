@@ -116,7 +116,25 @@ public class ParticlesManager {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-
+                    if (duration == 0) {
+                        this.cancel();
+                    }
+                    Player updatedPlayer = Bukkit.getPlayer(player.getUniqueId());
+                    if (updatedPlayer != null) {
+                        Location pLoc = updatedPlayer.getLocation().add(0, yValue, 0);
+                        for (Location loc : getCircle(pLoc, 1, 50)) {
+                            Color randomColour = allColours.get(new Random().nextInt(allColours.size()));
+                            loc.getWorld().spawnParticle(Particle.REDSTONE, loc, 1,
+                                    new Particle.DustOptions(randomColour, 1));
+                        }
+                        if (yValue > 2) {
+                            yValue = 0;
+                        }
+                        yValue += 0.1;
+                        duration--;
+                    } else {
+                        this.cancel();
+                    }
                 }
             }.runTaskTimer(plugin, 0L, 2L);
         }
