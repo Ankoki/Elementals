@@ -152,7 +152,7 @@ public class ParticlesManager {
      */
     public void spawnHelix(int height, Color... allColours) {
         int radius = 2;
-        for(double y = 0; y <= 50; y += 0.05) {
+        for(double y = 0; y <= height; y += 0.05) {
             double x = radius * Math.cos(y);
             double z = radius * Math.sin(y);
             Color randomColour = allColours[new Random().nextInt(allColours.length)];

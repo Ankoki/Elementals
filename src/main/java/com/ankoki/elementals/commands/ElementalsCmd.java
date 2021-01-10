@@ -68,6 +68,6 @@ public class ElementalsCmd {
     public void testHook(Player player) {
         new ParticlesManager(player, plugin).spawnHelix(2,
                 Color.AQUA, Color.BLUE, Color.TEAL);
-        player.sendMessage("Spawning rings!");
+        player.sendMessage("Spawning helix!");
     }
 }
