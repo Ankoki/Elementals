@@ -3,5 +3,24 @@ version: 1.0
 main: com.ankoki.elementals.Elementals
 api-version: 1.16
 author: Ankoki
+permissions:
+  elementals.admin:
+    default: op
+    description: The wildcard permission.
+  elementals.reload:
+    default: op
+    description: Allows player's to reload the messages and config.
+  elementals.enchant:
+    default: op
+    description: Allows player's to enchant wands.
+  elementals.disenchant:
+    default: op
+    description: Allows player's to disenchant wands.
+  elementals.bypass:
+    default: op
+    description: Allows player's to bypass cooldowns on spells.
+  elementals.specialpermonlyiknowmwahahahaha:
+    default: false
+    description: Only the dev has this for testing purposes.
 softdepend:
   - RedLib

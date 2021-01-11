@@ -4,6 +4,7 @@ elementals {
     hook elementals
     enchant,give,addspell spell:spell {
         permission elementals.admin
+        permission elementals.enchant
         user player
         hook enchant
         context mainhand
@@ -11,6 +12,7 @@ elementals {
     }
     disenchant,remove,removespells {
         permission elementals.admin
+        permission elementals.disenchant
         user player
         hook disenchant
         context mainhand
@@ -22,12 +24,13 @@ elementals {
     }
     reload {
         permission elementals.admin
+        permission elementals.reload
         hook reload
         help Reloads the messages.txt
     }
     test {
         user player
-        permission elementals.admin
+        permission elementals.specialpermonlyiknowmwahahahaha
         hook test
         help Test for the owner, ignore
     }
