@@ -14,9 +14,20 @@ import org.bukkit.metadata.FixedMetadataValue;
 @RequiredArgsConstructor
 public class CastFireball implements GenericSpell {
     private final Elementals plugin;
+    private final Spell spell;
     @Getter
     @Setter
     private int cooldown = 10;
+
+    public CastFireball(Elementals plugin) {
+        this.plugin = plugin;
+        this.spell = new Spell("Fireball", 3733, false);
+        try {
+            ElementalsAPI.registerSpell(plugin, spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onCast(Player player) {
@@ -27,12 +38,6 @@ public class CastFireball implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        Spell spell = new Spell("Fireball", 3733, false);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return spell;
     }
 }

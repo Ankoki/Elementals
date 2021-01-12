@@ -17,9 +17,20 @@ import org.bukkit.util.Vector;
 @RequiredArgsConstructor
 public class CastDash implements GenericSpell {
     private final Elementals plugin;
+    private final Spell spell;
     @Getter
     @Setter
     private int cooldown = 20;
+
+    public CastDash(Elementals plugin) {
+        this.plugin = plugin;
+        this.spell = new Spell("Dash", 3732, false);
+        try {
+            ElementalsAPI.registerSpell(plugin, spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onCast(Player player) {

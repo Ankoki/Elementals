@@ -21,9 +21,21 @@ import redempt.redlib.commandmanager.Messages;
 public class CastPossession extends Prolonged implements EntitySpell {
     private final Elementals plugin;
     private final SpellListener listener;
+    private final Spell spell;
     @Getter
     @Setter
     private int cooldown = 10;
+
+    public CastPossession(Elementals plugin, SpellListener listener) {
+        this.plugin = plugin;
+        this.listener = listener;
+        this.spell = new Spell("Possession", 3731, true);
+        try {
+            ElementalsAPI.registerSpell(plugin, spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onCast(Player player, Entity entity) {
@@ -74,12 +86,6 @@ public class CastPossession extends Prolonged implements EntitySpell {
 
     @Override
     public Spell getSpell() {
-        Spell spell = new Spell("Possession", 3731, true);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return spell;
     }
 }

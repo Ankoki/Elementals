@@ -16,12 +16,22 @@ import org.bukkit.entity.Player;
 import redempt.redlib.commandmanager.Messages;
 
 @SuppressWarnings("unused")
-@RequiredArgsConstructor
 public class CastTravel implements GenericSpell {
     private final Elementals plugin;
+    private final Spell spell;
     @Getter
     @Setter
     private int cooldown = 10;
+
+    public CastTravel(Elementals plugin) {
+        this.plugin = plugin;
+        this.spell = new Spell("Travel", 3730, false);
+        try {
+            ElementalsAPI.registerSpell(plugin, spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onCast(Player player) {
@@ -48,12 +58,6 @@ public class CastTravel implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        Spell spell = new Spell("Travel", 3730, false);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return spell;
     }
 }

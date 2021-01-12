@@ -18,11 +18,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class CastRegrowth extends Prolonged implements GenericSpell {
     private final Elementals plugin;
     private final SpellListener listener;
+    private final Spell spell;
     private final HashMap<Player, Integer> duration = new HashMap<>();
+
+    public CastRegrowth(Elementals plugin, SpellListener listener) {
+        this.plugin = plugin;
+        this.listener = listener;
+        this.spell = new Spell("Regrowth", 3737, false);
+        try {
+            ElementalsAPI.registerSpell(plugin, spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onCast(Player player) {
@@ -109,12 +120,6 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        Spell spell = new Spell("Regrowth", 3737, true);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return spell;
     }
 

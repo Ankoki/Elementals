@@ -1,6 +1,7 @@
 package com.ankoki.elementals.listeners;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.events.EntitySpellCastEvent;
 import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.events.GenericSpellCastEvent;
@@ -39,20 +40,30 @@ public class SpellListener implements Listener {
     private void onRightClick(RightClickEvent e) {
         Player player = e.getPlayer();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
+        player.sendMessage("debug1");
         if (heldItem.getType() != Material.AIR) {
-            for (GenericSpell genericSpell : plugin.getGenericSpells()) {
+            player.sendMessage("debug2");
+            for (GenericSpell genericSpell : ElementalsAPI.getGenericSpells()) {
+                player.sendMessage("debug3");
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(genericSpell.getSpell())) {
+                    player.sendMessage("debug4");
                     if (cooldownExpired(player, genericSpell.getSpell(), genericSpell.getCooldown())) {
+                        player.sendMessage("debug5");
                         if (plugin.spellEnabled(genericSpell.getSpell())) {
+                            player.sendMessage("debug6");
                             GenericSpellCastEvent event = new GenericSpellCastEvent(player, genericSpell.getSpell(),
                                     genericSpell.getCooldown());
                             Bukkit.getPluginManager().callEvent(event);
                             if (!event.isCancelled()) {
+                                player.sendMessage("debug7");
                                 e.setCancelled(true);
                                 if (genericSpell instanceof Prolonged) {
+                                    player.sendMessage("debug8");
                                     if (!isCasting(player)) {
+                                        player.sendMessage("debug9");
                                         if (genericSpell.onCast(player)) {
+                                            player.sendMessage("debug10");
                                             addCaster(player, genericSpell.getSpell());
                                             Utils.sendActionBar(player, Messages.msg("on-cast")
                                                     .replace("%spell%", genericSpell.getSpell().getSpellName()));

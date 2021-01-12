@@ -8,7 +8,6 @@ import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,13 +16,24 @@ import org.bukkit.scheduler.BukkitRunnable;
 import redempt.redlib.commandmanager.Messages;
 
 @SuppressWarnings("ConstantConditions")
-@RequiredArgsConstructor
 public class CastFlow extends Prolonged implements GenericSpell {
     private final Elementals plugin;
     private final SpellListener listener;
+    private final Spell spell;
     @Getter
     @Setter
     private int cooldown = 60;
+
+    public CastFlow(Elementals plugin, SpellListener listener) {
+        this.plugin = plugin;
+        this.listener = listener;
+        this.spell = new Spell("Flow", 3734, true);
+        try {
+            ElementalsAPI.registerSpell(plugin, spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onCast(Player player) {
@@ -70,12 +80,6 @@ public class CastFlow extends Prolonged implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        Spell spell = new Spell("Flow", 3734, false);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return spell;
     }
 }

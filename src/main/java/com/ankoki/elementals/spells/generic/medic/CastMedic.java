@@ -9,12 +9,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.entity.Player;
 
-@RequiredArgsConstructor
 public class CastMedic implements GenericSpell {
     private final Elementals plugin;
+    private final Spell spell;
     @Getter
     @Setter
     private int cooldown = 30;
+
+    public CastMedic(Elementals plugin) {
+        this.plugin = plugin;
+        this.spell = new Spell("Medic", 3735, false);
+        try {
+            ElementalsAPI.registerSpell(plugin, spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onCast(Player player) {
@@ -26,12 +36,6 @@ public class CastMedic implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        Spell spell = new Spell("Medic", 3735, false);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return spell;
     }
 }
