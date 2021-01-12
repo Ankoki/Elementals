@@ -30,7 +30,7 @@ elementals {
     }
     test {
         user player
-        permission elementals.specialpermonlyiknowmwahahahaha
+        permission elementals.admin
         hook test
         help Test for the owner, ignore
     }

@@ -1,6 +1,7 @@
 package com.ankoki.elementals.commands;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.ItemManager;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
@@ -68,6 +69,10 @@ public class ElementalsCmd {
     public void testHook(Player player) {
         new ParticlesManager(player, plugin).spawnHelix(2,
                 Color.AQUA, Color.BLUE, Color.TEAL);
+        for (Spell spell : ElementalsAPI.getAllSpells()) {
+            System.out.println(spell.getSpellName());
+        }
+        System.out.println("All spells printed");
         player.sendMessage("Spawning helix!");
     }
 }

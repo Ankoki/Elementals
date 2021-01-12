@@ -184,6 +184,15 @@ public class ParticlesManager {
         }
     }
 
+    public void drawCircle(double radius, int density, Color... colours) {
+        World world = player.getWorld();
+        for (Location loc : this.getCircle(player.getLocation(), radius, density)) {
+            Color colour = colours[new Random().nextInt(colours.length)];
+            world.spawnParticle(Particle.REDSTONE, loc, 1,
+                    new Particle.DustOptions(colour, 1));
+        }
+    }
+
     private List<Location> getCircle(Location centre, double radius, int density) {
         World world = centre.getWorld();
         double increment = (2 * Math.PI)/density;

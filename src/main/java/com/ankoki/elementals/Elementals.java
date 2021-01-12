@@ -14,6 +14,7 @@ import com.ankoki.elementals.managers.EventManager;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.spells.entity.possesion.CastPossession;
 import com.ankoki.elementals.spells.generic.medic.CastMedic;
+import com.ankoki.elementals.spells.generic.regrowth.CastRegrowth;
 import com.ankoki.elementals.spells.generic.rise.CastRise;
 import com.ankoki.elementals.spells.generic.travel.CastTravel;
 import com.ankoki.elementals.utils.Utils;
@@ -38,6 +39,7 @@ import redempt.redlib.configmanager.annotations.ConfigValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public class Elementals extends JavaPlugin {
@@ -124,15 +126,23 @@ public class Elementals extends JavaPlugin {
                 new CastRise(this),
                 new CastFireball(this),
                 new CastDash(this),
-                new CastMedic(this));
+                new CastMedic(this),
+                new CastRegrowth(this, spellListener));
         ElementalsAPI.registerEntitySpells(this,
                 new CastPossession(this, spellListener));
-        //Registering commands
-        this.registerCommand();
+        //REMOVE THIS LATER WHEN YOU HAVE MORE TIME, CHANGE TO BE IN CONSTRUCTORS OF SPELLS ONLY THIS FOR TESTING
+        for (EntitySpell spell : ElementalsAPI.getEntitySpells()) {
+            Spell spell1 = spell.getSpell();
+        }
+        for (GenericSpell spell : ElementalsAPI.getGenericSpells()) {
+            Spell spell1 = spell.getSpell();
+        }
         //Loading NBTAPI
         NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
         testItem.addCompound("test");
         testItem.setInteger("testInt", 1);
+        //Registering commands
+        this.registerCommand();
         logger.info(String.format("%s v%s was enabled in %.2f seconds (" + (System.currentTimeMillis() - start) + "ms)\n",
                 description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
     }
@@ -149,7 +159,7 @@ public class Elementals extends JavaPlugin {
     }
 
     private void registerCommand() {
-        ArgType<Spell> spellType = new ArgType<>("spell", Elementals::getSpell)
+        ArgType<Spell> spellType = new ArgType<>("spell", ElementalsAPI::valueOf)
                 .tabStream(c -> (ElementalsAPI.getAllSpells()).stream().map(Spell::getSpellName).map(String::toLowerCase));
         new CommandParser(this.getResource("command.txt"))
                 .setArgTypes(spellType)
@@ -171,10 +181,6 @@ public class Elementals extends JavaPlugin {
         } else if (!redLib.isEnabled()) {
             return false;
         } else return Utils.checkPluginVersion(redLib, 2, 0);
-    }
-
-    private static Spell getSpell(String s) {
-        return ElementalsAPI.valueOf(s.toUpperCase());
     }
 
     private void loadConfiguration() {
@@ -199,7 +205,7 @@ public class Elementals extends JavaPlugin {
         return enabledSpells.contains(spell);
     }
 
-    /**
+    /*
      * Lists for spells that i dont wanna make
      * static so i get them from here asf
      */
