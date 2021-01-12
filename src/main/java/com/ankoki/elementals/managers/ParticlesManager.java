@@ -169,6 +169,21 @@ public class ParticlesManager {
         }
     }
 
+    /**
+     * Scatters particles around the player.
+     *
+     * @param size The size of the particles that will be spawned.
+     * @param particles The particles you want to spawn around the player.
+     *                  These will be randomised.
+     */
+    public void scatterParticles(int size, Particle... particles) {
+        List<Location> locations = new ArrayList<>();
+        for (Location loc : locations) {
+            Particle particle = particles[new Random().nextInt(particles.length)];
+            loc.getWorld().spawnParticle(particle, loc, size);
+        }
+    }
+
     private List<Location> getCircle(Location centre, double radius, int density) {
         World world = centre.getWorld();
         double increment = (2 * Math.PI)/density;
