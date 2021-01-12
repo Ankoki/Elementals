@@ -118,13 +118,15 @@ public class Elementals extends JavaPlugin {
                 new JoinQuitListener(),
                 new ProjectileHit());
         //Registering Spells
-        this.registerGenericSpells(new CastFlow(this, spellListener),
+        ElementalsAPI.registerGenericSpells(this,
+                new CastFlow(this, spellListener),
                 new CastTravel(this),
                 new CastRise(this),
                 new CastFireball(this),
                 new CastDash(this),
                 new CastMedic(this));
-        this.registerEntitySpells(new CastPossession(this, spellListener));
+        ElementalsAPI.registerEntitySpells(this,
+                new CastPossession(this, spellListener));
         //Registering commands
         this.registerCommand();
         //Loading NBTAPI
@@ -144,14 +146,6 @@ public class Elementals extends JavaPlugin {
         version = null;
         System.out.printf("Elementals was disabled in %.2f seconds%n",
                 (float) System.currentTimeMillis() - end);
-    }
-
-    private void registerGenericSpells(GenericSpell... genericSpells) {
-        this.genericSpells.addAll(Arrays.asList(genericSpells));
-    }
-
-    private void registerEntitySpells(EntitySpell... spells) {
-        entitySpells.addAll(Arrays.asList(spells));
     }
 
     private void registerCommand() {

@@ -6,7 +6,9 @@ import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -17,6 +19,9 @@ import redempt.redlib.commandmanager.Messages;
 @RequiredArgsConstructor
 public class CastTravel implements GenericSpell {
     private final Elementals plugin;
+    @Getter
+    @Setter
+    private int cooldown = 10;
 
     @Override
     public boolean onCast(Player player) {
@@ -27,6 +32,7 @@ public class CastTravel implements GenericSpell {
             new ParticlesManager(player, plugin).spawnRings(1, true, Color.WHITE, Color.GRAY, Color.BLACK);
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 Player updatedPlayer = Bukkit.getPlayer(player.getUniqueId());
+                if (updatedPlayer == null || !player.isOnline()) return;
                 loc.setPitch(updatedPlayer.getLocation().getPitch());
                 loc.setYaw(updatedPlayer.getLocation().getYaw());
                 player.teleport(loc);
@@ -41,15 +47,10 @@ public class CastTravel implements GenericSpell {
     }
 
     @Override
-    public int getCooldown() {
-        return 10;
-    }
-
-    @Override
     public Spell getSpell() {
         Spell spell = new Spell("Travel", 3730, false);
         try {
-            ElementalsAPI.addSpell(spell);
+            ElementalsAPI.registerSpell(plugin, spell);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

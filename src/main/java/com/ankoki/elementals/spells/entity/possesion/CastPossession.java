@@ -7,7 +7,9 @@ import com.ankoki.elementals.managers.EntitySpell;
 import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
@@ -19,6 +21,9 @@ import redempt.redlib.commandmanager.Messages;
 public class CastPossession extends Prolonged implements EntitySpell {
     private final Elementals plugin;
     private final SpellListener listener;
+    @Getter
+    @Setter
+    private int cooldown = 10;
 
     @Override
     public boolean onCast(Player player, Entity entity) {
@@ -68,15 +73,10 @@ public class CastPossession extends Prolonged implements EntitySpell {
     }
 
     @Override
-    public int getCooldown() {
-        return 10;
-    }
-
-    @Override
     public Spell getSpell() {
         Spell spell = new Spell("Possession", 3731, true);
         try {
-            ElementalsAPI.addSpell(spell);
+            ElementalsAPI.registerSpell(plugin, spell);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

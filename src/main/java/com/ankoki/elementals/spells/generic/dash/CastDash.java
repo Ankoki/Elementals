@@ -5,7 +5,9 @@ import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -15,6 +17,9 @@ import org.bukkit.util.Vector;
 @RequiredArgsConstructor
 public class CastDash implements GenericSpell {
     private final Elementals plugin;
+    @Getter
+    @Setter
+    private int cooldown = 20;
 
     @Override
     public boolean onCast(Player player) {
@@ -27,15 +32,10 @@ public class CastDash implements GenericSpell {
     }
 
     @Override
-    public int getCooldown() {
-        return 30;
-    }
-
-    @Override
     public Spell getSpell() {
         Spell spell = new Spell("Dash", 3732, false);
         try {
-            ElementalsAPI.addSpell(spell);
+            ElementalsAPI.registerSpell(plugin, spell);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import redempt.redlib.commandmanager.Messages;
@@ -200,6 +201,16 @@ public class SpellListener implements Listener {
             if (castingSpell.get(player).isProlonged()) {
                 Utils.sendActionBar(player, Messages.msg("on-stop-cast")
                         .replace("%spell%", castingSpell.get(player).getSpellName()));
+                removeCaster(player);
+            }
+        }
+    }
+
+    @EventHandler
+    private void onQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+        if (isCasting(player)) {
+            if (castingSpell.get(player).isProlonged()) {
                 removeCaster(player);
             }
         }

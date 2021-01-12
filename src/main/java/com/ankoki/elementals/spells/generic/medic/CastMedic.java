@@ -4,12 +4,17 @@ import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
 public class CastMedic implements GenericSpell {
     private final Elementals plugin;
+    @Getter
+    @Setter
+    private int cooldown = 30;
 
     @Override
     public boolean onCast(Player player) {
@@ -20,15 +25,10 @@ public class CastMedic implements GenericSpell {
     }
 
     @Override
-    public int getCooldown() {
-        return 30;
-    }
-
-    @Override
     public Spell getSpell() {
         Spell spell = new Spell("Medic", 3735, false);
         try {
-            ElementalsAPI.addSpell(spell);
+            ElementalsAPI.registerSpell(plugin, spell);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

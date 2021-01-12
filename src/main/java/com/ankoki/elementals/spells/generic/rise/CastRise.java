@@ -5,7 +5,9 @@ import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -13,6 +15,9 @@ import org.bukkit.potion.PotionEffectType;
 @RequiredArgsConstructor
 public class CastRise implements GenericSpell {
     private final Elementals plugin;
+    @Getter
+    @Setter
+    private int cooldown = 10;
 
     @Override
     public boolean onCast(Player player) {
@@ -23,15 +28,10 @@ public class CastRise implements GenericSpell {
     }
 
     @Override
-    public int getCooldown() {
-        return 15;
-    }
-
-    @Override
     public Spell getSpell() {
         Spell spell = new Spell("Rise", 3736, false);
         try {
-            ElementalsAPI.addSpell(spell);
+            ElementalsAPI.registerSpell(plugin, spell);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

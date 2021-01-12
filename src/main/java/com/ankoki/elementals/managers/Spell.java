@@ -1,5 +1,6 @@
 package com.ankoki.elementals.managers;
 
+import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.ElementalsAPI;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class Spell {
         this.id = id;
         this.prolonged = prolonged;
         try {
-            ElementalsAPI.addSpell(this);
+            ElementalsAPI.registerSpell(Elementals.getInstance(), this);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

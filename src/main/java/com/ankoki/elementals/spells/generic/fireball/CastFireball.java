@@ -4,7 +4,9 @@ import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -12,6 +14,9 @@ import org.bukkit.metadata.FixedMetadataValue;
 @RequiredArgsConstructor
 public class CastFireball implements GenericSpell {
     private final Elementals plugin;
+    @Getter
+    @Setter
+    private int cooldown = 10;
 
     @Override
     public boolean onCast(Player player) {
@@ -21,15 +26,10 @@ public class CastFireball implements GenericSpell {
     }
 
     @Override
-    public int getCooldown() {
-        return 10;
-    }
-
-    @Override
     public Spell getSpell() {
         Spell spell = new Spell("Fireball", 3733, false);
         try {
-            ElementalsAPI.addSpell(spell);
+            ElementalsAPI.registerSpell(plugin, spell);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
