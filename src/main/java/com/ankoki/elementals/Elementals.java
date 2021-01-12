@@ -13,6 +13,7 @@ import com.ankoki.elementals.spells.generic.flow.CastFlow;
 import com.ankoki.elementals.managers.EventManager;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.spells.entity.possesion.CastPossession;
+import com.ankoki.elementals.spells.generic.medic.CastMedic;
 import com.ankoki.elementals.spells.generic.rise.CastRise;
 import com.ankoki.elementals.spells.generic.travel.CastTravel;
 import com.ankoki.elementals.utils.Utils;
@@ -120,7 +121,8 @@ public class Elementals extends JavaPlugin {
                 new CastTravel(this),
                 new CastRise(this),
                 new CastFireball(this),
-                new CastDash(this));
+                new CastDash(this),
+                new CastMedic(this));
         this.registerEntitySpells(new CastPossession(this, spellListener));
         //Registering commands
         this.registerCommand();
