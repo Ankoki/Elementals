@@ -67,12 +67,7 @@ public class ElementalsCmd {
 
     @CommandHook("test")
     public void testHook(Player player) {
-        new ParticlesManager(player, plugin).spawnHelix(2,
-                Color.AQUA, Color.BLUE, Color.TEAL);
-        for (Spell spell : ElementalsAPI.getAllSpells()) {
-            System.out.println(spell.getSpellName());
-        }
-        System.out.println("All spells printed");
-        player.sendMessage("Spawning helix!");
+        new ParticlesManager(player, plugin).drawCone(5, 200, Color.PURPLE, Color.ORANGE, Color.SILVER);
+        player.sendMessage("yuh");
     }
 }

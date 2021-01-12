@@ -184,12 +184,33 @@ public class ParticlesManager {
         }
     }
 
+    /**
+     * Draws a circle around the player with a radius and density which is
+     * specified in the input.
+     *
+     * @param radius The radius you want this to be in blocks.
+     * @param density The amount of particles you want spawned.
+     * @param colours Randomised colours.
+     */
     public void drawCircle(double radius, int density, Color... colours) {
         World world = player.getWorld();
         for (Location loc : this.getCircle(player.getLocation(), radius, density)) {
             Color colour = colours[new Random().nextInt(colours.length)];
             world.spawnParticle(Particle.REDSTONE, loc, 1,
                     new Particle.DustOptions(colour, 1));
+        }
+    }
+
+    public void drawCone(double radius, int density, Color... colours) {
+        World world = player.getWorld();
+        double updatedRadius = radius;
+        for (int i =  0; updatedRadius >= 0; i += 0.5) {
+            for (Location loc : this.getCircle(player.getLocation().add(0, i, 0), updatedRadius, density)) {
+                Color colour = colours[new Random().nextInt(colours.length)];
+                world.spawnParticle(Particle.REDSTONE, loc, 1,
+                        new Particle.DustOptions(colour, 1));
+            }
+            updatedRadius -= 1;
         }
     }
 
