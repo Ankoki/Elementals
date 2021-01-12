@@ -2,8 +2,6 @@ package com.ankoki.elementals;
 
 import com.ankoki.elementals.commands.ElementalsCmd;
 import com.ankoki.elementals.listeners.JoinQuitListener;
-import com.ankoki.elementals.managers.GenericSpell;
-import com.ankoki.elementals.managers.EntitySpell;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.spells.generic.dash.CastDash;
 import com.ankoki.elementals.spells.generic.fireball.CastFireball;
@@ -37,26 +35,19 @@ import redempt.redlib.configmanager.ConfigManager;
 import redempt.redlib.configmanager.annotations.ConfigValue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Logger;
 
 public class Elementals extends JavaPlugin {
-    @Getter
-    private final List<GenericSpell> genericSpells = new ArrayList<>();
-    @Getter
-    private final List<EntitySpell> entitySpells = new ArrayList<>();
     private PluginDescriptionFile description;
     private PluginManager pluginManager;
     private Logger logger;
     @Getter
-    private String version;
+    private String pluginVersion;
     @Getter
     private ConfigManager configManager;
     @Getter
     @ConfigValue("enabled-spells")
-    @SuppressWarnings("FieldMayBeFinal")
     private List<Spell> enabledSpells = ConfigManager.list(Spell.class);
     public static Version SERVER_VERSION;
     @Getter
@@ -81,13 +72,13 @@ public class Elementals extends JavaPlugin {
 
         description = this.getDescription();
         logger = this.getLogger();
-        version = this.description.getVersion();
-        SERVER_VERSION = this.getVersion();
+        pluginVersion = this.description.getVersion();
+        SERVER_VERSION = this.getPluginVersion();
 
-        if (this.getVersion() == Version.UNKNOWN) {
+        if (this.getPluginVersion() == Version.UNKNOWN) {
             logger.severe(" # # # # # # # # # # # # # # #");
             logger.severe(" # ");
-            logger.severe(" # You are running on an unknown version!");
+            logger.severe(" # You are running on an unknown pluginVersion!");
             logger.severe(" # There is will be an update to support shortly!");
             logger.severe(" # Disabling...");
             logger.severe(" # ");
@@ -96,10 +87,10 @@ public class Elementals extends JavaPlugin {
             return;
         }
 
-        if (this.getVersion().isLegacy()) {
+        if (this.getPluginVersion().isLegacy()) {
             logger.severe(" # # # # # # # # # # # # # # #");
             logger.severe(" # ");
-            logger.severe(" # You are running on a legacy version!");
+            logger.severe(" # You are running on a legacy pluginVersion!");
             logger.severe(" # This plugin only supports 1.13+!");
             logger.severe(" # Disabling...");
             logger.severe(" # ");
@@ -109,9 +100,6 @@ public class Elementals extends JavaPlugin {
         }
 
         instance = this;
-        //Loading config and messages
-        Messages.load(this);
-        this.loadConfiguration();
         //Registering Listeners
         SpellListener spellListener = new SpellListener(this);
         this.registerListeners(new WaterSpread(this),
@@ -120,6 +108,7 @@ public class Elementals extends JavaPlugin {
                 new JoinQuitListener(),
                 new ProjectileHit());
         //Registering Spells
+        ElementalsAPI.getEntitySpells().clear();
         ElementalsAPI.registerGenericSpells(this,
                 new CastFlow(this, spellListener),
                 new CastTravel(this),
@@ -130,19 +119,15 @@ public class Elementals extends JavaPlugin {
                 new CastRegrowth(this, spellListener));
         ElementalsAPI.registerEntitySpells(this,
                 new CastPossession(this, spellListener));
-        //REMOVE THIS LATER WHEN YOU HAVE MORE TIME, CHANGE TO BE IN CONSTRUCTORS OF SPELLS ONLY THIS FOR TESTING
-        for (EntitySpell spell : ElementalsAPI.getEntitySpells()) {
-            Spell spell1 = spell.getSpell();
-        }
-        for (GenericSpell spell : ElementalsAPI.getGenericSpells()) {
-            Spell spell1 = spell.getSpell();
-        }
         //Loading NBTAPI
         NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
         testItem.addCompound("test");
         testItem.setInteger("testInt", 1);
         //Registering commands
         this.registerCommand();
+        //Loading config and messages
+        Messages.load(this);
+        this.loadConfiguration();
         logger.info(String.format("%s v%s was enabled in %.2f seconds (" + (System.currentTimeMillis() - start) + "ms)\n",
                 description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
     }
@@ -153,7 +138,7 @@ public class Elementals extends JavaPlugin {
         pluginManager = null;
         description = null;
         logger = null;
-        version = null;
+        pluginVersion = null;
         System.out.printf("Elementals was disabled in %.2f seconds%n",
                 (float) System.currentTimeMillis() - end);
     }
@@ -191,7 +176,7 @@ public class Elementals extends JavaPlugin {
                 .load();
     }
 
-    private Version getVersion() {
+    private Version getPluginVersion() {
         try {
             String packageName = this.getServer().getClass().getPackage().getName();
             String version = packageName.substring(packageName.lastIndexOf('.') + 1);

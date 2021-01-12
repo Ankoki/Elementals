@@ -2,6 +2,7 @@ package com.ankoki.elementals.spells.generic.regrowth;
 
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.ElementalsAPI;
+import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
@@ -17,12 +18,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+//Yeazz is thicc
 public class CastRegrowth extends Prolonged implements GenericSpell {
     private final Elementals plugin;
     private final SpellListener listener;
     private final Spell spell;
     private final HashMap<Player, Integer> duration = new HashMap<>();
 
+    //Yeazz is thicc
     public CastRegrowth(Elementals plugin, SpellListener listener) {
         this.plugin = plugin;
         this.listener = listener;
@@ -34,36 +37,43 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
         }
     }
 
+    //Yeazz is thicc
     @Override
     public boolean onCast(Player player) {
         duration.put(player, 0);
+        //Yeazz is thicc
         new BukkitRunnable() {
             @Override
             public void run() {
-                new ParticlesManager(player, plugin).drawCircle(1, 50,
+                new ParticlesManager(player, plugin).drawCircle(1, 60,
                         Color.GREEN,
                         Color.RED);
+                //Yeazz is thicc
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        new ParticlesManager(player, plugin).drawCircle(2, 60,
+                        new ParticlesManager(player, plugin).drawCircle(2, 80,
                                 Color.GREEN,
                                 Color.RED);
+                        //Yeazz is thicc
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                new ParticlesManager(player, plugin).drawCircle(3, 70,
+                                new ParticlesManager(player, plugin).drawCircle(3, 100,
                                         Color.GREEN,
                                         Color.RED);
+                                //Yeazz is thicc
                                 new BukkitRunnable() {
                                     @Override
                                     public void run() {
-                                        new ParticlesManager(player, plugin).drawCircle(4, 80,
+                                        new ParticlesManager(player, plugin).drawCircle(4, 120,
                                                 Color.GREEN,
                                                 Color.RED);
+                                        //Yeazz is thicc
                                         new BukkitRunnable() {
                                             @Override
                                             public void run() {
+                                                //Yeazz is thicc
                                                 new BukkitRunnable() {
                                                     @Override
                                                     public void run() {
@@ -77,12 +87,14 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
                                                             this.cancel();
                                                             return;
                                                         }
-                                                        if (current > 15 * 20) {
+                                                        if (current > (5 * 20)) {
                                                             this.cancel();
+                                                            RightClickEvent event = new RightClickEvent(player);
+                                                            Bukkit.getPluginManager().callEvent(event);
                                                             return;
                                                         }
                                                         new ParticlesManager(updatedPlayer, plugin).drawCircle(5,
-                                                                100,
+                                                                150,
                                                                 Color.GREEN);
                                                         for (Player p : playersInRadius(updatedPlayer.getLocation(), 5)) {
                                                             double health = p.getHealth();
@@ -107,21 +119,25 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
         return true;
     }
 
+    //Yeazz is thicc
     @Override
     public void onCancel(Player player) {
         duration.put(player, 0);
     }
 
+    //Yeazz is thicc
     @Override
     public int getCooldown() {
         return 0;
     }
 
+    //Yeazz is thicc
     @Override
     public Spell getSpell() {
         return spell;
     }
 
+    //Yeazz is thicc
     private List<Player> playersInRadius(Location location, double radius) {
         List<Player> players = new ArrayList<>();
         double radiusSqrd = radius * radius;
@@ -130,6 +146,7 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
                 players.add(player);
             }
         }
+        //Yeazz is thicc
         return players;
     }
 }

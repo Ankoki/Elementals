@@ -35,14 +35,18 @@ public class ElementalsAPI {
             for (Spell spell : allSpells) {
                 if (spell.getId() == newSpell.getId()) {
                     throw new IdInUseException();
+                    //System.out.println("apparently in use " + spell.getId());
+                    //System.out.println("apparently it equals this" + spell.getId() + " this is the spell " +spell.getSpellName());
                 }
                 if (spell.getSpellName().equalsIgnoreCase(newSpell.getSpellName())) {
                     throw new NameInUseException();
+                    //System.out.println("appartenly in use " + spell.getSpellName());
+                    //System.out.println("apparently it equals this" + spell.getId() + " this is the spell " +spell.getSpellName());
                 }
             }
         }
         allSpells.addAll(Arrays.asList(spells));
-        //if (plugin == Elementals.getInstance()) return;
+        if (plugin == Elementals.getInstance()) return;
         String owningPl = plugin.getDescription().getName();
         for (Spell newSpell : spells) {
             System.out.println(owningPl + " has registered the spell " + newSpell.getSpellName() + "!");
@@ -66,7 +70,7 @@ public class ElementalsAPI {
                 return listSpell;
             }
         }
-        return new Spell("Regrowth", 3737, true);
+        return null;
     }
 
     /**

@@ -42,12 +42,6 @@ public class CastDash implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        Spell spell = new Spell("Dash", 3732, false);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return spell;
     }
 }

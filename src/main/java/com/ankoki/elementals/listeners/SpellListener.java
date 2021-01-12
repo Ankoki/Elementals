@@ -40,30 +40,20 @@ public class SpellListener implements Listener {
     private void onRightClick(RightClickEvent e) {
         Player player = e.getPlayer();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
-        player.sendMessage("debug1");
         if (heldItem.getType() != Material.AIR) {
-            player.sendMessage("debug2");
             for (GenericSpell genericSpell : ElementalsAPI.getGenericSpells()) {
-                player.sendMessage("debug3");
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(genericSpell.getSpell())) {
-                    player.sendMessage("debug4");
                     if (cooldownExpired(player, genericSpell.getSpell(), genericSpell.getCooldown())) {
-                        player.sendMessage("debug5");
                         if (plugin.spellEnabled(genericSpell.getSpell())) {
-                            player.sendMessage("debug6");
                             GenericSpellCastEvent event = new GenericSpellCastEvent(player, genericSpell.getSpell(),
                                     genericSpell.getCooldown());
                             Bukkit.getPluginManager().callEvent(event);
                             if (!event.isCancelled()) {
-                                player.sendMessage("debug7");
                                 e.setCancelled(true);
                                 if (genericSpell instanceof Prolonged) {
-                                    player.sendMessage("debug8");
                                     if (!isCasting(player)) {
-                                        player.sendMessage("debug9");
                                         if (genericSpell.onCast(player)) {
-                                            player.sendMessage("debug10");
                                             addCaster(player, genericSpell.getSpell());
                                             Utils.sendActionBar(player, Messages.msg("on-cast")
                                                     .replace("%spell%", genericSpell.getSpell().getSpellName()));
@@ -98,7 +88,7 @@ public class SpellListener implements Listener {
                     return;
                 }
             }
-            for (EntitySpell entitySpell : plugin.getEntitySpells()) {
+            for (EntitySpell entitySpell : ElementalsAPI.getEntitySpells()) {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(entitySpell.getSpell())) {
                     if (plugin.spellEnabled(entitySpell.getSpell())) {
@@ -124,7 +114,7 @@ public class SpellListener implements Listener {
         Entity entity = e.getRightClicked();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
         if (heldItem.getType() != Material.AIR) {
-            for (EntitySpell entitySpell : plugin.getEntitySpells()) {
+            for (EntitySpell entitySpell : ElementalsAPI.getEntitySpells()) {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(entitySpell.getSpell())) {
                     if (!isCasting(player)) {
