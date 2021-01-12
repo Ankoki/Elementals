@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.generic.rise;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
@@ -28,6 +29,12 @@ public class CastRise implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        return Spell.RISE;
+        Spell spell = new Spell("Rise", 3736, false);
+        try {
+            ElementalsAPI.addSpell(spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return spell;
     }
 }

@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.generic.medic;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,12 @@ public class CastMedic implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        return Spell.MEDIC;
+        Spell spell = new Spell("Medic", 3735, false);
+        try {
+            ElementalsAPI.addSpell(spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return spell;
     }
 }

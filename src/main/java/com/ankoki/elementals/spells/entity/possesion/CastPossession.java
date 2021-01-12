@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.entity.possesion;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.managers.EntitySpell;
 import com.ankoki.elementals.managers.Prolonged;
@@ -73,6 +74,12 @@ public class CastPossession extends Prolonged implements EntitySpell {
 
     @Override
     public Spell getSpell() {
-        return Spell.POSSESSION;
+        Spell spell = new Spell("Possession", 3731, true);
+        try {
+            ElementalsAPI.addSpell(spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return spell;
     }
 }

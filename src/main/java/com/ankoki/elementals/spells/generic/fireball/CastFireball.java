@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.generic.fireball;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,12 @@ public class CastFireball implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        return Spell.FIREBALL;
+        Spell spell = new Spell("Fireball", 3733, false);
+        try {
+            ElementalsAPI.addSpell(spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return spell;
     }
 }

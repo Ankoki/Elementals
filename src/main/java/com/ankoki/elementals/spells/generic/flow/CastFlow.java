@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.generic.flow;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Prolonged;
@@ -69,6 +70,12 @@ public class CastFlow extends Prolonged implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        return Spell.FLOW;
+        Spell spell = new Spell("Flow", 3734, false);
+        try {
+            ElementalsAPI.addSpell(spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return spell;
     }
 }

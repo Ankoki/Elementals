@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.generic.dash;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
@@ -32,6 +33,12 @@ public class CastDash implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        return Spell.DASH;
+        Spell spell = new Spell("Dash", 3732, false);
+        try {
+            ElementalsAPI.addSpell(spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return spell;
     }
 }
