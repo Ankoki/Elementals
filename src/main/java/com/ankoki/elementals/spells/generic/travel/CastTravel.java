@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.generic.travel;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
@@ -10,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import redempt.redlib.commandmanager.Messages;
 
 @SuppressWarnings("unused")
@@ -47,6 +47,12 @@ public class CastTravel implements GenericSpell {
 
     @Override
     public Spell getSpell() {
-        return Spell.TRAVEL;
+        Spell spell = new Spell("Travel", 3730, false);
+        try {
+            ElementalsAPI.addSpell(spell);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return spell;
     }
 }

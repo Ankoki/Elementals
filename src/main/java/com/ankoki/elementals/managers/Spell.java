@@ -1,22 +1,26 @@
 package com.ankoki.elementals.managers;
 
+import com.ankoki.elementals.ElementalsAPI;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum Spell {
-    TRAVEL("Travel", 3730, false),
-    FLOW("Flow", 3731, true),
-    RISE("Rise", 3732, false),
-    FIREBALL("Fireball", 3733, false),
-    POSSESSION("Possession", 3734, true),
-    DASH("Dash", 3735, false),
-    MEDIC("Medic", 3736, false);
+public class Spell {
+    @Getter
+    private String spellName;
+    @Getter
+    private int id;
+    @Getter
+    private boolean prolonged;
 
-    @Getter
-    private final String spellName;
-    @Getter
-    private final int id;
-    @Getter
-    private final boolean isProlonged;
+    public Spell(String spellName, int id, boolean prolonged) {
+        this.spellName = spellName;
+        this.id = id;
+        this.prolonged = prolonged;
+        try {
+            ElementalsAPI.addSpell(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

@@ -37,7 +37,6 @@ import redempt.redlib.configmanager.annotations.ConfigValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -58,6 +57,8 @@ public class Elementals extends JavaPlugin {
     @SuppressWarnings("FieldMayBeFinal")
     private List<Spell> enabledSpells = ConfigManager.list(Spell.class);
     public static Version SERVER_VERSION;
+    @Getter
+    private static Elementals instance;
 
     @Override
     public void onEnable() {
@@ -105,9 +106,9 @@ public class Elementals extends JavaPlugin {
             return;
         }
 
+        instance = this;
         //Loading config and messages
         Messages.load(this);
-        Collections.addAll(enabledSpells, Spell.values());
         this.loadConfiguration();
         //Registering Listeners
         SpellListener spellListener = new SpellListener(this);
@@ -155,7 +156,7 @@ public class Elementals extends JavaPlugin {
 
     private void registerCommand() {
         ArgType<Spell> spellType = new ArgType<>("spell", Elementals::getSpell)
-                .tabStream(c -> Arrays.stream(Spell.values()).map(Spell::getSpellName).map(String::toLowerCase));
+                .tabStream(c -> (ElementalsAPI.getAllSpells()).stream().map(Spell::getSpellName).map(String::toLowerCase));
         new CommandParser(this.getResource("command.txt"))
                 .setArgTypes(spellType)
                 .setContextProviders(ContextProvider.mainHand)
@@ -179,12 +180,12 @@ public class Elementals extends JavaPlugin {
     }
 
     private static Spell getSpell(String s) {
-        return Spell.valueOf(s.toUpperCase());
+        return ElementalsAPI.valueOf(s.toUpperCase());
     }
 
     private void loadConfiguration() {
         configManager = new ConfigManager(this)
-                .addConverter(Spell.class, Spell::valueOf, Spell::toString)
+                .addConverter(Spell.class, ElementalsAPI::valueOf, Spell::toString)
                 .register(this)
                 .saveDefaults()
                 .load();

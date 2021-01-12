@@ -1,5 +1,7 @@
 package com.ankoki.elementals.managers;
 
+import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.ElementalsAPI;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +29,7 @@ public class ItemManager {
 
     public ItemManager removeSpells() {
         NBTItem wand = new NBTItem(item);
-        for (Spell spell : Spell.values()) {
+        for (Spell spell : Elementals.getInstance().getEnabledSpells()) {
             if (wand.hasKey(Integer.toString(spell.getId()))) {
                 wand.removeKey(Integer.toString(spell.getId()));
             }
@@ -38,7 +40,7 @@ public class ItemManager {
 
     public boolean hasSpell() {
         NBTItem wand = new NBTItem(item);
-        for (Spell spell : Spell.values()) {
+        for (Spell spell : Elementals.getInstance().getEnabledSpells()) {
             if (wand.hasKey(Integer.toString(spell.getId()))) {
                 return true;
             }
