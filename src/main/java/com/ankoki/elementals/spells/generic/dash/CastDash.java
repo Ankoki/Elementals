@@ -6,7 +6,6 @@ import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
@@ -14,7 +13,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-@RequiredArgsConstructor
 public class CastDash implements GenericSpell {
     private final Elementals plugin;
     private final Spell spell;
