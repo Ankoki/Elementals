@@ -44,7 +44,7 @@ This manages anything you need to within the plugin, and other things may be add
 ### Permissions
 | Permission | Default | Description |  
 | :-- | :--: | :-- |  
-| `elementals.admin` | FALSE | This allows you to do anything, similar to *. This is the wildcard permission. |  
+| `elementals.admin` | FALSE | This allows you to do anything, similar to *. This is the wildcard perm. |  
 | `elementals.reload` | FALSE | Lets the player reload the messages and config. |  
 | `elementals.enchant` | FALSE | Allows the player to enchant wands. |  
 | `elementals.disenchant` | FALSE | Allows the player to disenchant wands. |  
