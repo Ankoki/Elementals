@@ -3,7 +3,6 @@ package com.ankoki.elementals.events;
 import com.ankoki.elementals.managers.Spell;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -30,7 +29,6 @@ public class SpellCastEvent extends Event implements Cancellable {
         this.player = player;
         this.spell = spell;
         this.cooldown = cooldown;
-        Bukkit.getPluginManager().callEvent(this);
     }
 
     public SpellCastEvent(Player player, Entity entity, Spell spell, long cooldown) {
@@ -38,7 +36,6 @@ public class SpellCastEvent extends Event implements Cancellable {
         this.entity = entity;
         this.spell = spell;
         this.cooldown = cooldown;
-        Bukkit.getPluginManager().callEvent(this);
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.utils.Utils;
 import com.ankoki.elementals.managers.Spell;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -49,8 +50,10 @@ public class SpellListener implements Listener {
                             if (plugin.spellEnabled(genericSpell.getSpell())) {
                                 SpellCastEvent defaultEvent = new SpellCastEvent(player, genericSpell.getSpell(),
                                         genericSpell.getCooldown());
+                                Bukkit.getPluginManager().callEvent(defaultEvent);
                                 GenericSpellCastEvent event = new GenericSpellCastEvent(player, genericSpell.getSpell(),
                                         genericSpell.getCooldown());
+                                Bukkit.getPluginManager().callEvent(event);
                                 if (!event.isCancelled() && !defaultEvent.isCancelled()) {
                                     e.setCancelled(true);
                                     if (genericSpell instanceof Prolonged) {
@@ -127,8 +130,10 @@ public class SpellListener implements Listener {
                             if (plugin.spellEnabled(entitySpell.getSpell())) {
                                 SpellCastEvent defaultEvent = new SpellCastEvent(player, entity,
                                         entitySpell.getSpell(), entitySpell.getCooldown());
+                                Bukkit.getPluginManager().callEvent(defaultEvent);
                                 EntitySpellCastEvent event = new EntitySpellCastEvent(player, entity,
                                         entitySpell.getSpell(), entitySpell.getCooldown());
+                                Bukkit.getPluginManager().callEvent(event);
                                 if (!event.isCancelled() && !defaultEvent.isCancelled()) {
                                     e.setCancelled(true);
                                     if (entitySpell instanceof Prolonged) {
