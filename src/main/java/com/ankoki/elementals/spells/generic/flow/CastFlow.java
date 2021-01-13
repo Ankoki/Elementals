@@ -1,14 +1,16 @@
 package com.ankoki.elementals.spells.generic.flow;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.ElementalsAPI;
+import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,24 +18,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 import redempt.redlib.commandmanager.Messages;
 
 @SuppressWarnings("ConstantConditions")
+@RequiredArgsConstructor
 public class CastFlow extends Prolonged implements GenericSpell {
     private final Elementals plugin;
     private final SpellListener listener;
-    private final Spell spell;
+    private final Spell spell = new Spell("Flow", 3734, true);
     @Getter
     @Setter
     private int cooldown = 60;
-
-    public CastFlow(Elementals plugin, SpellListener listener) {
-        this.plugin = plugin;
-        this.listener = listener;
-        this.spell = new Spell("Flow", 3734, true);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @Override
     public boolean onCast(Player player) {
@@ -45,13 +37,15 @@ public class CastFlow extends Prolonged implements GenericSpell {
                     if (targetBlock.getBlock().getType() != Material.AIR &&
                         targetBlock.getBlock().getType() != Material.WATER) {
                         listener.removeCaster(player);
-                        Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
+                        RightClickEvent event = new RightClickEvent(player);
+                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }
                     if (!listener.isCasting(player)) {
                         listener.removeCaster(player);
-                        Utils.sendActionBar(player, Messages.msg("flow-interrupted"));
+                        RightClickEvent event = new RightClickEvent(player);
+                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }

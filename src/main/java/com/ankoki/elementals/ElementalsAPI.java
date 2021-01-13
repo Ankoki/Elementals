@@ -34,12 +34,12 @@ public class ElementalsAPI {
         for (Spell newSpell : spells) {
             for (Spell spell : allSpells) {
                 if (spell.getId() == newSpell.getId()) {
-                    //throw new IdInUseException();
+                    throw new IdInUseException();
                     //System.out.println("apparently in use " + spell.getId());
                     //System.out.println("apparently it equals this" + spell.getId() + " this is the spell " +spell.getSpellName());
                 }
                 if (spell.getSpellName().equalsIgnoreCase(newSpell.getSpellName())) {
-                    //throw new NameInUseException();
+                    throw new NameInUseException();
                     //System.out.println("appartenly in use " + spell.getSpellName());
                     //System.out.println("apparently it equals this" + spell.getId() + " this is the spell " +spell.getSpellName());
                 }

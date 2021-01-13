@@ -1,13 +1,13 @@
 package com.ankoki.elementals.spells.generic.regrowth;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -19,23 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 
 //Yeazz is thicc
+@RequiredArgsConstructor
 public class CastRegrowth extends Prolonged implements GenericSpell {
     private final Elementals plugin;
     private final SpellListener listener;
-    private final Spell spell;
+    private final Spell spell = new Spell("Regrowth", 3737, false);
     private final HashMap<Player, Integer> duration = new HashMap<>();
-
-    //Yeazz is thicc
-    public CastRegrowth(Elementals plugin, SpellListener listener) {
-        this.plugin = plugin;
-        this.listener = listener;
-        this.spell = new Spell("Regrowth", 3737, false);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     //Yeazz is thicc
     @Override

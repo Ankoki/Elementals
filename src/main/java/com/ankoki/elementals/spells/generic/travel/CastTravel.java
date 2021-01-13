@@ -1,12 +1,12 @@
 package com.ankoki.elementals.spells.generic.travel;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -15,22 +15,13 @@ import org.bukkit.entity.Player;
 import redempt.redlib.commandmanager.Messages;
 
 @SuppressWarnings("unused")
+@RequiredArgsConstructor
 public class CastTravel implements GenericSpell {
     private final Elementals plugin;
-    private final Spell spell;
+    private final Spell spell = new Spell("Travel", 3730, false);
     @Getter
     @Setter
     private int cooldown = 10;
-
-    public CastTravel(Elementals plugin) {
-        this.plugin = plugin;
-        this.spell = new Spell("Travel", 3730, false);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @Override
     public boolean onCast(Player player) {

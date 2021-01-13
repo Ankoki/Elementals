@@ -1,39 +1,29 @@
 package com.ankoki.elementals.spells.entity.possesion;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.ElementalsAPI;
+import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.managers.EntitySpell;
 import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import redempt.redlib.commandmanager.Messages;
 
+@RequiredArgsConstructor
 public class CastPossession extends Prolonged implements EntitySpell {
     private final Elementals plugin;
     private final SpellListener listener;
-    private final Spell spell;
+    private final Spell spell = new Spell("Possession", 3731, true);
     @Getter
     @Setter
     private int cooldown = 10;
-
-    public CastPossession(Elementals plugin, SpellListener listener) {
-        this.plugin = plugin;
-        this.listener = listener;
-        this.spell = new Spell("Possession", 3731, true);
-        try {
-            ElementalsAPI.registerSpell(plugin, spell);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @Override
     public boolean onCast(Player player, Entity entity) {
@@ -48,17 +38,18 @@ public class CastPossession extends Prolonged implements EntitySpell {
                         if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             player.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }
-                        listener.removeCaster(player);
+                        RightClickEvent event = new RightClickEvent(player);
+                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }
                     if (entity.isDead()) {
                         listener.removeCaster(player);
-                        Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                                .replace("%spell%", "Possession"));
                         if (p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }
+                        RightClickEvent event = new RightClickEvent(player);
+                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }
@@ -66,6 +57,8 @@ public class CastPossession extends Prolonged implements EntitySpell {
                         if (p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }
+                        RightClickEvent event = new RightClickEvent(player);
+                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }
