@@ -10,8 +10,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-
-public class EntitySpellCastEvent extends Event implements Cancellable {
+public class SpellCastEvent extends Event implements Cancellable {
 
     @Getter
     @Setter
@@ -21,13 +20,20 @@ public class EntitySpellCastEvent extends Event implements Cancellable {
     @Getter
     private final Player player;
     @Getter
-    private final Entity entity;
-    @Getter
     private final Spell spell;
     @Getter
     private final long cooldown;
+    @Getter
+    private Entity entity = null;
 
-    public EntitySpellCastEvent(Player player, Entity entity, Spell spell, long cooldown) {
+    public SpellCastEvent(Player player, Spell spell, long cooldown) {
+        this.player = player;
+        this.spell = spell;
+        this.cooldown = cooldown;
+        Bukkit.getPluginManager().callEvent(this);
+    }
+
+    public SpellCastEvent(Player player, Entity entity, Spell spell, long cooldown) {
         this.player = player;
         this.entity = entity;
         this.spell = spell;

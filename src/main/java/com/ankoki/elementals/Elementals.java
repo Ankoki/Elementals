@@ -78,8 +78,11 @@ public class Elementals extends JavaPlugin {
         if (this.getPluginVersion() == Version.UNKNOWN) {
             logger.severe(" # # # # # # # # # # # # # # #");
             logger.severe(" # ");
-            logger.severe(" # You are running on an unknown pluginVersion!");
-            logger.severe(" # There is will be an update to support shortly!");
+            logger.severe(" # You are running on an unknown minecraft version!");
+            logger.severe(" # If you are running below 1.7... what are you doing?");
+            logger.severe(" # Anything below 1.13 is not supported by Elementals!");
+            logger.severe(" # If you are running on a very new plugin version, don't worry!");
+            logger.severe(" # There is will be an update to provide support shortly!");
             logger.severe(" # Disabling...");
             logger.severe(" # ");
             logger.severe(" # # # # # # # # # # # # # # #");
@@ -129,7 +132,7 @@ public class Elementals extends JavaPlugin {
         Messages.load(this);
         this.loadConfiguration();
         logger.info(String.format("%s v%s was enabled in %.2f seconds (" + (System.currentTimeMillis() - start) + "ms)\n",
-                description.getName(), description.getVersion(), (float) System.currentTimeMillis() - start));
+                description.getName(), pluginVersion, (float) System.currentTimeMillis() - start));
     }
 
     @Override

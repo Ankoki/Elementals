@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ElementalsAPI {
+public final class ElementalsAPI {
 
     @Getter
     private static final List<Spell> allSpells = new ArrayList<>();
@@ -20,6 +20,10 @@ public class ElementalsAPI {
     private static final List<GenericSpell> genericSpells = new ArrayList<>();
     @Getter
     private static final List<EntitySpell> entitySpells = new ArrayList<>();
+
+    private ElementalsAPI() throws IllegalAccessException {
+        throw new IllegalAccessException("You cannot make a new instance of this class!");
+    }
 
     /**
      * Registers the spell which is used in a plugin
