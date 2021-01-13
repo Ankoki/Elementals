@@ -42,13 +42,13 @@ public class Elementals extends JavaPlugin {
     private PluginDescriptionFile description;
     private PluginManager pluginManager;
     private Logger logger;
-    @Getter
     private String pluginVersion;
     @Getter
     private ConfigManager configManager;
     @Getter
-    @ConfigValue("enabled-spells")
-    private List<Spell> enabledSpells = ConfigManager.list(Spell.class);
+    @ConfigValue("disabled-spells")
+    @SuppressWarnings("FieldMayBeFinal")
+    private final List<Spell> disabledSpells = ConfigManager.list(Spell.class);
     public static Version SERVER_VERSION;
     @Getter
     private static Elementals instance;
@@ -187,7 +187,7 @@ public class Elementals extends JavaPlugin {
     }
 
     public boolean spellEnabled(Spell spell) {
-        return enabledSpells.contains(spell);
+        return !disabledSpells.contains(spell);
     }
 
     /*

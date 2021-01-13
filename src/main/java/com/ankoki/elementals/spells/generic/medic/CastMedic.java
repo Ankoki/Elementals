@@ -2,10 +2,12 @@ package com.ankoki.elementals.spells.generic.medic;
 
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class CastMedic implements GenericSpell {
         double health = player.getHealth() + 5;
         if (health > 20) health = 20;
         player.setHealth(health);
+        new ParticlesManager(player, plugin).scatterParticles(5, Particle.HEART, Particle.VILLAGER_HAPPY);
         return true;
     }
 

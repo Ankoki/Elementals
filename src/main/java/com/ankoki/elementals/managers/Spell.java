@@ -3,16 +3,14 @@ package com.ankoki.elementals.managers;
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.ElementalsAPI;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class Spell {
     @Getter
-    private String spellName;
+    private final String spellName;
     @Getter
-    private int id;
+    private final int id;
     @Getter
-    private boolean prolonged;
+    private final boolean prolonged;
 
     public Spell(String spellName, int id, boolean prolonged) {
         this.spellName = spellName;

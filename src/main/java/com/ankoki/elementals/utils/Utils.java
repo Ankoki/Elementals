@@ -2,6 +2,7 @@ package com.ankoki.elementals.utils;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Material;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
-public class Utils {
+public final class Utils {
 
     /**
      * Replaces minecraft's § in messages with &, the default and
@@ -94,4 +95,15 @@ public class Utils {
         return pluginVer >= required;
     }
 
+    /**
+     * Checks if a player has logged off, or they cannot be updated for any reason.
+     *
+     * @param player The player you want to check.
+     * @return If the player can continue casting.
+     */
+    public static boolean canCast(Player player) {
+        Player updated = Bukkit.getPlayer(player.getUniqueId());
+        if (updated == null) return false;
+        return player.isOnline();
+    }
 }

@@ -7,6 +7,7 @@ import com.ankoki.elementals.managers.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Prolonged;
 import com.ankoki.elementals.managers.Spell;
+import com.ankoki.elementals.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -68,7 +69,7 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
                                                     public void run() {
                                                         int current = duration.get(player);
                                                         Player updatedPlayer = Bukkit.getPlayer(player.getUniqueId());
-                                                        if (updatedPlayer == null || !player.isOnline()) {
+                                                        if (!Utils.canCast(player)) {
                                                             this.cancel();
                                                             return;
                                                         }

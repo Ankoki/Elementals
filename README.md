@@ -52,5 +52,156 @@ I hope you enjoy using this plugin, and if you have any suggestions, feedback, o
 let me know, either in the [issue tracker](https://www.github.com/Ankoki-Dev/Elementals/issues), or 
 [my discord](https://www.discord.gg/aCDNj8s):)
 ## Developers
-There is currently no proper way to register your own spells, however I am working on a way to implement this, 
-this spot will be updated when there is a proper way.
+There is now a way to register your own spells!  
+There are two types of spell you can create.  
+### Generic Spell
+A generic spell is cast when you right click anywhere. You make this spell by implementing the GenericSpell 
+interface. An example of a basic GenericSpell is as follows:  
+
+```java
+import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.managers.Spell;
+import org.bukkit.entity.Player;
+
+public class YourSpell implements GenericSpell {
+    /*This is your spell. It requires a name, an id, and if your spell is prolonged.
+    The ID and spell name must be indivudual, or you will generate an exception. 
+    We will tackle prolonged spells later on.*/
+    private final Spell spell = new Spell("SpellName", 262, false);
+
+    //What you want to happen when the spell is cast
+    @Override
+    public boolean onCast(Player player) {
+        player.setFlying(true);
+        return true; //You return true when the spell is cast successfully, this enables the cooldown.
+    }
+
+    //This returns the spell you created
+    @Override
+    public Spell getSpell() {
+        return spell;
+    }
+    
+    //The cooldown you want to be applied when the spell is cast successfully, in seconds.
+    @Override
+    public int getCooldown() {
+        return 3;
+    }
+}
+```
+This will create a spell which sets you to flying. However, you will need to register your spell when your
+plugin is enabled. This is easy enough to do. You need to use this line in your onEnable():  
+`ElementalsAPI.registerGenericSpells(new YourSpell());`  
+This will register your spell with Elementals and now you have a functioning Generic Spell!
+### Entity Spell
+An entity spell is cast when you right click on an entitiy. You make this spell by implementing the EntitySpell
+interface. An example of a basic EntitySpell is as follows:
+
+```java
+import com.ankoki.elementals.managers.EntitySpell;
+import com.ankoki.elementals.managers.Spell;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+
+public class YourSpell implements EntitySpell {
+    /*This is your spell. It requires a name, an id, and if your spell is prolonged.
+    The ID and spell name must be indivudual, or you will generate an exception. 
+    We will tackle prolonged spells later on.*/
+    private final Spell spell = new Spell("SpellName", 262, false);
+
+    //What you want to happen when the spell is cast
+    @Override
+    public boolean onCast(Player player, Entity entity) {
+        if (entity instanceof Player) {
+            Player clickedPlayer = (Player) entity;
+            clickedPlayer.setHealth(0);
+            return true;
+        }
+        return false; //As the spell wasn't cast successfully, we return false and the cooldown isn't set.
+    }
+
+    //This returns the spell you created
+    @Override
+    public Spell getSpell() {
+        return spell;
+    }
+
+    //The cooldown you want to be applied when the spell is cast successfully, in seconds.
+    @Override
+    public int getCooldown() {
+        return 300;
+    }
+}
+```
+This creates a spell which kills the player you right click. An important note to take in is that you need to 
+check what type of entity was clicked. You still also need to register the EntitySpells, and the way is nearly 
+identical to the previous way:  
+`ElementalsAPI.registerEntitySpells(new YourSpell());`  
+You now know how to make both type of spells!
+### Prolonged
+The last thing that is essential to know is that you can make a spell prolonged, and is casted until 
+the player attempts to cast again, leaves the game, or swaps tool. A prime example of a Prolonged spell in 
+Elementals is Regrowth. To make a prolonged spell, there is not much too it. We will make this a GenericSpell type.
+
+```java
+import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.managers.ParticlesManager;
+import com.ankoki.elementals.managers.Prolonged;
+import com.ankoki.elementals.managers.Spell;
+import com.ankoki.elementals.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+//You need to extend Prolonged to create a prolonged spell
+public class YourSpell extends Prolonged implements GenericSpell {
+    //Remember the spell asks if the spell is prolonged, and so the last boolean needs to be true to account for this.
+    private final Spell spell = new Spell("SpellName", 262, true);
+    private final JavaPlugin plugin;
+    
+    public YourSpell(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    //The onCast is the same, this is just an example of something you can do.
+    @Override
+    public boolean onCast(Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!Utils.canCast(player)) {
+                    this.cancel();
+                }
+                Player updated = Bukkit.getPlayer(player.getUniqueId());
+                new ParticlesManager(updated, plugin).spawnRings(1, true, Color.BLUE);
+            }
+        }.runTaskTimer(plugin, 0L, 2L);
+        return true;
+    }
+
+    @Override
+    public Spell getSpell() {
+        return spell;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3;
+    }
+
+    /*This gets called when the player stops casting the spell, you can do other things here.
+    This method is optional and you do not have to include it. It'll still be cancellable if you do not include it*/
+    @Override
+    public void onCancel(Player player) {
+        new ParticlesManager(player, plugin).drawCircle(3, 100, Color.RED);
+    }
+}
+```
+It's as simple as that! To register a prolonged spell, you don't need to do anything different. You can just 
+use the `ElementalsAPI.registerGenericSpell(new YourSpell())` like when registering a normal spell!  
+If there is anything you need/want added, or you have any suggestions, feel free to let me know in either the
+[issue tracker](https://www.github.com/Ankoki-Dev/Elementals/issues), or [my discord](https://www.discord.gg/aCDNj8s) 
+and I'll be happy to help!
