@@ -44,48 +44,52 @@ public class SpellListener implements Listener {
             for (GenericSpell genericSpell : ElementalsAPI.getGenericSpells()) {
                 ItemManager wand = new ItemManager(heldItem);
                 if (wand.hasSpell(genericSpell.getSpell())) {
-                    if (cooldownExpired(player, genericSpell.getSpell(), genericSpell.getCooldown())) {
-                        if (plugin.spellEnabled(genericSpell.getSpell())) {
-                            GenericSpellCastEvent event = new GenericSpellCastEvent(player, genericSpell.getSpell(),
-                                    genericSpell.getCooldown());
-                            Bukkit.getPluginManager().callEvent(event);
-                            if (!event.isCancelled()) {
-                                e.setCancelled(true);
-                                if (genericSpell instanceof Prolonged) {
-                                    if (!isCasting(player)) {
-                                        if (genericSpell.onCast(player)) {
-                                            addCaster(player, genericSpell.getSpell());
-                                            Utils.sendActionBar(player, Messages.msg("on-cast")
+                    if (player.hasPermission("elementals.cast")) {
+                        if (cooldownExpired(player, genericSpell.getSpell(), genericSpell.getCooldown())) {
+                            if (plugin.spellEnabled(genericSpell.getSpell())) {
+                                GenericSpellCastEvent event = new GenericSpellCastEvent(player, genericSpell.getSpell(),
+                                        genericSpell.getCooldown());
+                                Bukkit.getPluginManager().callEvent(event);
+                                if (!event.isCancelled()) {
+                                    e.setCancelled(true);
+                                    if (genericSpell instanceof Prolonged) {
+                                        if (!isCasting(player)) {
+                                            if (genericSpell.onCast(player)) {
+                                                addCaster(player, genericSpell.getSpell());
+                                                Utils.sendActionBar(player, Messages.msg("on-cast")
+                                                        .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                                            }
+                                        } else {
+                                            ((Prolonged) genericSpell).onCancel(player);
+                                            removeCaster(player);
+                                            Utils.sendActionBar(player, Messages.msg("on-stop-cast")
                                                     .replace("%spell%", genericSpell.getSpell().getSpellName()));
                                         }
-                                    } else {
-                                        ((Prolonged) genericSpell).onCancel(player);
-                                        removeCaster(player);
-                                        Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                                                .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                                        return;
                                     }
-                                    return;
-                                }
-                                if (genericSpell.onCast(player)) {
-                                    cooldown.put(genericSpell.getSpell(), System.currentTimeMillis());
-                                    spellCooldown.put(player, cooldown);
-                                    Utils.sendActionBar(player, Messages.msg("on-cast")
+                                    if (genericSpell.onCast(player)) {
+                                        cooldown.put(genericSpell.getSpell(), System.currentTimeMillis());
+                                        spellCooldown.put(player, cooldown);
+                                        Utils.sendActionBar(player, Messages.msg("on-cast")
+                                                .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                                        return;
+                                    }
+                                } else {
+                                    Utils.sendActionBar(player, Messages.msg("cancelled-spell")
                                             .replace("%spell%", genericSpell.getSpell().getSpellName()));
-                                    return;
                                 }
                             } else {
-                                Utils.sendActionBar(player, Messages.msg("cancelled-spell")
+                                Utils.sendActionBar(player, Messages.msg("disabled-spell")
                                         .replace("%spell%", genericSpell.getSpell().getSpellName()));
                             }
                         } else {
-                            Utils.sendActionBar(player, Messages.msg("disabled-spell")
-                                    .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                            Utils.sendActionBar(player, Messages.msg("cooldown")
+                                    .replace("%cooldown%", Integer.toString(genericSpell.getCooldown())));
                         }
-                    } else {
-                        Utils.sendActionBar(player, Messages.msg("cooldown")
-                                .replace("%cooldown%", Integer.toString(genericSpell.getCooldown())));
+                        return;
                     }
-                    return;
+                } else {
+                    Utils.sendActionBar(player, Messages.msg("no-permission"));
                 }
             }
             for (EntitySpell entitySpell : ElementalsAPI.getEntitySpells()) {

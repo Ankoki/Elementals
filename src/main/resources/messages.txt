@@ -15,3 +15,4 @@ flow-interrupted: &eYou have stopped casting flow!
 flow-no-water: &eThis spell requires water!
 travel-solid: &eYou can only teleport to solid blocks!
 already-casting: &eYou are already casting a spell!
+no-permission: &eYou don't have permission to cast spells!

@@ -19,6 +19,9 @@ permissions:
   elementals.bypass:
     default: op
     description: Allows player's to bypass cooldowns on spells.
+  elementals.cast:
+    default: true
+    description: Allows player's to cast spells.
   elementals.specialpermonlyiknowmwahahahaha:
     default: false
     description: Only the dev has this for testing purposes.
