@@ -39,14 +39,16 @@ Medic is a Generic Spell which heals the player. This is useful during fights.
 ### Command
 There is currently one command in Elementals, and this is /elementals. The current applicable arguments are as follows, 
 where (1|2) are choices, and [option] is optional.  
-/elementals [(enchant|disenchant|info|reload)] [spell]  
+`/elementals [(enchant|disenchant|info|reload)] [spell]`  
 This manages anything you need to within the plugin, and other things may be added in the future.  
 ### Permissions
-elementals.admin : This allows you to do anything, similar to *. This is the wildcard permission.  
-elementals.reload : Lets the player reload the messages and config.  
-elementals.enchant : Allows the player to enchant wands.  
-elementals.disenchant : Allows the player to disenchant wands.  
-elementals.bypass : This bypasses the cooldown for spells.
+| Permission | Description |  
+| :-- | :-- |  
+| `elementals.admin` | This allows you to do anything, similar to *. This is the wildcard permission. |  
+| `elementals.reload` | Lets the player reload the messages and config. |  
+| `elementals.enchant` | Allows the player to enchant wands. |  
+| `elementals.disenchant` | Allows the player to disenchant wands. |  
+| `elementals.bypass` | This bypasses the cooldown for spells |  
 ### Enjoy!
 I hope you enjoy using this plugin, and if you have any suggestions, feedback, or anything of the sort, make sure to 
 let me know, either in the [issue tracker](https://www.github.com/Ankoki-Dev/Elementals/issues), or 
