@@ -201,7 +201,11 @@ public class YourSpell extends Prolonged implements GenericSpell {
 }
 ```
 It's as simple as that! To register a prolonged spell, you don't need to do anything different. You can just 
-use the `ElementalsAPI.registerGenericSpell(new YourSpell())` like when registering a normal spell!  
+use the `ElementalsAPI.registerGenericSpell(new YourSpell());` like when registering a normal spell!  
+### Help
+Remember you can access any Managers or Libraries that are in Elementals, so feel free to check them out. I highly 
+recommend using the ParticlesManager as this provides an ease of use when drawing circles, and the Utils class is 
+also useful for things such as coloured text and other small things which can be useful!
 If there is anything you need/want added, or you have any suggestions, feel free to let me know in either the
 [issue tracker](https://www.github.com/Ankoki-Dev/Elementals/issues), or [my discord](https://www.discord.gg/aCDNj8s) 
 and I'll be happy to help!
