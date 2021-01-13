@@ -201,6 +201,13 @@ public class ParticlesManager {
         }
     }
 
+    /**
+     * Draws a cone around the player, starting from the bottom.
+     *
+     * @param radius The radius around the player the bottom ring will be.
+     * @param density How many particles will be spawned per circle.
+     * @param colours The randomised colours that the rings will be.
+     */
     public void drawCone(double radius, int density, Color... colours) {
         World world = player.getWorld();
         double updatedRadius = radius;
