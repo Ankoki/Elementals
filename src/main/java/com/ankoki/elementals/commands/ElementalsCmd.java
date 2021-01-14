@@ -66,7 +66,6 @@ public class ElementalsCmd {
 
     @CommandHook("test")
     public void testHook(Player player) {
-        new ParticlesManager(player, plugin).drawCone(5, 200, Color.PURPLE, Color.ORANGE, Color.SILVER);
-        player.sendMessage("yuh");
+        new ParticlesManager(player, plugin).drawDome(Color.WHITE, Color.GRAY, Color.BLACK);
     }
 }

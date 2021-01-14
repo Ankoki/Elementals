@@ -221,6 +221,58 @@ public class ParticlesManager {
         }
     }
 
+    public void drawDome(Particle... particles) {
+        for (Particle particle : particles) {
+            if (particle == Particle.REDSTONE) {
+                throw new IllegalArgumentException("Redstone cannot be used here! Use ParticleManager#drawCone(Color... colours)!");
+            }
+        }
+        new BukkitRunnable() {
+            double t = Math.PI/64;
+            final Location loc = player.getLocation();
+            final World world = loc.getWorld();
+            public void run() {
+                t += 0.1*Math.PI;
+                for (double theta = 0; theta <= 2*Math.PI; theta = theta + Math.PI/16) {
+                    double x = t*Math.cos(theta);
+                    double y = 2*Math.exp(-0.1*t) * Math.sin(t) + 1.5;
+                    double z = t*Math.sin(theta);
+                    loc.add(x,y,z);
+                    Particle particle = particles[new Random().nextInt(particles.length)];
+                    world.spawnParticle(particle, loc, 1);
+                    loc.subtract(x,y,z);
+                }
+                if (t > 20) {
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0, 1);
+    }
+
+    public void drawDome(Color... colours) {
+        new BukkitRunnable() {
+            double t = Math.PI/64;
+            final Location loc = player.getLocation();
+            final World world = loc.getWorld();
+            public void run() {
+                t += 0.1*Math.PI;
+                for (double theta = 0; theta <= 2*Math.PI; theta = theta + Math.PI/16) {
+                    double x = t*Math.cos(theta);
+                    double y = 2*Math.exp(-0.1*t) * Math.sin(t) + 1.5;
+                    double z = t*Math.sin(theta);
+                    loc.add(x,y,z);
+                    Color colour = colours[new Random().nextInt(colours.length)];
+                    world.spawnParticle(Particle.REDSTONE, loc, 1,
+                            new Particle.DustOptions(colour, 1));
+                    loc.subtract(x,y,z);
+                }
+                if (t > 20) {
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0, 1);
+    }
+
     private List<Location> getCircle(Location centre, double radius, int density) {
         World world = centre.getWorld();
         double increment = (2 * Math.PI)/density;
