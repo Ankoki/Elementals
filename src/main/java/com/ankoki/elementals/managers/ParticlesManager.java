@@ -212,9 +212,9 @@ public class ParticlesManager {
         World world = player.getWorld();
         double updatedRadius = radius;
         for (int i =  0; updatedRadius >= 0; i += 0.5) {
-            for (Location loc : this.getCircle(player.getLocation().add(0, i, 0), updatedRadius, density)) {
+            for (Location loc : this.getCircle(player.getLocation(), updatedRadius, density)) {
                 Color colour = colours[new Random().nextInt(colours.length)];
-                world.spawnParticle(Particle.REDSTONE, loc, 1,
+                world.spawnParticle(Particle.REDSTONE, loc.add(0, i, 0), 1,
                         new Particle.DustOptions(colour, 1));
             }
             updatedRadius -= 1;

@@ -1,14 +1,16 @@
 package com.ankoki.elementals;
 
+import com.ankoki.elementals.api.ElementalsAPI;
 import com.ankoki.elementals.commands.ElementalsCmd;
 import com.ankoki.elementals.listeners.JoinQuitListener;
+import com.ankoki.elementals.listeners.SwapListener;
+import com.ankoki.elementals.managers.CooldownManager;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.spells.generic.dash.CastDash;
 import com.ankoki.elementals.spells.generic.fireball.CastFireball;
 import com.ankoki.elementals.spells.generic.fireball.ProjectileHit;
 import com.ankoki.elementals.spells.generic.flow.WaterSpread;
 import com.ankoki.elementals.spells.generic.flow.CastFlow;
-import com.ankoki.elementals.managers.EventManager;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.spells.entity.possesion.CastPossession;
 import com.ankoki.elementals.spells.generic.medic.CastMedic;
@@ -48,7 +50,7 @@ public class Elementals extends JavaPlugin {
     @Getter
     @ConfigValue("disabled-spells")
     @SuppressWarnings("FieldMayBeFinal")
-    private final List<Spell> disabledSpells = ConfigManager.list(Spell.class);
+    private List<Spell> disabledSpells = ConfigManager.list(Spell.class);
     public static Version SERVER_VERSION;
     @Getter
     private static Elementals instance;
@@ -103,11 +105,12 @@ public class Elementals extends JavaPlugin {
         }
 
         instance = this;
+        CooldownManager cooldownManager = new CooldownManager();
         //Registering Listeners
-        SpellListener spellListener = new SpellListener(this);
+        SpellListener spellListener = new SpellListener(this, cooldownManager);
         this.registerListeners(new WaterSpread(this),
                 spellListener,
-                new EventManager(),
+                new SwapListener(spellListener),
                 new JoinQuitListener(),
                 new ProjectileHit());
         //Registering Spells

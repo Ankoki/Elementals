@@ -1,10 +1,9 @@
 package com.ankoki.elementals.spells.entity.possesion;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.listeners.SpellListener;
-import com.ankoki.elementals.managers.EntitySpell;
-import com.ankoki.elementals.managers.Prolonged;
+import com.ankoki.elementals.api.EntitySpell;
+import com.ankoki.elementals.api.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
@@ -38,8 +37,6 @@ public class CastPossession extends Prolonged implements EntitySpell {
                         if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             player.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }
-                        RightClickEvent event = new RightClickEvent(player);
-                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }
@@ -48,8 +45,6 @@ public class CastPossession extends Prolonged implements EntitySpell {
                         if (p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }
-                        RightClickEvent event = new RightClickEvent(player);
-                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }
@@ -57,8 +52,6 @@ public class CastPossession extends Prolonged implements EntitySpell {
                         if (p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }
-                        RightClickEvent event = new RightClickEvent(player);
-                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }

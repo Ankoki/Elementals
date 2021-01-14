@@ -1,4 +1,4 @@
-package com.ankoki.elementals.managers;
+package com.ankoki.elementals.api;
 
 import org.bukkit.entity.Player;
 

@@ -1,11 +1,10 @@
 package com.ankoki.elementals.spells.generic.regrowth;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.listeners.SpellListener;
-import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.api.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
-import com.ankoki.elementals.managers.Prolonged;
+import com.ankoki.elementals.api.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.RequiredArgsConstructor;
@@ -79,8 +78,6 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
                                                         }
                                                         if (current > (5 * 20)) {
                                                             this.cancel();
-                                                            RightClickEvent event = new RightClickEvent(player);
-                                                            Bukkit.getPluginManager().callEvent(event);
                                                             return;
                                                         }
                                                         new ParticlesManager(updatedPlayer, plugin).drawCircle(5,

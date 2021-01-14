@@ -1,16 +1,14 @@
 package com.ankoki.elementals.spells.generic.flow;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.listeners.SpellListener;
-import com.ankoki.elementals.managers.GenericSpell;
-import com.ankoki.elementals.managers.Prolonged;
+import com.ankoki.elementals.api.GenericSpell;
+import com.ankoki.elementals.api.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,15 +35,11 @@ public class CastFlow extends Prolonged implements GenericSpell {
                     if (targetBlock.getBlock().getType() != Material.AIR &&
                         targetBlock.getBlock().getType() != Material.WATER) {
                         listener.removeCaster(player);
-                        RightClickEvent event = new RightClickEvent(player);
-                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }
                     if (!listener.isCasting(player)) {
                         listener.removeCaster(player);
-                        RightClickEvent event = new RightClickEvent(player);
-                        Bukkit.getPluginManager().callEvent(event);
                         this.cancel();
                         return;
                     }

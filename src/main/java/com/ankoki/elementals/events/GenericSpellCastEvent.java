@@ -9,8 +9,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-@RequiredArgsConstructor
-public class GenericSpellCastEvent extends Event implements Cancellable {
+public class GenericSpellCastEvent extends SpellCastEvent {
 
     @Getter
     @Setter
@@ -23,6 +22,14 @@ public class GenericSpellCastEvent extends Event implements Cancellable {
     private final Spell spell;
     @Getter
     private final long cooldown;
+
+    public GenericSpellCastEvent(Player player, Spell spell, long cooldown) {
+        super(player, spell, cooldown);
+        this.player = player;
+        this.spell = spell;
+        this.cooldown = cooldown;
+    }
+
 
     @Override
     public HandlerList getHandlers() {

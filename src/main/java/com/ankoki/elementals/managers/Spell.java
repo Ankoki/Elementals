@@ -1,7 +1,7 @@
 package com.ankoki.elementals.managers;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.ElementalsAPI;
+import com.ankoki.elementals.api.ElementalsAPI;
 import lombok.Getter;
 
 public class Spell {

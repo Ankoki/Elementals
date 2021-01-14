@@ -2,16 +2,12 @@ package com.ankoki.elementals.events;
 
 import com.ankoki.elementals.managers.Spell;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-@RequiredArgsConstructor
-public class EntitySpellCastEvent extends Event implements Cancellable {
+public class EntitySpellCastEvent extends SpellCastEvent {
 
     @Getter
     @Setter
@@ -26,6 +22,14 @@ public class EntitySpellCastEvent extends Event implements Cancellable {
     private final Spell spell;
     @Getter
     private final long cooldown;
+
+    public EntitySpellCastEvent(Player player, Entity entity, Spell spell, long cooldown) {
+        super(player, entity, spell, cooldown);
+        this.player = player;
+        this.entity = entity;
+        this.spell = spell;
+        this.cooldown = cooldown;
+    }
 
     @Override
     public HandlerList getHandlers() {

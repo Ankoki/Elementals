@@ -1,6 +1,6 @@
 package com.ankoki.elementals.managers;
 
-import com.ankoki.elementals.ElementalsAPI;
+import com.ankoki.elementals.api.ElementalsAPI;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.inventory.ItemStack;

@@ -1,7 +1,6 @@
 package com.ankoki.elementals.commands;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.ElementalsAPI;
 import com.ankoki.elementals.managers.ItemManager;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;

@@ -1,7 +1,6 @@
-package com.ankoki.elementals;
+package com.ankoki.elementals.api;
 
-import com.ankoki.elementals.managers.EntitySpell;
-import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.exceptions.IdInUseException;
 import com.ankoki.elementals.utils.exceptions.NameInUseException;

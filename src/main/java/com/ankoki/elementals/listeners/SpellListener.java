@@ -1,15 +1,15 @@
 package com.ankoki.elementals.listeners;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.ElementalsAPI;
+import com.ankoki.elementals.api.ElementalsAPI;
 import com.ankoki.elementals.events.EntitySpellCastEvent;
-import com.ankoki.elementals.events.RightClickEvent;
 import com.ankoki.elementals.events.GenericSpellCastEvent;
 import com.ankoki.elementals.events.SpellCastEvent;
-import com.ankoki.elementals.managers.GenericSpell;
-import com.ankoki.elementals.managers.EntitySpell;
+import com.ankoki.elementals.api.GenericSpell;
+import com.ankoki.elementals.api.EntitySpell;
+import com.ankoki.elementals.managers.CooldownManager;
 import com.ankoki.elementals.managers.ItemManager;
-import com.ankoki.elementals.managers.Prolonged;
+import com.ankoki.elementals.api.Prolonged;
 import com.ankoki.elementals.utils.Utils;
 import com.ankoki.elementals.managers.Spell;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +19,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import redempt.redlib.commandmanager.Messages;
 
@@ -32,26 +32,32 @@ import java.util.WeakHashMap;
 @RequiredArgsConstructor
 public class SpellListener implements Listener {
     private final Elementals plugin;
+    private final CooldownManager cooldown;
+    private static final String REPLACE_SPELL = "%spell%";
+    private static final String ON_STOP_CAST = "on-stop-cast";
+    private static final String ON_CAST = "on-cast";
 
-    private final WeakHashMap<Player, WeakHashMap<Spell, Long>> spellCooldown = new WeakHashMap<>();
-    private final WeakHashMap<Spell, Long> cooldown = new WeakHashMap<>();
     private final WeakHashMap<Player, Spell> castingSpell = new WeakHashMap<>();
 
     @EventHandler
-    private void onRightClick(RightClickEvent e) {
+    private void onRightClick(PlayerInteractEvent e) {
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
         Player player = e.getPlayer();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
         if (heldItem.getType() != Material.AIR) {
             for (GenericSpell genericSpell : ElementalsAPI.getGenericSpells()) {
                 ItemManager wand = new ItemManager(heldItem);
-                if (wand.hasSpell(genericSpell.getSpell())) {
+                Spell spell = genericSpell.getSpell();
+                String spellName = spell.getSpellName();
+                if (wand.hasSpell(spell)) {
                     if (player.hasPermission("elementals.cast")) {
-                        if (cooldownExpired(player, genericSpell.getSpell(), genericSpell.getCooldown())) {
-                            if (plugin.spellEnabled(genericSpell.getSpell())) {
-                                SpellCastEvent defaultEvent = new SpellCastEvent(player, genericSpell.getSpell(),
+                        if (cooldown.canCast(player, spell, genericSpell.getCooldown())) {
+                            if (plugin.spellEnabled(spell)) {
+                                SpellCastEvent defaultEvent = new SpellCastEvent(player, spell,
                                         genericSpell.getCooldown());
                                 Bukkit.getPluginManager().callEvent(defaultEvent);
-                                GenericSpellCastEvent event = new GenericSpellCastEvent(player, genericSpell.getSpell(),
+                                GenericSpellCastEvent event = new GenericSpellCastEvent(player, spell,
                                         genericSpell.getCooldown());
                                 Bukkit.getPluginManager().callEvent(event);
                                 if (!event.isCancelled() && !defaultEvent.isCancelled()) {
@@ -59,32 +65,31 @@ public class SpellListener implements Listener {
                                     if (genericSpell instanceof Prolonged) {
                                         if (!isCasting(player)) {
                                             if (genericSpell.onCast(player)) {
-                                                addCaster(player, genericSpell.getSpell());
-                                                Utils.sendActionBar(player, Messages.msg("on-cast")
-                                                        .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                                                addCaster(player, spell);
+                                                Utils.sendActionBar(player, Messages.msg(ON_CAST)
+                                                        .replace(REPLACE_SPELL, spellName));
                                             }
                                         } else {
                                             ((Prolonged) genericSpell).onCancel(player);
                                             removeCaster(player);
-                                            Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                                                    .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                                            Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
+                                                    .replace(REPLACE_SPELL, spellName));
                                         }
                                         return;
                                     }
                                     if (genericSpell.onCast(player)) {
-                                        cooldown.put(genericSpell.getSpell(), System.currentTimeMillis());
-                                        spellCooldown.put(player, cooldown);
-                                        Utils.sendActionBar(player, Messages.msg("on-cast")
-                                                .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                                        cooldown.addCooldown(player, spell);
+                                        Utils.sendActionBar(player, Messages.msg(ON_CAST)
+                                                .replace(REPLACE_SPELL, spellName));
                                         return;
                                     }
                                 } else {
                                     Utils.sendActionBar(player, Messages.msg("cancelled-spell")
-                                            .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                                            .replace(REPLACE_SPELL, spellName));
                                 }
                             } else {
                                 Utils.sendActionBar(player, Messages.msg("disabled-spell")
-                                        .replace("%spell%", genericSpell.getSpell().getSpellName()));
+                                        .replace(REPLACE_SPELL, spellName));
                             }
                         } else {
                             Utils.sendActionBar(player, Messages.msg("cooldown")
@@ -98,14 +103,15 @@ public class SpellListener implements Listener {
             }
             for (EntitySpell entitySpell : ElementalsAPI.getEntitySpells()) {
                 ItemManager wand = new ItemManager(heldItem);
-                if (wand.hasSpell(entitySpell.getSpell())) {
-                    if (plugin.spellEnabled(entitySpell.getSpell())) {
-                        if (castingSpell.get(player) == entitySpell.getSpell()) {
+                Spell spell = entitySpell.getSpell();
+                if (wand.hasSpell(spell)) {
+                    if (plugin.spellEnabled(spell)) {
+                        if (castingSpell.get(player) == spell) {
                             if (entitySpell instanceof Prolonged) {
                                 ((Prolonged) entitySpell).onCancel(player);
                                 removeCaster(player);
-                                Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                                        .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                                Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
+                                        .replace(REPLACE_SPELL, spell.getSpellName()));
                             }
                             return;
                         }
@@ -124,48 +130,49 @@ public class SpellListener implements Listener {
         if (heldItem.getType() != Material.AIR) {
             for (EntitySpell entitySpell : ElementalsAPI.getEntitySpells()) {
                 ItemManager wand = new ItemManager(heldItem);
-                if (wand.hasSpell(entitySpell.getSpell())) {
+                Spell spell = entitySpell.getSpell();
+                String spellName = spell.getSpellName();
+                if (wand.hasSpell(spell)) {
                     if (!isCasting(player)) {
-                        if (cooldownExpired(player, entitySpell.getSpell(), entitySpell.getCooldown())) {
-                            if (plugin.spellEnabled(entitySpell.getSpell())) {
+                        if (cooldown.canCast(player, spell, entitySpell.getCooldown())) {
+                            if (plugin.spellEnabled(spell)) {
                                 SpellCastEvent defaultEvent = new SpellCastEvent(player, entity,
-                                        entitySpell.getSpell(), entitySpell.getCooldown());
+                                        spell, entitySpell.getCooldown());
                                 Bukkit.getPluginManager().callEvent(defaultEvent);
                                 EntitySpellCastEvent event = new EntitySpellCastEvent(player, entity,
-                                        entitySpell.getSpell(), entitySpell.getCooldown());
+                                        spell, entitySpell.getCooldown());
                                 Bukkit.getPluginManager().callEvent(event);
                                 if (!event.isCancelled() && !defaultEvent.isCancelled()) {
                                     e.setCancelled(true);
                                     if (entitySpell instanceof Prolonged) {
                                         if (!isCasting(player)) {
                                             if (entitySpell.onCast(player, entity)) {
-                                                addCaster(player, entitySpell.getSpell());
-                                                Utils.sendActionBar(player, Messages.msg("on-cast")
-                                                        .replace("%spell%", entitySpell.getSpell()
+                                                addCaster(player, spell);
+                                                Utils.sendActionBar(player, Messages.msg(ON_CAST)
+                                                        .replace(REPLACE_SPELL, spell
                                                                 .getSpellName()));
                                             }
                                         } else {
                                             ((Prolonged) entitySpell).onCancel(player);
                                             removeCaster(player);
-                                            Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                                                    .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                                            Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
+                                                    .replace(REPLACE_SPELL, spellName));
                                         }
                                         return;
                                     }
                                     if (entitySpell.onCast(player, entity)) {
-                                        cooldown.put(entitySpell.getSpell(), System.currentTimeMillis());
-                                        spellCooldown.put(player, cooldown);
-                                        Utils.sendActionBar(player, Messages.msg("on-cast")
-                                                .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                                        cooldown.addCooldown(player, spell);
+                                        Utils.sendActionBar(player, Messages.msg(ON_CAST)
+                                                .replace(REPLACE_SPELL, spellName));
                                         return;
                                     }
                                 } else {
                                     Utils.sendActionBar(player, Messages.msg("cancelled-spell")
-                                            .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                                            .replace(REPLACE_SPELL, spellName));
                                 }
                             } else {
                                 Utils.sendActionBar(player, Messages.msg("disabled-spell")
-                                        .replace("%spell%", entitySpell.getSpell().getSpellName()));
+                                        .replace(REPLACE_SPELL, spellName));
                             }
                         } else {
                             Utils.sendActionBar(player, Messages.msg("cooldown")
@@ -175,55 +182,6 @@ public class SpellListener implements Listener {
                         Utils.sendActionBar(player, Messages.msg("already-casting"));
                     }
                 }
-            }
-        }
-    }
-
-    private boolean cooldownExpired(Player player, Spell spell, long cooldown) {
-        boolean cooldownExists = spellCooldown.get(player) != null;
-        long pCooldown;
-        if (cooldownExists) {
-            pCooldown = spellCooldown.get(player).get(spell) == null ? 0 : spellCooldown.get(player).get(spell);
-        } else {
-            pCooldown = 0;
-        }
-        return ((System.currentTimeMillis() - pCooldown) > (cooldown * 1000L));
-    }
-
-    /*
-     * These events are for the spells which cast for an extended amount
-     * of time, such as Flow, and rely on holding the same wand throughout.
-     */
-    @EventHandler
-    private void onSwitch(PlayerItemHeldEvent e) {
-        Player player = e.getPlayer();
-        if (castingSpell.containsKey(player)) {
-            if (castingSpell.get(player).isProlonged()) {
-                Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                        .replace("%spell%", castingSpell.get(player).getSpellName()));
-                removeCaster(player);
-            }
-        }
-    }
-
-    @EventHandler
-    private void offhandSwap(PlayerSwapHandItemsEvent e) {
-        Player player = e.getPlayer();
-        if (isCasting(player)) {
-            if (castingSpell.get(player).isProlonged()) {
-                Utils.sendActionBar(player, Messages.msg("on-stop-cast")
-                        .replace("%spell%", castingSpell.get(player).getSpellName()));
-                removeCaster(player);
-            }
-        }
-    }
-
-    @EventHandler
-    private void onQuit(PlayerQuitEvent e) {
-        Player player = e.getPlayer();
-        if (isCasting(player)) {
-            if (castingSpell.get(player).isProlonged()) {
-                removeCaster(player);
             }
         }
     }
@@ -238,5 +196,13 @@ public class SpellListener implements Listener {
 
     public boolean isCasting(Player player) {
         return castingSpell.containsKey(player);
+    }
+
+    public boolean isCastingProlonged(Player player) {
+        return castingSpell.get(player).isProlonged();
+    }
+
+    public Spell getCastedSpell(Player player) {
+        return castingSpell.get(player);
     }
 }

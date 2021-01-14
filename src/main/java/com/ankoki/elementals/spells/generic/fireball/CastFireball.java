@@ -1,7 +1,7 @@
 package com.ankoki.elementals.spells.generic.fireball;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.api.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

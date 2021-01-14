@@ -59,10 +59,10 @@ There is now a way to register your own spells!
 There are two types of spell you can create.  
 ### Generic Spell
 A generic spell is cast when you right click anywhere. You make this spell by implementing the GenericSpell 
-interface. An example of a basic GenericSpell is as follows:  
+interface. An example of a basic GenericSpell is as follows:
 
 ```java
-import com.ankoki.elementals.managers.GenericSpell;
+import com.ankoki.elementals.api.GenericSpell;
 import com.ankoki.elementals.managers.Spell;
 import org.bukkit.entity.Player;
 
@@ -84,7 +84,7 @@ public class YourSpell implements GenericSpell {
     public Spell getSpell() {
         return spell;
     }
-    
+
     //The cooldown you want to be applied when the spell is cast successfully, in seconds.
     @Override
     public int getCooldown() {
@@ -101,7 +101,7 @@ An entity spell is cast when you right click on an entitiy. You make this spell 
 interface. An example of a basic EntitySpell is as follows:
 
 ```java
-import com.ankoki.elementals.managers.EntitySpell;
+import com.ankoki.elementals.api.EntitySpell;
 import com.ankoki.elementals.managers.Spell;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -147,10 +147,10 @@ the player attempts to cast again, leaves the game, or swaps tool. A prime examp
 Elementals is Regrowth. To make a prolonged spell, there is not much too it. We will make this a GenericSpell type.
 
 ```java
-import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.managers.GenericSpell;
+
+import com.ankoki.elementals.api.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
-import com.ankoki.elementals.managers.Prolonged;
+import com.ankoki.elementals.api.Prolonged;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.Utils;
 import org.bukkit.Bukkit;
@@ -164,7 +164,7 @@ public class YourSpell extends Prolonged implements GenericSpell {
     //Remember the spell asks if the spell is prolonged, and so the last boolean needs to be true to account for this.
     private final Spell spell = new Spell("SpellName", 262, true);
     private final JavaPlugin plugin;
-    
+
     public YourSpell(JavaPlugin plugin) {
         this.plugin = plugin;
     }

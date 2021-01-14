@@ -12,7 +12,7 @@ public class JoinQuitListener implements Listener {
     private void playerJoin(PlayerJoinEvent e) {
         final Player player = e.getPlayer();
         if (player.isOp() || player.hasPermission("elementals.admin")) {
-            //this will have an updatechecker at a later date.
+            //TODO this will have an updatechecker at a later date.
         }
     }
 }
