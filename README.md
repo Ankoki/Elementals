@@ -14,13 +14,16 @@ just need to drop it in your plugins folder along with the [RedLib](https://www.
 plugin. You can then customize all the messages in the messages.txt and in the RedLib
 plugin folder to change the incorrect command messages.  
 ### Spells
-We currently have 6 spells.  
+We currently have 10 spells.  
 There are two types of spell, Entity and Generic. Generic spells can be cast looking at anything, and Entity spells 
 can be cast while looking at an entity. If a spell is prolonged, you can start and stop casting it.  
 #### Possession
 Possession is a prolonged Entity Spell which can be casted on entities and makes you able to take
 control of them and their movements. This only works on animals such as sheep, wolves, cows,
 chickens and pigs.  
+#### Umbrial
+Umbrial is an Entity Spell which can be casted on players and this allows you to become invisible and 
+enter the player you have targeted, you then rip out of their body, damaging them by 3 hearts.
 #### Dash
 Dash is a Generic Spell which pushes you towards the location you're looking at and gives you speed, which
 allows people to utilize this for PvP sitatuions to either get away from or catch up to enemies.  
@@ -28,14 +31,18 @@ allows people to utilize this for PvP sitatuions to either get away from or catc
 Fireball is a Generic Spell which shoots a fireball towards where that player is looking. This is useful to
 attack enemies which are far away.  
 #### Flow
-Flow is a prolonged Generic Spell which is used for controlling water and moves water to where you are looking.  
+Flow is a prolonged Generic Spell which is used for controlling water and moves water to where you are looking.
+#### Medic
+Medic is a Generic Spell which heals the player. This is useful during fights.  
+#### Regrowth
+Regrowth is a Prolonged Generic Spell which heals all players in the shown radius of the player.  
 #### Rise
 Rise is a Generic Spell which causes you to levitate on a cloud of particles for 10 seconds. This can be useful 
 when escaping enemies.  
+#### Self Destruct
+Self Destruct is a Generic Spell which freezes you and causes an explosion around you with a high force.
 #### Travel
-Travel is a Generic Spell which allows you to teleport to the location you are looking at.  
-#### Medic
-Medic is a Generic Spell which heals the player. This is useful during fights.  
+Travel is a Generic Spell which allows you to teleport to the location you are looking at. 
 ### Command
 There is currently one command in Elementals, and this is /elementals. The current applicable arguments are as follows, 
 where (1|2) are choices, and [option] is optional.  
@@ -150,6 +157,7 @@ Elementals is Regrowth. To make a prolonged spell, there is not much too it. We 
 
 ```java
 
+import com.ankoki.elementals.api.ElementalsAPI;
 import com.ankoki.elementals.api.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.api.Prolonged;
@@ -177,7 +185,7 @@ public class YourSpell extends Prolonged implements GenericSpell {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (!Utils.canCast(player)) {
+                if (!Utils.canCast(player) || !ElementalsAPI.isCasting(player)) {
                     this.cancel();
                 }
                 Player updated = Bukkit.getPlayer(player.getUniqueId());
@@ -207,6 +215,62 @@ public class YourSpell extends Prolonged implements GenericSpell {
 ```
 It's as simple as that! To register a prolonged spell, you don't need to do anything different. You can just 
 use the `ElementalsAPI.registerGenericSpell(new YourSpell());` like when registering a normal spell!  
+If you are using runnables to spawn particles whilst the player is casting a spell, you will want
+to take a look at the `ElementalsAPI.isCasting(Player player);` method, which checks if the player is casting a spell. 
+An example usage of this is as follows.
+
+```java
+import com.ankoki.elementals.api.ElementalsAPI;
+import com.ankoki.elementals.api.GenericSpell;
+import com.ankoki.elementals.api.Prolonged;
+import com.ankoki.elementals.managers.ParticlesManager;
+import org.bukkit.Color;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+public class YourSpell extends Prolonged implements GenericSpell {
+    private final JavaPlugin plugin;
+    private final Spell spell = new Spell("YourSpell", 262, true);
+
+    public YourSpell(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public boolean onCast(Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                //This is the method you can call to check if the player is still casting.
+                if (!ElementalsAPI.isCasting(player)) {
+                    this.cancel();
+                    return;
+                }
+                new ParticlesManager(player).drawDome(Color.ORANGE, Color.PURPLE);
+            }
+        }.runTaskTimer(plugin, 0L, 60L);
+        return true;
+    }
+
+    @Override
+    public Spell getSpell() {
+        return spell;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3;
+    }
+
+    @Override
+    public void onCancel(Player player) {
+        /* An alternative to doing the isCasting() method is to set your BukkitRunnable to 
+         * an int field and in the onCancel(), call task.cancel();
+         */
+    }
+}
+```
 ### Help
 Remember you can access any Managers or Libraries that are in Elementals, so feel free to check them out. I highly 
 recommend using the ParticlesManager as this provides an ease of use when drawing circles, and the Utils class is 

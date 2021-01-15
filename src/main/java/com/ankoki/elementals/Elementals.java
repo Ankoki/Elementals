@@ -6,6 +6,7 @@ import com.ankoki.elementals.listeners.JoinQuitListener;
 import com.ankoki.elementals.listeners.SwapListener;
 import com.ankoki.elementals.managers.CooldownManager;
 import com.ankoki.elementals.managers.Spell;
+import com.ankoki.elementals.spells.entity.umbrial.CastUmbrial;
 import com.ankoki.elementals.spells.generic.dash.CastDash;
 import com.ankoki.elementals.spells.generic.fireball.CastFireball;
 import com.ankoki.elementals.spells.generic.fireball.ProjectileHit;
@@ -16,6 +17,7 @@ import com.ankoki.elementals.spells.entity.possesion.CastPossession;
 import com.ankoki.elementals.spells.generic.medic.CastMedic;
 import com.ankoki.elementals.spells.generic.regrowth.CastRegrowth;
 import com.ankoki.elementals.spells.generic.rise.CastRise;
+import com.ankoki.elementals.spells.generic.selfdestruct.CastSelfDestruct;
 import com.ankoki.elementals.spells.generic.travel.CastTravel;
 import com.ankoki.elementals.utils.Utils;
 import com.ankoki.elementals.utils.Version;
@@ -110,21 +112,23 @@ public class Elementals extends JavaPlugin {
         SpellListener spellListener = new SpellListener(this, cooldownManager);
         this.registerListeners(new WaterSpread(this),
                 spellListener,
-                new SwapListener(spellListener),
+                new SwapListener(),
                 new JoinQuitListener(),
                 new ProjectileHit());
         //Registering Spells
         ElementalsAPI.getEntitySpells().clear();
         ElementalsAPI.registerGenericSpells(this,
-                new CastFlow(this, spellListener),
+                new CastFlow(this),
                 new CastTravel(this),
                 new CastRise(this),
                 new CastFireball(this),
                 new CastDash(this),
                 new CastMedic(this),
-                new CastRegrowth(this, spellListener));
+                new CastRegrowth(this),
+                new CastSelfDestruct(this));
         ElementalsAPI.registerEntitySpells(this,
-                new CastPossession(this, spellListener));
+                new CastPossession(this),
+                new CastUmbrial(this));
         //Loading NBTAPI
         NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
         testItem.addCompound("test");
@@ -134,8 +138,9 @@ public class Elementals extends JavaPlugin {
         //Loading config and messages
         Messages.load(this);
         this.loadConfiguration();
-        logger.info(String.format("%s v%s was enabled in %.2f seconds (" + (System.currentTimeMillis() - start) + "ms)\n",
-                description.getName(), pluginVersion, (float) System.currentTimeMillis() - start));
+        logger.info(String.format("%s v%s was enabled in %.2f seconds (%sms)",
+                description.getName(), pluginVersion, (float) System.currentTimeMillis() - start,
+                (System.currentTimeMillis() - start)));
     }
 
     @Override
@@ -145,6 +150,7 @@ public class Elementals extends JavaPlugin {
         description = null;
         logger = null;
         pluginVersion = null;
+        instance = null;
         System.out.printf("Elementals was disabled in %.2f seconds%n",
                 (float) System.currentTimeMillis() - end);
     }
@@ -167,11 +173,9 @@ public class Elementals extends JavaPlugin {
 
     private boolean dependencyCheck() {
         Plugin redLib = pluginManager.getPlugin("RedLib");
-        if (redLib == null) {
-            return false;
-        } else if (!redLib.isEnabled()) {
-            return false;
-        } else return Utils.checkPluginVersion(redLib, 2, 0);
+        if (redLib == null) return false;
+        else if (!redLib.isEnabled()) return false;
+        else return Utils.checkPluginVersion(redLib, 2, 0);
     }
 
     private void loadConfiguration() {

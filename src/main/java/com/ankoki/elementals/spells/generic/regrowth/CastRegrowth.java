@@ -1,7 +1,7 @@
 package com.ankoki.elementals.spells.generic.regrowth;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.listeners.SpellListener;
+import com.ankoki.elementals.api.ElementalsAPI;
 import com.ankoki.elementals.api.GenericSpell;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.api.Prolonged;
@@ -22,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CastRegrowth extends Prolonged implements GenericSpell {
     private final Elementals plugin;
-    private final SpellListener listener;
     private final Spell spell = new Spell("Regrowth", 3737, false);
     private final HashMap<Player, Integer> duration = new HashMap<>();
 
@@ -72,7 +71,7 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
                                                             this.cancel();
                                                             return;
                                                         }
-                                                        if (!listener.isCasting(player)) {
+                                                        if (!ElementalsAPI.isCasting(player)) {
                                                             this.cancel();
                                                             return;
                                                         }

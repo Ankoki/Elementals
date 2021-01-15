@@ -33,9 +33,9 @@ public final class Utils {
      *                 looking at.
      * @return Wether the player is looking at the specified material type
      */
-    public static boolean isLookingAt(Player player, Material material) {
+    public static boolean canSeeSource(Player player, int distance, Material material) {
         try {
-            return player.getTargetBlockExact(10, FluidCollisionMode.SOURCE_ONLY).getType() == material;
+            return player.getTargetBlockExact(distance, FluidCollisionMode.SOURCE_ONLY).getType() == material;
         } catch (NullPointerException ex) {
             return material == Material.AIR;
         }
@@ -104,6 +104,7 @@ public final class Utils {
     public static boolean canCast(Player player) {
         Player updated = Bukkit.getPlayer(player.getUniqueId());
         if (updated == null) return false;
-        return player.isOnline();
+        if (!player.isOnline()) return false;
+        return player.getHealth() > 0;
     }
 }

@@ -1,7 +1,7 @@
 package com.ankoki.elementals.spells.entity.possesion;
 
 import com.ankoki.elementals.Elementals;
-import com.ankoki.elementals.listeners.SpellListener;
+import com.ankoki.elementals.api.ElementalsAPI;
 import com.ankoki.elementals.api.EntitySpell;
 import com.ankoki.elementals.api.Prolonged;
 import com.ankoki.elementals.managers.Spell;
@@ -18,7 +18,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 @RequiredArgsConstructor
 public class CastPossession extends Prolonged implements EntitySpell {
     private final Elementals plugin;
-    private final SpellListener listener;
     private final Spell spell = new Spell("Possession", 3731, true);
     @Getter
     @Setter
@@ -41,14 +40,14 @@ public class CastPossession extends Prolonged implements EntitySpell {
                         return;
                     }
                     if (entity.isDead()) {
-                        listener.removeCaster(player);
+                        ElementalsAPI.removeCaster(player);
                         if (p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }
                         this.cancel();
                         return;
                     }
-                    if (!listener.isCasting(p)) {
+                    if (!ElementalsAPI.isCasting(p)) {
                         if (p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                         }

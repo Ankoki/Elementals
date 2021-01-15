@@ -1,6 +1,7 @@
 package com.ankoki.elementals.spells.generic.flow;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.api.ElementalsAPI;
 import com.ankoki.elementals.listeners.SpellListener;
 import com.ankoki.elementals.api.GenericSpell;
 import com.ankoki.elementals.api.Prolonged;
@@ -19,7 +20,6 @@ import redempt.redlib.commandmanager.Messages;
 @RequiredArgsConstructor
 public class CastFlow extends Prolonged implements GenericSpell {
     private final Elementals plugin;
-    private final SpellListener listener;
     private final Spell spell = new Spell("Flow", 3734, true);
     @Getter
     @Setter
@@ -27,19 +27,19 @@ public class CastFlow extends Prolonged implements GenericSpell {
 
     @Override
     public boolean onCast(Player player) {
-        if (Utils.canSee(player, 10, Material.WATER)) {
+        if (Utils.canSeeSource(player, 4, Material.WATER)) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     Location targetBlock = player.getTargetBlock(null, 4).getLocation();
                     if (targetBlock.getBlock().getType() != Material.AIR &&
                         targetBlock.getBlock().getType() != Material.WATER) {
-                        listener.removeCaster(player);
+                        ElementalsAPI.removeCaster(player);
                         this.cancel();
                         return;
                     }
-                    if (!listener.isCasting(player)) {
-                        listener.removeCaster(player);
+                    if (!ElementalsAPI.isCasting(player)) {
+                        ElementalsAPI.removeCaster(player);
                         this.cancel();
                         return;
                     }

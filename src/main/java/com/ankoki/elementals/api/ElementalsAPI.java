@@ -5,12 +5,15 @@ import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.exceptions.IdInUseException;
 import com.ankoki.elementals.utils.exceptions.NameInUseException;
 import lombok.Getter;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.WeakHashMap;
 
+@SuppressWarnings("unused")
 public final class ElementalsAPI {
 
     @Getter
@@ -19,6 +22,7 @@ public final class ElementalsAPI {
     private static final List<GenericSpell> genericSpells = new ArrayList<>();
     @Getter
     private static final List<EntitySpell> entitySpells = new ArrayList<>();
+    private static final WeakHashMap<Player, Spell> castingSpell = new WeakHashMap<>();
 
     private ElementalsAPI() throws IllegalAccessException {
         throw new IllegalAccessException("You cannot make a new instance of this class!");
@@ -104,4 +108,54 @@ public final class ElementalsAPI {
         }
     }
 
+    /**
+     * If a player is casting, it will stop the player from casting.
+     *
+     * @param player The player you want to stop casting.
+     */
+    public static void removeCaster(Player player) {
+        castingSpell.remove(player);
+    }
+
+    /**
+     * Adds a player to the casting list.
+     *
+     * @param player The player you want to mark as casting.
+     * @param spell The spell the player is casting.
+     */
+    public static void addCaster(Player player, Spell spell) {
+        castingSpell.put(player, spell);
+    }
+
+    /**
+     * Returns wether or not the provided player is casting.
+     *
+     * @param player The player you want to see if they are casting
+     * @return True if the player is casting, false if not.
+     */
+    public static boolean isCasting(Player player) {
+        return castingSpell.containsKey(player);
+    }
+
+    /**
+     * Returns if the spell a player is casting is prolonged.
+     *
+     * @param player The player you want to check if their spell is prolonged.
+     * @return If the player's casted spell is prolonged.
+     */
+    public static boolean isCastingProlonged(Player player) {
+        try {
+            return castingSpell.get(player).isProlonged();
+        } catch (Exception ex) { return false; }
+    }
+
+    /**
+     * Returns the spell the player is casting, if they are casting a spell.
+     *
+     * @param player The player you want to get the spell of.
+     * @return The spell the player is casting. Null if they are not casting a spell.
+     */
+    public static Spell getCastedSpell(Player player) {
+        return castingSpell.get(player);
+    }
 }

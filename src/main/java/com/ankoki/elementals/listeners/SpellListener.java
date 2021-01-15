@@ -37,8 +37,6 @@ public class SpellListener implements Listener {
     private static final String ON_STOP_CAST = "on-stop-cast";
     private static final String ON_CAST = "on-cast";
 
-    private final WeakHashMap<Player, Spell> castingSpell = new WeakHashMap<>();
-
     @EventHandler
     private void onRightClick(PlayerInteractEvent e) {
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
@@ -64,15 +62,15 @@ public class SpellListener implements Listener {
                                 if (!event.isCancelled() && !defaultEvent.isCancelled()) {
                                     e.setCancelled(true);
                                     if (genericSpell instanceof Prolonged) {
-                                        if (!isCasting(player)) {
+                                        if (!ElementalsAPI.isCasting(player)) {
                                             if (genericSpell.onCast(player)) {
-                                                addCaster(player, spell);
+                                                ElementalsAPI.addCaster(player, spell);
                                                 Utils.sendActionBar(player, Messages.msg(ON_CAST)
                                                         .replace(REPLACE_SPELL, spellName));
                                             }
                                         } else {
                                             ((Prolonged) genericSpell).onCancel(player);
-                                            removeCaster(player);
+                                            ElementalsAPI.removeCaster(player);
                                             Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
                                                     .replace(REPLACE_SPELL, spellName));
                                         }
@@ -109,10 +107,10 @@ public class SpellListener implements Listener {
                     if (player.hasPermission("elementals.cast") ||
                             player.hasPermission("elementals.cast.entity")) {
                         if (plugin.spellEnabled(spell)) {
-                            if (castingSpell.get(player) == spell) {
+                            if (ElementalsAPI.getCastedSpell(player) == spell) {
                                 if (entitySpell instanceof Prolonged) {
                                     ((Prolonged) entitySpell).onCancel(player);
-                                    removeCaster(player);
+                                    ElementalsAPI.removeCaster(player);
                                     Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
                                             .replace(REPLACE_SPELL, spell.getSpellName()));
                                 }
@@ -139,7 +137,7 @@ public class SpellListener implements Listener {
                 if (wand.hasSpell(spell)) {
                     if (player.hasPermission("elementals.cast") ||
                             player.hasPermission("elementals.cast.entity")) {
-                        if (!isCasting(player)) {
+                        if (!ElementalsAPI.isCasting(player)) {
                             if (cooldown.canCast(player, spell, entitySpell.getCooldown())) {
                                 if (plugin.spellEnabled(spell)) {
                                     SpellCastEvent defaultEvent = new SpellCastEvent(player, entity,
@@ -151,16 +149,16 @@ public class SpellListener implements Listener {
                                     if (!event.isCancelled() && !defaultEvent.isCancelled()) {
                                         e.setCancelled(true);
                                         if (entitySpell instanceof Prolonged) {
-                                            if (!isCasting(player)) {
+                                            if (!ElementalsAPI.isCasting(player)) {
                                                 if (entitySpell.onCast(player, entity)) {
-                                                    addCaster(player, spell);
+                                                    ElementalsAPI.addCaster(player, spell);
                                                     Utils.sendActionBar(player, Messages.msg(ON_CAST)
                                                             .replace(REPLACE_SPELL, spell
                                                                     .getSpellName()));
                                                 }
                                             } else {
                                                 ((Prolonged) entitySpell).onCancel(player);
-                                                removeCaster(player);
+                                                ElementalsAPI.removeCaster(player);
                                                 Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
                                                         .replace(REPLACE_SPELL, spellName));
                                             }
@@ -193,25 +191,5 @@ public class SpellListener implements Listener {
                 }
             }
         }
-    }
-
-    public void removeCaster(Player player) {
-        castingSpell.remove(player);
-    }
-
-    public void addCaster(Player player, Spell spell) {
-        castingSpell.put(player, spell);
-    }
-
-    public boolean isCasting(Player player) {
-        return castingSpell.containsKey(player);
-    }
-
-    public boolean isCastingProlonged(Player player) {
-        return castingSpell.get(player).isProlonged();
-    }
-
-    public Spell getCastedSpell(Player player) {
-        return castingSpell.get(player);
     }
 }

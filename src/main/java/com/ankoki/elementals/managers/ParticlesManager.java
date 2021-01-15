@@ -221,6 +221,15 @@ public class ParticlesManager {
         }
     }
 
+    /**
+     * Causes a dome of particles to come out of the players head.
+     *
+     * @param particles The particles you want the to come out of the player.
+     *                  Note this cannot be redstone. Use ParticlesManager#drawDome(Color... colours)
+     *                  for a dome of redstone particles.
+     *
+     * @throws IllegalArgumentException If any of the particles is Particle.REDSTONE.
+     */
     public void drawDome(Particle... particles) {
         for (Particle particle : particles) {
             if (particle == Particle.REDSTONE) {
@@ -249,6 +258,12 @@ public class ParticlesManager {
         }.runTaskTimer(plugin, 0, 1);
     }
 
+    /**
+     * Causes a dome of particles to come out of the players head.
+     *
+     * @param colours The colours you want the redstone particles that are spawned
+     *                to be.
+     */
     public void drawDome(Color... colours) {
         new BukkitRunnable() {
             double t = Math.PI/64;
