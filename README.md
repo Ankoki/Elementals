@@ -40,7 +40,8 @@ Regrowth is a Prolonged Generic Spell which heals all players in the shown radiu
 Rise is a Generic Spell which causes you to levitate on a cloud of particles for 10 seconds. This can be useful 
 when escaping enemies.  
 #### Self Destruct
-Self Destruct is a Generic Spell which freezes you and causes an explosion around you with a high force.
+Self Destruct is a Generic Spell which freezes you and causes an explosion around you with a high force. This most 
+likely will kill you.
 #### Travel
 Travel is a Generic Spell which allows you to teleport to the location you are looking at. 
 ### Command
