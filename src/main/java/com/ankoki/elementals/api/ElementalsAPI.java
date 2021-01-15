@@ -29,7 +29,7 @@ public final class ElementalsAPI {
      *
      * @param plugin The owning plugin that is registering this spell.
      * @param spells Spell instances you want to register.
-     * @throws IdInUseException If the ID of the spell is in use, this is thrown.
+     * @throws IdInUseException   If the ID of the spell is in use, this is thrown.
      * @throws NameInUseException If the name of the spell is in use (including case), this is thrown.
      */
     public static void registerSpell(JavaPlugin plugin, Spell... spells)
@@ -38,13 +38,9 @@ public final class ElementalsAPI {
             for (Spell spell : allSpells) {
                 if (spell.getId() == newSpell.getId()) {
                     throw new IdInUseException();
-                    //System.out.println("apparently in use " + spell.getId());
-                    //System.out.println("apparently it equals this" + spell.getId() + " this is the spell " +spell.getSpellName());
                 }
                 if (spell.getSpellName().equalsIgnoreCase(newSpell.getSpellName())) {
                     throw new NameInUseException();
-                    //System.out.println("appartenly in use " + spell.getSpellName());
-                    //System.out.println("apparently it equals this" + spell.getId() + " this is the spell " +spell.getSpellName());
                 }
             }
         }
@@ -79,12 +75,11 @@ public final class ElementalsAPI {
     /**
      * This registers your spells and takes in your plugin instance and multiple GenericSpells
      *
-     * @param plugin The main class instance
+     * @param plugin        The main class instance
      * @param genericSpells The generic spells you want to register
      */
     public static void registerGenericSpells(JavaPlugin plugin, GenericSpell... genericSpells) {
         ElementalsAPI.genericSpells.addAll(Arrays.asList(genericSpells));
-        //if (plugin == Elementals.getInstance()) return;
         String pluginName = plugin.getDescription().getName();
         if (genericSpells.length == 1) {
             System.out.println(pluginName + " has successfully registered 1 new GenericSpell!");
@@ -96,12 +91,11 @@ public final class ElementalsAPI {
     /**
      * This registers your spells and takes in your plugin instance and multiple GenericSpells
      *
-     * @param plugin The main class instance
+     * @param plugin       The main class instance
      * @param entitySpells The entity spells you want to register
      */
     public static void registerEntitySpells(JavaPlugin plugin, EntitySpell... entitySpells) {
         ElementalsAPI.entitySpells.addAll(Arrays.asList(entitySpells));
-        //if (plugin == Elementals.getInstance()) return;
         String owningPl = plugin.getDescription().getName();
         if (entitySpells.length == 1) {
             System.out.println(owningPl + " has successfully registered 1 new EntitySpell!");

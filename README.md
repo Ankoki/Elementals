@@ -50,6 +50,8 @@ This manages anything you need to within the plugin, and other things may be add
 | `elementals.disenchant` | FALSE | Allows the player to disenchant wands. |  
 | `elementals.bypass` | FALSE | This bypasses the cooldown for spells. |  
 | `elementals.cast` | TRUE | This determines wether or not a player can cast a spell. |  
+| `elementals.cast.generic` | TRUE | This determines wether or not a player can cast a generic spell. |  
+| `elementals.cast.entity` | TRUE | This determines wether or not a player can cast an entity spell. |  
 ### Enjoy!
 I hope you enjoy using this plugin, and if you have any suggestions, feedback, or anything of the sort, make sure to 
 let me know, either in the [issue tracker](https://www.github.com/Ankoki-Dev/Elementals/issues), or 
