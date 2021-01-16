@@ -19,6 +19,7 @@ import com.ankoki.elementals.spells.generic.regrowth.CastRegrowth;
 import com.ankoki.elementals.spells.generic.rise.CastRise;
 import com.ankoki.elementals.spells.generic.selfdestruct.CastSelfDestruct;
 import com.ankoki.elementals.spells.generic.travel.CastTravel;
+import com.ankoki.elementals.utils.UpdateChecker;
 import com.ankoki.elementals.utils.Utils;
 import com.ankoki.elementals.utils.Version;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -56,6 +57,10 @@ public class Elementals extends JavaPlugin {
     public static Version SERVER_VERSION;
     @Getter
     private static Elementals instance;
+    @Getter
+    public boolean latest;
+    @Getter
+    public String latestTag;
 
     @Override
     public void onEnable() {
@@ -113,7 +118,7 @@ public class Elementals extends JavaPlugin {
         this.registerListeners(new WaterSpread(this),
                 spellListener,
                 new SwapListener(),
-                new JoinQuitListener(),
+                new JoinQuitListener(this),
                 new ProjectileHit());
         //Registering Spells
         ElementalsAPI.getEntitySpells().clear();
@@ -141,6 +146,14 @@ public class Elementals extends JavaPlugin {
         logger.info(String.format("%s v%s was enabled in %.2f seconds (%sms)",
                 description.getName(), pluginVersion, (float) System.currentTimeMillis() - start,
                 (System.currentTimeMillis() - start)));
+        UpdateChecker checker = new UpdateChecker(this);
+        latest = checker.isLatest();
+        if (!latest) {
+            latestTag = checker.getLatestTag();
+            logger.info("There is a newer release of Elementals! " +
+                    "Please go to https://github.com/Ankoki-Dev/Elementals/releases/tag/" + checker.getLatestTag() +
+                    " to get the latest version!");
+        }
     }
 
     @Override
