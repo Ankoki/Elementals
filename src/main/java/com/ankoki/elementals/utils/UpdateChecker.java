@@ -22,7 +22,11 @@ public class UpdateChecker {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return redirectedURL.split("releases/tag/")[1];
+        try {
+            return redirectedURL.split("releases/tag/")[1];
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            return "UNKNOWN";
+        }
     }
 
     public boolean isLatest() {

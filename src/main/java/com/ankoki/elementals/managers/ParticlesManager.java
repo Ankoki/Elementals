@@ -178,6 +178,26 @@ public class ParticlesManager {
      */
     public void scatterParticles(int size, Particle... particles) {
         List<Location> locations = new ArrayList<>();
+        locations.add(player.getLocation().add(0.2, 0.6, 0.3));
+        locations.add(player.getLocation().add(0.3, 0.2, 0.1));
+        locations.add(player.getLocation().add(0.1, 0.2, 0.3));
+        locations.add(player.getLocation().add(0.1, 0.3, 0.2));
+        locations.add(player.getLocation().add(0.2, 0.3, 0.1));
+        locations.add(player.getLocation().subtract(0.2, 0.6, 0.3));
+        locations.add(player.getLocation().subtract(0.3, 0.2, 0.1));
+        locations.add(player.getLocation().subtract(0.1, 0.2, 0.3));
+        locations.add(player.getLocation().subtract(0.1, 0.3, 0.2));
+        locations.add(player.getLocation().subtract(0.2, 0.3, 0.1));
+        locations.add(player.getLocation().add(1.2, 0.6, 1.3));
+        locations.add(player.getLocation().add(1.3, 0.2, 1.1));
+        locations.add(player.getLocation().add(1.1, 0.2, 1.3));
+        locations.add(player.getLocation().add(1.1, 0.3, 1.2));
+        locations.add(player.getLocation().add(1.2, 0.3, 1.1));
+        locations.add(player.getLocation().subtract(1.2, 0.6, 1.3));
+        locations.add(player.getLocation().subtract(1.3, 0.2, 1.1));
+        locations.add(player.getLocation().subtract(1.1, 0.2, 1.3));
+        locations.add(player.getLocation().subtract(1.1, 0.3, 1.2));
+        locations.add(player.getLocation().subtract(1.2, 0.3, 1.1));
         for (Location loc : locations) {
             Particle particle = particles[new Random().nextInt(particles.length)];
             loc.getWorld().spawnParticle(particle, loc, size);
