@@ -279,3 +279,5 @@ also useful for things such as coloured text and other small things which can be
 If there is anything you need/want added, or you have any suggestions, feel free to let me know in either the
 [issue tracker](https://www.github.com/Ankoki-Dev/Elementals/issues), or [my discord](https://www.discord.gg/aCDNj8s) 
 and I'll be happy to help!
+# Version
+Current release we are on is 1.0! This will be updated as more releases are out!
