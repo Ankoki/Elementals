@@ -30,6 +30,6 @@ public class UpdateChecker {
     }
 
     public boolean isLatest() {
-        return getLatestTag().equalsIgnoreCase(plugin.getDescription().getVersion());
+        return this.getLatestTag().equalsIgnoreCase(plugin.getDescription().getVersion()) || !this.getLatestTag().equalsIgnoreCase("UNKNOWN");
     }
 }
