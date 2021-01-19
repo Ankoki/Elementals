@@ -102,7 +102,7 @@ public class Elementals extends JavaPlugin {
         if (this.getPluginVersion().isLegacy()) {
             logger.severe(" # # # # # # # # # # # # # # #");
             logger.severe(" # ");
-            logger.severe(" # You are running on a legacy pluginVersion!");
+            logger.severe(" # Your server is running on a legacy minecraft version!");
             logger.severe(" # This plugin only supports 1.13+!");
             logger.severe(" # Disabling...");
             logger.severe(" # ");

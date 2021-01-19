@@ -27,7 +27,7 @@ public class JoinQuitListener implements Listener {
                 TextComponent github =
                         new TextComponent(Utils.coloured("           &6[&cClick me to download the latest version!&6]"));
                 github.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder("Click me to visit Spigot!")
+                        new ComponentBuilder("Click me to go to the latest release!")
                         .color(net.md_5.bungee.api.ChatColor.GRAY)
                         .italic(true)
                         .create()));
