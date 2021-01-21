@@ -158,4 +158,9 @@ public final class ElementalsAPI {
     public static Spell getCastedSpell(Player player) {
         return castingSpell.get(player);
     }
+
+    enum CombineType {
+        YOUR,
+        MUM_IS_GAY;
+    }
 }

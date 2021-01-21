@@ -2,6 +2,7 @@ package com.ankoki.elementals;
 
 import com.ankoki.elementals.api.ElementalsAPI;
 import com.ankoki.elementals.commands.ElementalsCmd;
+import com.ankoki.elementals.listeners.CombineListener;
 import com.ankoki.elementals.listeners.JoinQuitListener;
 import com.ankoki.elementals.listeners.SwapListener;
 import com.ankoki.elementals.managers.CooldownManager;
@@ -119,7 +120,8 @@ public class Elementals extends JavaPlugin {
                 spellListener,
                 new SwapListener(),
                 new JoinQuitListener(this),
-                new ProjectileHit());
+                new ProjectileHit(),
+                new CombineListener());
         //Registering Spells
         ElementalsAPI.getEntitySpells().clear();
         ElementalsAPI.registerGenericSpells(this,

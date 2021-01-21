@@ -1,6 +1,8 @@
 package com.ankoki.elementals.commands;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.api.ElementalsAPI;
+import com.ankoki.elementals.managers.BookManager;
 import com.ankoki.elementals.managers.ItemManager;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
@@ -40,10 +42,6 @@ public class ElementalsCmd {
     @CommandHook("disenchant")
     public void disenchantHook(Player player, ItemStack heldItem) {
         ItemManager wand = new ItemManager(heldItem);
-        if (!wand.hasSpell()) {
-            player.sendMessage(Messages.msg("no-spells"));
-            return;
-        }
         player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.removeSpells().getItem());
         player.sendMessage(Messages.msg("on-disenchant"));
     }
@@ -65,13 +63,28 @@ public class ElementalsCmd {
         sender.sendMessage(Messages.msg("on-reload"));
     }
 
-    @CommandHook("help")
+    //@CommandHook("help")
     public void helpHook(CommandSender sender) {
         sender.sendMessage(Utils.coloured("&6৺  &e&nElementals Help\n" + "\n" +
                 "&7/elementals:" +
                 "&7    enchant <spell> &8- &7Enchants held item with the said spell" +
                 "&7    disenchant &8- &7Disenchants the held item" +
                 "&7    information &8- &7Information about the plugin" +
-                "&7    help &8- &7Your here! Shows this message"));
+                "&7    help &8- &7Your here! Shows this message" +
+                "&7    book <spell> &8- &7Gives you an enchanted book you can combine with an item."));
+    }
+
+    @CommandHook("book")
+    public void bookHook(Player player, Spell spell) {
+        player.getInventory().addItem(new BookManager(spell).getBook());
+        player.sendMessage(Utils.coloured("&6৺ &eYou have recieved a " + spell.getSpellName() + " book!"));
+    }
+
+    @CommandHook("spells")
+    public void spellsHook(CommandSender sender) {
+        sender.sendMessage(Utils.coloured("&6৺ &eWe currently have the following spells!"));
+        for (Spell spell : ElementalsAPI.getAllSpells()) {
+            sender.sendMessage(Utils.coloured("&8» &7" + spell.getSpellName()));
+        }
     }
 }

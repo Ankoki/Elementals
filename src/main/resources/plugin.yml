@@ -19,6 +19,15 @@ permissions:
   elementals.bypass:
     default: op
     description: Allows player's to bypass cooldowns on spells.
+  elementals.give.book:
+    default: op
+    description: Allows player's to get the enchantable books.
+  elementals.help:
+    default: op
+    description: Allows player's to use the /elementals help command.
+  elementals.use.book:
+    default: true
+    description: Allows player's to combine books with items.
   elementals.cast:
     default: true
     description: Allows player's to cast any spell.

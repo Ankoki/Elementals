@@ -18,7 +18,7 @@ elementals {
         context mainhand
         help Disenchants a wand
     }
-    info,information,help {
+    info,information {
         hook information
         help Information about Elementals
     }
@@ -28,10 +28,14 @@ elementals {
         hook reload
         help Reloads the messages.txt
     }
-    help {
+    book spell:spell{
         permission elementals.admin
-        permission elementals.help
-        hook help
-        help Shows all possible command usages
+        permission elementals.give.book
+        hook book
+        help Gives a spell book to the player
+    }
+    spells,spell {
+        hook spells
+        help Lists all current spells Elementals has
     }
 }

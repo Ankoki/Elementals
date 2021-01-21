@@ -26,8 +26,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import redempt.redlib.commandmanager.Messages;
 
-import java.util.WeakHashMap;
-
 @SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class SpellListener implements Listener {
@@ -77,7 +75,9 @@ public class SpellListener implements Listener {
                                         return;
                                     }
                                     if (genericSpell.onCast(player)) {
-                                        cooldown.addCooldown(player, spell);
+                                        if (!player.hasPermission("elementals.bypass")) {
+                                            cooldown.addCooldown(player, spell);
+                                        }
                                         Utils.sendActionBar(player, Messages.msg(ON_CAST)
                                                 .replace(REPLACE_SPELL, spellName));
                                         return;
@@ -137,53 +137,60 @@ public class SpellListener implements Listener {
                 if (wand.hasSpell(spell)) {
                     if (player.hasPermission("elementals.cast") ||
                             player.hasPermission("elementals.cast.entity")) {
-                        if (!ElementalsAPI.isCasting(player)) {
-                            if (cooldown.canCast(player, spell, entitySpell.getCooldown())) {
-                                if (plugin.spellEnabled(spell)) {
-                                    SpellCastEvent defaultEvent = new SpellCastEvent(player, entity,
-                                            spell, entitySpell.getCooldown());
-                                    Bukkit.getPluginManager().callEvent(defaultEvent);
-                                    EntitySpellCastEvent event = new EntitySpellCastEvent(player, entity,
-                                            spell, entitySpell.getCooldown());
-                                    Bukkit.getPluginManager().callEvent(event);
-                                    if (!event.isCancelled() && !defaultEvent.isCancelled()) {
-                                        e.setCancelled(true);
-                                        if (entitySpell instanceof Prolonged) {
-                                            if (!ElementalsAPI.isCasting(player)) {
-                                                if (entitySpell.onCast(player, entity)) {
-                                                    ElementalsAPI.addCaster(player, spell);
-                                                    Utils.sendActionBar(player, Messages.msg(ON_CAST)
-                                                            .replace(REPLACE_SPELL, spell
-                                                                    .getSpellName()));
+                        if (player.hasPermission("elementals.spell" + spellName.replace(" ", ""))) {
+                            if (!ElementalsAPI.isCasting(player)) {
+                                if (cooldown.canCast(player, spell, entitySpell.getCooldown())) {
+                                    if (plugin.spellEnabled(spell)) {
+                                        SpellCastEvent defaultEvent = new SpellCastEvent(player, entity,
+                                                spell, entitySpell.getCooldown());
+                                        Bukkit.getPluginManager().callEvent(defaultEvent);
+                                        EntitySpellCastEvent event = new EntitySpellCastEvent(player, entity,
+                                                spell, entitySpell.getCooldown());
+                                        Bukkit.getPluginManager().callEvent(event);
+                                        if (!event.isCancelled() && !defaultEvent.isCancelled()) {
+                                            e.setCancelled(true);
+                                            if (entitySpell instanceof Prolonged) {
+                                                if (!ElementalsAPI.isCasting(player)) {
+                                                    if (entitySpell.onCast(player, entity)) {
+                                                        ElementalsAPI.addCaster(player, spell);
+                                                        Utils.sendActionBar(player, Messages.msg(ON_CAST)
+                                                                .replace(REPLACE_SPELL, spell
+                                                                        .getSpellName()));
+                                                    }
+                                                } else {
+                                                    ((Prolonged) entitySpell).onCancel(player);
+                                                    ElementalsAPI.removeCaster(player);
+                                                    if (!player.hasPermission("elementals.bypass")) {
+                                                        cooldown.addCooldown(player, spell);
+                                                    }
+                                                    Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
+                                                            .replace(REPLACE_SPELL, spellName));
                                                 }
-                                            } else {
-                                                ((Prolonged) entitySpell).onCancel(player);
-                                                ElementalsAPI.removeCaster(player);
-                                                Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
-                                                        .replace(REPLACE_SPELL, spellName));
+                                                return;
                                             }
-                                            return;
-                                        }
-                                        if (entitySpell.onCast(player, entity)) {
-                                            cooldown.addCooldown(player, spell);
-                                            Utils.sendActionBar(player, Messages.msg(ON_CAST)
+                                            if (entitySpell.onCast(player, entity)) {
+                                                cooldown.addCooldown(player, spell);
+                                                Utils.sendActionBar(player, Messages.msg(ON_CAST)
+                                                        .replace(REPLACE_SPELL, spellName));
+                                                return;
+                                            }
+                                        } else {
+                                            Utils.sendActionBar(player, Messages.msg("cancelled-spell")
                                                     .replace(REPLACE_SPELL, spellName));
-                                            return;
                                         }
                                     } else {
-                                        Utils.sendActionBar(player, Messages.msg("cancelled-spell")
+                                        Utils.sendActionBar(player, Messages.msg("disabled-spell")
                                                 .replace(REPLACE_SPELL, spellName));
                                     }
                                 } else {
-                                    Utils.sendActionBar(player, Messages.msg("disabled-spell")
-                                            .replace(REPLACE_SPELL, spellName));
+                                    Utils.sendActionBar(player, Messages.msg("cooldown")
+                                            .replace("%cooldown%", Integer.toString(entitySpell.getCooldown())));
                                 }
                             } else {
-                                Utils.sendActionBar(player, Messages.msg("cooldown")
-                                        .replace("%cooldown%", Integer.toString(entitySpell.getCooldown())));
+                                Utils.sendActionBar(player, Messages.msg("already-casting"));
                             }
                         } else {
-                            Utils.sendActionBar(player, Messages.msg("already-casting"));
+                            Utils.sendActionBar(player, Messages.msg("no-permission"));
                         }
                     } else {
                         Utils.sendActionBar(player, Messages.msg("no-permission"));

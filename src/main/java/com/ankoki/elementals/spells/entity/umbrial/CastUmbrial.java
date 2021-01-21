@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 @RequiredArgsConstructor
 public class CastUmbrial implements EntitySpell {
@@ -38,6 +39,7 @@ public class CastUmbrial implements EntitySpell {
                         if (duration <= 0) {
                             player.removePotionEffect(PotionEffectType.INVISIBILITY);
                             targeted.damage(6);
+                            player.setVelocity(new Vector(0, 2, 0));
                             this.cancel();
                         }
                     } else {

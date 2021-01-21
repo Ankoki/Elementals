@@ -16,3 +16,7 @@ flow-no-water: &eThis spell requires water!
 travel-solid: &eYou can only teleport to solid blocks!
 already-casting: &eYou are already casting a spell!
 no-permission: &eYou don't have permission to cast spells!
+already-got-spell: &6৺ &eYou already have a spell on this item!
+only-enchant-items: &6৺ &eYou can only enchant items!
+successful-book-enchant: &6৺ &eYou have successfully enchanted this item with %spell%&e!
+enchant-one-item: &6৺ &eYou can only enchant one item with a book!
