@@ -28,10 +28,10 @@ elementals {
         hook reload
         help Reloads the messages.txt
     }
-    test {
-        user player
+    help {
         permission elementals.admin
-        hook test
-        help Test for the owner, ignore
+        permission elementals.help
+        hook help
+        help Shows all possible command usages
     }
 }

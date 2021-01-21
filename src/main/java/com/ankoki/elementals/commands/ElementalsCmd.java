@@ -65,8 +65,13 @@ public class ElementalsCmd {
         sender.sendMessage(Messages.msg("on-reload"));
     }
 
-    @CommandHook("test")
-    public void testHook(Player player) {
-        new ParticlesManager(player, plugin).drawDome(Color.WHITE, Color.GRAY, Color.BLACK);
+    @CommandHook("help")
+    public void helpHook(CommandSender sender) {
+        sender.sendMessage(Utils.coloured("&6৺  &e&nElementals Help\n" + "\n" +
+                "&7/elementals:" +
+                "&7    enchant <spell> &8- &7Enchants held item with the said spell" +
+                "&7    disenchant &8- &7Disenchants the held item" +
+                "&7    information &8- &7Information about the plugin" +
+                "&7    help &8- &7Your here! Shows this message"));
     }
 }

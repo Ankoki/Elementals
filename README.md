@@ -57,6 +57,7 @@ This manages anything you need to within the plugin, and other things may be add
 | `elementals.enchant` | FALSE | Allows the player to enchant wands. |  
 | `elementals.disenchant` | FALSE | Allows the player to disenchant wands. |  
 | `elementals.bypass` | FALSE | This bypasses the cooldown for spells. |  
+| `elementals.help` | FALSE | This alllows you to use the /elementals help command. |  
 | `elementals.cast` | TRUE | This determines wether or not a player can cast a spell. |  
 | `elementals.cast.generic` | TRUE | This determines wether or not a player can cast a generic spell. |  
 | `elementals.cast.entity` | TRUE | This determines wether or not a player can cast an entity spell. |  
