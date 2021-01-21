@@ -2,51 +2,55 @@ package com.ankoki.elementals.managers;
 
 import com.ankoki.elementals.api.ElementalsAPI;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
 @SuppressWarnings("unused")
+@RequiredArgsConstructor
 public class ItemManager {
     private final ItemStack item;
     private ItemStack wand;
 
-    public ItemManager(ItemStack item) {
-        this.item = item;
-        wand = item;
-    }
-
-    public void addSpell(Spell spell) {
+    public ItemManager addSpell(Spell spell) {
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName("§6" + spell.getSpellName() + " §eWand");
+        item.setItemMeta(meta);
         NBTItem wand = new NBTItem(item);
         wand.addCompound(Integer.toString(spell.getId()));
         wand.setUUID("unstackable", UUID.randomUUID());
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§6" + spell.getSpellName() + "§e Wand");
-        ItemStack finWand = wand.getItem();
-        finWand.setItemMeta(meta);
-        this.wand = finWand;
+        this.wand = wand.getItem();
+        return this;
     }
 
     public ItemManager removeSpell(Spell spell) {
-        wand.getItemMeta().setDisplayName(null);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(null);
+        item.setItemMeta(meta);
         NBTItem wand = new NBTItem(item);
-        wand.removeKey("unstackable");
         if (wand.hasKey(Integer.toString(spell.getId()))) {
             wand.removeKey("" + spell.getId());
+            wand.setUUID("unstackable", null);
         }
         this.wand = wand.getItem();
         return this;
     }
 
     public ItemManager removeSpells() {
-        wand.getItemMeta().setDisplayName(null);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(null);
+        item.setItemMeta(meta);
         NBTItem wand = new NBTItem(item);
-        wand.removeKey("unstackable");
         for (Spell spell : ElementalsAPI.getAllSpells()) {
             if (wand.hasKey(Integer.toString(spell.getId()))) {
                 wand.removeKey(Integer.toString(spell.getId()));
             }
+            wand.setUUID("unstackable", null);
         }
         this.wand = wand.getItem();
         return this;

@@ -1,5 +1,5 @@
 # Read Me!
-This was project to mess around with Lombok that I'm actually enjoying developing and now plan on releasing eventually. 
+This was project to mess around with Lombok that I'm actually enjoying developing and is now released. 
 Depends on RedLib and if you're planning to create a fork you will need Lombok installed on your IDE.
 You can find the RedLib source code [here](https://www.github.com/Redempt/RedLib). 
 You can find the RedLib download on spigot [here](https://www.spigotmc.org/resources/redlib.78713/).  
@@ -61,6 +61,7 @@ This manages anything you need to within the plugin, and other things may be add
 | `elementals.cast` | TRUE | This determines wether or not a player can cast a spell. |  
 | `elementals.cast.generic` | TRUE | This determines wether or not a player can cast a generic spell. |  
 | `elementals.cast.entity` | TRUE | This determines wether or not a player can cast an entity spell. |  
+| `elementals.spell.<spellname>` | TRUE | If you have the permission, you can cast the spell! |  
 ### Enjoy!
 I hope you enjoy using this plugin, and if you have any suggestions, feedback, or anything of the sort, make sure to 
 let me know, either in the [issue tracker](https://www.github.com/Ankoki-Dev/Elementals/issues), or 
@@ -273,6 +274,39 @@ public class YourSpell extends Prolonged implements GenericSpell {
     }
 }
 ```
+### Giving Spells to an Item
+There is a built-in class for you to give your players an enchanted item! Heres a small example of how to use my 
+ItemManager class to give and remove spells!  
+
+```java
+import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.api.ElementalsAPI;
+import com.ankoki.elementals.managers.ItemManager;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
+
+public class Listening implements Listener {
+
+    @EventHandler
+    private void block(BlockBreakEvent e) {
+        Player player = e.getPlayer();
+        ItemStack heldItem = player.getInventory().getItemInMainHand();
+        player.getInventory().setItem(player.getInventory().getHeldItemSlot(),
+                new ItemManager(heldItem)
+                        .addSpell(ElementalsAPI.getAllSpells() //Gets the list of all spells from the api
+                                .get(new Random() //Gets a random number based on the size.
+                                        .nextInt(ElementalsAPI.getAllSpells().size()))).getItem());
+        player.sendMessage("§7You have been given a random spell!");
+    }
+}
+```
+This is **OBVIOUSLY** ugly and not easy on the eyes, however was just made to be an example of how you add a spell to 
+an item and get the item with a spell back.
 ### Help
 Remember you can access any Managers or Libraries that are in Elementals, so feel free to check them out. I highly 
 recommend using the ParticlesManager as this provides an ease of use when drawing circles, and the Utils class is 

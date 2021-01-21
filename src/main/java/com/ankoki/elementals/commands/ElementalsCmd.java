@@ -32,7 +32,7 @@ public class ElementalsCmd {
             ItemStack item = wand.removeSpells().getItem();
             ItemManager newWand = new ItemManager(item);
             newWand.addSpell(spell);
-            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), newWand.getItem());
+            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), newWand.addSpell(spell).getItem());
             player.sendMessage(Messages.msg("on-enchant").replace("%spell%", spell.getSpellName()));
         } else {
             player.sendMessage(Messages.msg("enchant-blocks"));
@@ -63,7 +63,7 @@ public class ElementalsCmd {
         sender.sendMessage(Messages.msg("on-reload"));
     }
 
-    //@CommandHook("help")
+    @CommandHook("help")
     public void helpHook(CommandSender sender) {
         sender.sendMessage(Utils.coloured("&6৺  &e&nElementals Help\n" + "\n" +
                 "&7/elementals:" +

@@ -145,16 +145,34 @@ public class Elementals extends JavaPlugin {
         //Loading config and messages
         Messages.load(this);
         this.loadConfiguration();
-        logger.info(String.format("%s v%s was enabled in %.2f seconds (%sms)",
-                description.getName(), pluginVersion, (float) System.currentTimeMillis() - start,
-                (System.currentTimeMillis() - start)));
+        if (pluginVersion.startsWith("beta-")) {
+            logger.info(String.format("%s %s was enabled in %.2f seconds (%sms)",
+                    description.getName(), pluginVersion, (float) System.currentTimeMillis() - start,
+                    (System.currentTimeMillis() - start)));
+        } else {
+            logger.info(String.format("%s v%s was enabled in %.2f seconds (%sms)",
+                    description.getName(), pluginVersion, (float) System.currentTimeMillis() - start,
+                    (System.currentTimeMillis() - start)));
+        }
         UpdateChecker checker = new UpdateChecker(this);
         latest = checker.isLatest();
-        if (!latest) {
+        if (isBeta()) {
             latestTag = checker.getLatestTag();
-            logger.info("There is a newer release of Elementals! " +
-                    "Please go to https://github.com/Ankoki-Dev/Elementals/releases/tag/" + checker.getLatestTag() +
-                    " to get the latest version!");
+            logger.warning("You are currently runninng on an untested and in development version of Elementals!");
+            logger.info("How you obtained this I have 0 clue, so be sure to message me on discord (Ankoki#0001) so i can help sort this:)");
+            String compare = pluginVersion.replace("beta-", "");
+            if (compare.equalsIgnoreCase(latestTag)) {
+                logger.info("Even though you are in a beta version, there is a newer release of Elementals! " +
+                        "Please go to https://github.com/Ankoki-Dev/Elementals/releases/tag/" + checker.getLatestTag() +
+                        " to get the latest version!");
+            }
+        } else {
+            if (!latest) {
+                latestTag = checker.getLatestTag();
+                logger.info("There is a newer release of Elementals! " +
+                        "Please go to https://github.com/Ankoki-Dev/Elementals/releases/tag/" + checker.getLatestTag() +
+                        " to get the latest version!");
+            }
         }
     }
 
@@ -213,6 +231,10 @@ public class Elementals extends JavaPlugin {
 
     public boolean spellEnabled(Spell spell) {
         return !disabledSpells.contains(spell);
+    }
+
+    private boolean isBeta() {
+        return pluginVersion.startsWith("beta-");
     }
 
     /*

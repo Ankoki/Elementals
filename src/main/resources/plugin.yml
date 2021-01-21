@@ -1,5 +1,5 @@
 name: Elementals
-version: 1.1
+version: 1.2
 main: com.ankoki.elementals.Elementals
 api-version: 1.16
 author: Ankoki
@@ -37,5 +37,35 @@ permissions:
   elementals.cast.entity:
     default: true
     description: Allows player's to cast entity spells.
+  elementals.spell.possession:
+    default: true
+    description: Ability to cast Possession
+  elementals.spell.umbrial:
+    default: true
+    description: Ability to cast Umbrial.
+  elementals.spell.dash:
+    default: true
+    description: Ability to cast Dash.
+  elementals.spell.fireball:
+    default: true
+    description: Ability to cast Fireball.
+  elementals.spell.flow:
+    default: true
+    description: Ability to cast Flow.
+  elementals.spell.medic:
+    default: true
+    description: Ability to cast Medic.
+  elementals.spell.regrowth:
+    default: true
+    description: Ability to cast Regrowth.
+  elementals.spell.rise:
+    default: true
+    description: Ability to cast Rise.
+  elementals.spell.selfdestruct:
+    default: true
+    description: Ability to cast Self Destruct.
+  elementals.spell.travel:
+    default: true
+    description: Ability to cast Travel.
 softdepend:
   - RedLib
