@@ -158,4 +158,17 @@ public final class ElementalsAPI {
     public static Spell getCastedSpell(Player player) {
         return castingSpell.get(player);
     }
+
+    /**
+     * Returns the Spell object by the name of the spell.
+     *
+     * @param name The name of the spell you want to retrieve
+     * @return The spell object that has the same display name of the paramater name
+     */
+    public static Spell getSpellByName(String name) {
+        for (Spell spell : allSpells) {
+            if (spell.getSpellName().equalsIgnoreCase(name)) return spell;
+        }
+        return null;
+    }
 }
