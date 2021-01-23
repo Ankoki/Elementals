@@ -1,11 +1,13 @@
 package com.ankoki.elementals.api;
 
 import com.ankoki.elementals.Elementals;
+import com.ankoki.elementals.managers.BookManager;
 import com.ankoki.elementals.managers.Spell;
 import com.ankoki.elementals.utils.exceptions.IdInUseException;
 import com.ankoki.elementals.utils.exceptions.NameInUseException;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -170,5 +172,15 @@ public final class ElementalsAPI {
             if (spell.getSpellName().equalsIgnoreCase(name)) return spell;
         }
         return null;
+    }
+
+    /**
+     * Returns a spellbook with the spell specified
+     *
+     * @param spell The spell you want the spellbook to contain.
+     * @return A spellbook that can be used for enchanting wands.
+     */
+    public static ItemStack getSpellBook(Spell spell) {
+        return new BookManager(spell).getBook();
     }
 }
