@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -82,11 +84,13 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
                                                         new ParticlesManager(updatedPlayer, plugin).drawCircle(5,
                                                                 150,
                                                                 Color.GREEN);
-                                                        for (Player p : playersInRadius(updatedPlayer.getLocation(), 5)) {
-                                                            double health = p.getHealth();
-                                                            health += 0.05;
-                                                            if (health > 20) health = 20;
-                                                            p.setHealth(health);
+                                                        for (Entity ent : player.getNearbyEntities(3, 3, 3)) {
+                                                            if (ent instanceof LivingEntity) {
+                                                                double health = ((LivingEntity) ent).getHealth();
+                                                                health += 0.05;
+                                                                if (health > 20) health = 20;
+                                                                ((LivingEntity) ent).setHealth(health);
+                                                            }
                                                         }
                                                         current++;
                                                         duration.put(player, current);
@@ -121,18 +125,5 @@ public class CastRegrowth extends Prolonged implements GenericSpell {
     @Override
     public Spell getSpell() {
         return spell;
-    }
-
-    //Yeazz is thicc
-    private List<Player> playersInRadius(Location location, double radius) {
-        List<Player> players = new ArrayList<>();
-        double radiusSqrd = radius * radius;
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getLocation().distanceSquared(location) <= radiusSqrd) {
-                players.add(player);
-            }
-        }
-        //Yeazz is thicc
-        return players;
     }
 }
