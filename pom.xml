@@ -19,14 +19,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>com.ankoki.elementals</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
             </plugin>
         </plugins>
     </build>
