@@ -145,15 +145,9 @@ public class Elementals extends JavaPlugin {
         //Loading config and messages
         Messages.load(this);
         this.loadConfiguration();
-        if (pluginVersion.startsWith("beta-")) {
-            logger.info(String.format("%s %s was enabled in %.2f seconds (%sms)",
-                    description.getName(), pluginVersion, (float) System.currentTimeMillis() - start,
-                    (System.currentTimeMillis() - start)));
-        } else {
-            logger.info(String.format("%s v%s was enabled in %.2f seconds (%sms)",
-                    description.getName(), pluginVersion, (float) System.currentTimeMillis() - start,
-                    (System.currentTimeMillis() - start)));
-        }
+        logger.info(String.format("%s v%s was enabled in %.2f seconds (%sms)",
+                description.getName(), pluginVersion, (float) System.currentTimeMillis() - start,
+                (System.currentTimeMillis() - start)));
         UpdateChecker checker = new UpdateChecker(this);
         latest = checker.isLatest();
         if (isBeta()) {
@@ -234,7 +228,7 @@ public class Elementals extends JavaPlugin {
     }
 
     private boolean isBeta() {
-        return pluginVersion.startsWith("beta-");
+        return pluginVersion.endsWith("-beta");
     }
 
     /*

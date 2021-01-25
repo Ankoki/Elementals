@@ -29,10 +29,8 @@ public class ElementalsCmd {
     public void enchantHook(Player player, Spell spell, ItemStack heldItem) {
         if (heldItem.getType().isItem()) {
             ItemManager wand = new ItemManager(heldItem);
-            ItemStack item = wand.removeSpells().getItem();
-            ItemManager newWand = new ItemManager(item);
-            newWand.addSpell(spell);
-            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), newWand.addSpell(spell).getItem());
+            wand.addSpell(spell);
+            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), wand.getItem());
             player.sendMessage(Messages.msg("on-enchant").replace("%spell%", spell.getSpellName()));
         } else {
             player.sendMessage(Messages.msg("enchant-blocks"));
