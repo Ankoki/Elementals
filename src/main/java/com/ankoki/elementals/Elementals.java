@@ -7,6 +7,7 @@ import com.ankoki.elementals.listeners.JoinQuitListener;
 import com.ankoki.elementals.listeners.SwapListener;
 import com.ankoki.elementals.managers.CooldownManager;
 import com.ankoki.elementals.managers.Spell;
+import com.ankoki.elementals.spells.entity.poison.CastPoison;
 import com.ankoki.elementals.spells.entity.umbrial.CastUmbrial;
 import com.ankoki.elementals.spells.generic.dash.CastDash;
 import com.ankoki.elementals.spells.generic.fireball.CastFireball;
@@ -124,6 +125,7 @@ public class Elementals extends JavaPlugin {
                 new CombineListener());
         //Registering Spells
         ElementalsAPI.getEntitySpells().clear();
+        ElementalsAPI.getGenericSpells().clear();
         ElementalsAPI.registerGenericSpells(this,
                 new CastFlow(this),
                 new CastTravel(this),
@@ -135,7 +137,8 @@ public class Elementals extends JavaPlugin {
                 new CastSelfDestruct(this));
         ElementalsAPI.registerEntitySpells(this,
                 new CastPossession(this),
-                new CastUmbrial(this));
+                new CastUmbrial(this),
+                new CastPoison(this));
         //Loading NBTAPI
         NBTItem testItem = new NBTItem(new ItemStack(Material.LEAD));
         testItem.addCompound("test");

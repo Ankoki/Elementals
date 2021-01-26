@@ -14,7 +14,7 @@ just need to drop it in your plugins folder along with the [RedLib](https://www.
 plugin. You can then customize all the messages in the messages.txt and in the RedLib
 plugin folder to change the incorrect command messages.  
 ### Spells
-We currently have 10 spells.  
+We currently have 11 spells.  
 There are two types of spell, Entity and Generic. Generic spells can be cast looking at anything, and Entity spells 
 can be cast while looking at an entity. If a spell is prolonged, you can start and stop casting it.  
 #### Possession
@@ -23,7 +23,10 @@ control of them and their movements. This only works on animals such as sheep, w
 chickens and pigs.  
 #### Umbrial
 Umbrial is an Entity Spell which can be casted on players and this allows you to become invisible and 
-enter the player you have targeted, you then rip out of their body, damaging them by 3 hearts.
+enter the player you have targeted, you then rip out of their body, damaging them by 3 hearts.  
+#### Poison  
+Poison is an Entity Spell which can be casted on any living entity, and poisons the target entity for 6 seconds, 
+and enables you to have absorbtion for the time they are poisoned.
 #### Dash
 Dash is a Generic Spell which pushes you towards the location you're looking at and gives you speed, which
 allows people to utilize this for PvP sitatuions to either get away from or catch up to enemies.  
