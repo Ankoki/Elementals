@@ -86,6 +86,7 @@ public final class ElementalsAPI {
      */
     public static void registerGenericSpells(JavaPlugin plugin, GenericSpell... genericSpells) {
         ElementalsAPI.genericSpells.addAll(Arrays.asList(genericSpells));
+        for (GenericSpell spell : genericSpells) spell.init();
         String pluginName = plugin.getDescription().getName();
         if (genericSpells.length == 1) {
             System.out.println(pluginName + " has successfully registered 1 new GenericSpell!");
@@ -102,6 +103,7 @@ public final class ElementalsAPI {
      */
     public static void registerEntitySpells(JavaPlugin plugin, EntitySpell... entitySpells) {
         ElementalsAPI.entitySpells.addAll(Arrays.asList(entitySpells));
+        for (EntitySpell spell : entitySpells) spell.init();
         String owningPl = plugin.getDescription().getName();
         if (entitySpells.length == 1) {
             System.out.println(owningPl + " has successfully registered 1 new EntitySpell!");

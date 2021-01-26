@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 public interface EntitySpell {
 
+    default void init(){}
     boolean onCast(Player player, Entity entity);
     int getCooldown();
     Spell getSpell();
