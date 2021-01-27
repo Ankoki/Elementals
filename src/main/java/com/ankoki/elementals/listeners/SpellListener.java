@@ -4,6 +4,7 @@ import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.api.ElementalsAPI;
 import com.ankoki.elementals.events.EntitySpellCastEvent;
 import com.ankoki.elementals.events.GenericSpellCastEvent;
+import com.ankoki.elementals.events.ProlongedSpellCancelEvent;
 import com.ankoki.elementals.events.SpellCastEvent;
 import com.ankoki.elementals.api.GenericSpell;
 import com.ankoki.elementals.api.EntitySpell;
@@ -68,6 +69,8 @@ public class SpellListener implements Listener {
                                             }
                                         } else {
                                             ((Prolonged) genericSpell).onCancel(player);
+                                            ProlongedSpellCancelEvent cancelEvent = new ProlongedSpellCancelEvent(player, spell, genericSpell.getCooldown(), false);
+                                            Bukkit.getPluginManager().callEvent(cancelEvent);
                                             ElementalsAPI.removeCaster(player);
                                             Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
                                                     .replace(REPLACE_SPELL, spellName));
@@ -83,8 +86,10 @@ public class SpellListener implements Listener {
                                         return;
                                     }
                                 } else {
-                                    Utils.sendActionBar(player, Messages.msg("cancelled-spell")
-                                            .replace(REPLACE_SPELL, spellName));
+                                    if (!Messages.msg("cancelled-spell").equalsIgnoreCase("none")) {
+                                        Utils.sendActionBar(player, Messages.msg("cancelled-spell")
+                                                .replace(REPLACE_SPELL, spellName));
+                                    }
                                 }
                             } else {
                                 Utils.sendActionBar(player, Messages.msg("disabled-spell")
@@ -111,6 +116,8 @@ public class SpellListener implements Listener {
                                 if (entitySpell instanceof Prolonged) {
                                     ((Prolonged) entitySpell).onCancel(player);
                                     ElementalsAPI.removeCaster(player);
+                                    ProlongedSpellCancelEvent cancelEvent = new ProlongedSpellCancelEvent(player, spell, entitySpell.getCooldown(), true);
+                                    Bukkit.getPluginManager().callEvent(cancelEvent);
                                     Utils.sendActionBar(player, Messages.msg(ON_STOP_CAST)
                                             .replace(REPLACE_SPELL, spell.getSpellName()));
                                 }
@@ -160,6 +167,8 @@ public class SpellListener implements Listener {
                                                 } else {
                                                     ((Prolonged) entitySpell).onCancel(player);
                                                     ElementalsAPI.removeCaster(player);
+                                                    ProlongedSpellCancelEvent cancelEvent = new ProlongedSpellCancelEvent(player, spell, entitySpell.getCooldown(), true);
+                                                    Bukkit.getPluginManager().callEvent(cancelEvent);
                                                     if (!player.hasPermission("elementals.bypass")) {
                                                         cooldown.addCooldown(player, spell);
                                                     }
@@ -175,8 +184,10 @@ public class SpellListener implements Listener {
                                                 return;
                                             }
                                         } else {
-                                            Utils.sendActionBar(player, Messages.msg("cancelled-spell")
-                                                    .replace(REPLACE_SPELL, spellName));
+                                            if (!Messages.msg("cancelled-spell").equalsIgnoreCase("none")) {
+                                                Utils.sendActionBar(player, Messages.msg("cancelled-spell")
+                                                        .replace(REPLACE_SPELL, spellName));
+                                            }
                                         }
                                     } else {
                                         Utils.sendActionBar(player, Messages.msg("disabled-spell")
