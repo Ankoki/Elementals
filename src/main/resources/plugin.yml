@@ -67,7 +67,7 @@ permissions:
   elementals.spell.travel:
     default: true
     description: Ability to cast Travel.
-  elementals.spell.posion:
+  elementals.spell.poison:
     default: true
     description: Ability to cast Posion.
 softdepend:
