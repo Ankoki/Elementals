@@ -67,5 +67,8 @@ permissions:
   elementals.spell.travel:
     default: true
     description: Ability to cast Travel.
+  elementals.spell.posion:
+    default: true
+    description: Ability to cast Posion.
 softdepend:
   - RedLib
