@@ -182,6 +182,11 @@ public class ParticlesManager {
         locations.add(player.getLocation().add(0.1, 0.8, 0.3));
         locations.add(player.getLocation().add(0.1, 0.7, 0.2));
         locations.add(player.getLocation().add(0.2, 0.5, 0.1));
+        locations.add(player.getLocation().add(-0.2, 1.8, -0.3));
+        locations.add(player.getLocation().add(-0.3, 1.5, -0.1));
+        locations.add(player.getLocation().add(-0.1, 0.8, -0.3));
+        locations.add(player.getLocation().add(-0.1, 0.7, -0.2));
+        locations.add(player.getLocation().add(-0.2, 0.5, -0.1));
         for (Location loc : locations) {
             Particle particle = particles[new Random().nextInt(particles.length)];
             loc.getWorld().spawnParticle(particle, loc, size);

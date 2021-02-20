@@ -293,7 +293,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
-public class Listening implements Listener {
+public class BlockListener implements Listener {
 
     @EventHandler
     private void block(BlockBreakEvent e) {

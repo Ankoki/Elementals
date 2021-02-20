@@ -2,10 +2,12 @@ package com.ankoki.elementals.listeners;
 
 import com.ankoki.elementals.Elementals;
 import com.ankoki.elementals.api.ElementalsAPI;
+import com.ankoki.elementals.events.BookEnchantEvent;
 import com.ankoki.elementals.managers.ItemManager;
 import com.ankoki.elementals.managers.ParticlesManager;
 import com.ankoki.elementals.managers.Spell;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -38,7 +40,6 @@ public class CombineListener implements Listener {
         NBTItem nbtItem = new NBTItem(cursor);
         if (nbtItem.getString("spell") == null ||
                 nbtItem.getString("spell").isEmpty()) return;
-        //e.setCancelled(true);
         if (!clicked.getType().isItem()) {
             player.sendMessage(Messages.msg("only-enchant-items"));
             return;
@@ -46,6 +47,9 @@ public class CombineListener implements Listener {
         String spellName = nbtItem.getString("spell");
         Spell spell = ElementalsAPI.valueOf(spellName);
         if (spell == null) return;
+        BookEnchantEvent event = new BookEnchantEvent(player, spell);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
         ItemManager managerItem = new ItemManager(clicked);
         if (managerItem.hasSpell()) {
             player.sendMessage(Messages.msg("already-got-spell"));
